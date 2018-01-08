@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using PixelBattles.Server.BusinessLogic;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace PixelBattles.Server.Web
 {
@@ -37,7 +38,16 @@ namespace PixelBattles.Server.Web
 
             services.AddBusinessLogic(ConfigurationRoot);
 
+            services.AddOptions();
+
+            services.AddAttributeRegistration();
+
             services.AddAutoMapper();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Pixel Battles Api", Version = "v1" });
+            });
 
             services.AddMvc(options => { })
                 .AddJsonOptions(options =>
@@ -64,7 +74,14 @@ namespace PixelBattles.Server.Web
             {
                 loggerFactory.AddDebug();
             }
-            
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pixel Battles Api V1");
+            });
+
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
