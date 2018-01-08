@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "name": "pixel-battles",
+  "private": true,
+  "dependencies": {
+    "@aspnet/signalr-client": "1.0.0-alpha2-final"
+  },
+  "devDependencies": {
+  }
+}
