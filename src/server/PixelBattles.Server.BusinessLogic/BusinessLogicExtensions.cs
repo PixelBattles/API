@@ -14,14 +14,5 @@ namespace PixelBattles.Server.BusinessLogic
                 .AddDataStorage(configuration)
                 .AddSingleton<ErrorDescriber>();
         }
-
-        public static IApplicationBuilder UseBusinessLogic(this IApplicationBuilder applicationBuilder, IConfigurationRoot configuration, ILoggerFactory loggerFactory)
-        {
-            using (var serviceScope = applicationBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                serviceScope.UseDataStorage(configuration, loggerFactory);
-            }
-            return applicationBuilder;
-        }
     }
 }

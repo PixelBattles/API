@@ -65,8 +65,6 @@ namespace PixelBattles.Server.Web
                 loggerFactory.AddDebug();
             }
             
-            app.UseBusinessLogic(ConfigurationRoot, loggerFactory);
-
             app.UseStaticFiles();
 
             app.UseMvc(routes =>

@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using PixelBattles.Server.Core;
-using System;
 
 namespace PixelBattles.Server.DataStorage
 {
@@ -20,54 +18,17 @@ namespace PixelBattles.Server.DataStorage
                 });
         }
 
-        public static void UseDataStorage(this IServiceScope serviceScope, IConfigurationRoot configuration, ILoggerFactory loggerFactory)
+        public static IWebHost Migrate(this IWebHost webhost)
         {
-            var context = serviceScope.ServiceProvider.GetService<PixelBattlesDbContext>();
-            var logger = loggerFactory.CreateLogger("Data storage startup");
-
-            switch (configuration["ASPNETCORE_ENVIRONMENT"])
+            using (var scope = webhost.Services.GetService<IServiceScopeFactory>().CreateScope())
             {
-                case EnvironmentNames.Staging:
-                    context.Database.Migrate();
-                    try
-                    {
-                        logger.LogInformation(-1, "Updating database.");
-                    }
-                    catch (Exception exception)
-                    {
-                        logger.LogError(-1, exception, "Database update partially failed.");
-                        throw;
-                    }
-                    break;
-                case EnvironmentNames.Production:
-                    context.Database.Migrate();
-                    try
-                    {
-                        logger.LogInformation(-1, "Updating database.");
-                    }
-                    catch (Exception exception)
-                    {
-                        logger.LogError(-1, exception, "Database update partially failed.");
-                        throw;
-                    }
-                    break;
-                case EnvironmentNames.Development:
-                    context.Database.Migrate();
-                    try
-                    {
-                        logger.LogInformation(-1, "Updating database.");
-                    }
-                    catch (Exception exception)
-                    {
-                        logger.LogError(-1, exception, "Database update partially failed.");
-                        throw;
-                    }
-                    break;
-                default:
-                    InvalidOperationException invalidOperationException = new InvalidOperationException("Unknown environment");
-                    logger.LogError(-1, invalidOperationException, $"{configuration["ASPNETCORE_ENVIRONMENT"]} is unknown environment for database init.");
-                    throw invalidOperationException;
+                using (var dbContext = scope.ServiceProvider.GetRequiredService<PixelBattlesDbContext>())
+                {
+                    dbContext.Database.Migrate();
+                    dbContext.EnsureSeedData();
+                }
             }
+            return webhost;
         }
     }
 }
