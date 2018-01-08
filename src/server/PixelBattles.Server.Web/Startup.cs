@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 using PixelBattles.Server.BusinessLogic;
 
 namespace PixelBattles.Server.Web
@@ -34,20 +36,53 @@ namespace PixelBattles.Server.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddBusinessLogic(ConfigurationRoot);
+
+            services.AddAutoMapper();
+
+            services.AddMvc(options => { })
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                })
+                .AddRazorOptions(options =>
+                {
+                });
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-            }
+                loggerFactory.AddDebug();
+                loggerFactory.AddConsole(ConfigurationRoot.GetSection("Logging"));
 
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+                app.UseBrowserLink();
+            }
+            else
+            {
+                loggerFactory.AddDebug();
+            }
+            
             app.UseBusinessLogic(ConfigurationRoot, loggerFactory);
 
-            app.Run(async (context) =>
+            app.UseStaticFiles();
+
+            app.UseMvc(routes =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                routes.MapRoute(
+                    name: "landing",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "dashboard",
+                    template: "game/{*.}",
+                    defaults: new { controller = "Dashboard", action = "Index" });
+
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Dashboard", action = "Index" });
             });
         }
     }
