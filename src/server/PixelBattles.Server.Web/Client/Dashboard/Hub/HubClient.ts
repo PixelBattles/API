@@ -1,6 +1,6 @@
 ﻿import { HubConnection, TransportType, ConsoleLogger, LogLevel } from "@aspnet/signalr-client"
 
-export class ClientHub {
+export class HubClient {
     private hubConnection: HubConnection;
     private url: string;
     private token: string;
