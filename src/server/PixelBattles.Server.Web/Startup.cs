@@ -31,6 +31,8 @@ namespace PixelBattles.Server.Web
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddBusinessLogic(ConfigurationRoot);
         }
         

@@ -11,7 +11,8 @@ namespace PixelBattles.Server.BusinessLogic
         public static IServiceCollection AddBusinessLogic(this IServiceCollection services, IConfigurationRoot configuration)
         {
             return services
-                .AddDataStorage(configuration);
+                .AddDataStorage(configuration)
+                .AddSingleton<ErrorDescriber>();
         }
 
         public static IApplicationBuilder UseBusinessLogic(this IApplicationBuilder applicationBuilder, IConfigurationRoot configuration, ILoggerFactory loggerFactory)
