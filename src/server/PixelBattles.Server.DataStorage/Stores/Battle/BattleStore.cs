@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using PixelBattles.Server.DataStorage.Models;
 using System;
 using System.Threading;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace PixelBattles.Server.DataStorage.Stores
 {
+    [Register(typeof(IBattleStore))]
     public class BattleStore : BaseStore<BattleEntity>, IBattleStore
     {
         public BattleStore(

@@ -16,7 +16,13 @@ namespace PixelBattles.Server.Web.Controllers.Api
             this.Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-        
+
+        protected ObjectResult Exception(Exception exception, string message, params object[] args)
+        {
+            Logger.LogError(-1, exception, message, args);
+            return StatusCode(500, Result.Failed(new Error("", message)));
+        }
+
         protected ActionResult OnResult(Result result)
         {
             if (result.Succeeded)
