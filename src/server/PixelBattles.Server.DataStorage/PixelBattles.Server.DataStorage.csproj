@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PixelBattles.Server.Core\PixelBattles.Server.Core.csproj" />
+    <ProjectReference Include="..\PixelBattles.Server.Infrastructure\PixelBattles.Server.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
