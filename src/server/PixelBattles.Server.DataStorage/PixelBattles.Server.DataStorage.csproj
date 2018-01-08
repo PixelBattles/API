@@ -9,4 +9,9 @@
     <ProjectReference Include="..\PixelBattles.Server.Infrastructure\PixelBattles.Server.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
+  </ItemGroup>
+
 </Project>
