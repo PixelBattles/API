@@ -40,7 +40,7 @@ namespace PixelBattles.Server.Hub.Models
 
         public Stream GetImage()
         {
-            Stream stream = null;
+            Stream stream = new MemoryStream();
             var image = Image.LoadPixelData(this.Pixels, this.Width, this.Height);
             PngEncoder pngEncoder = new PngEncoder
             {
