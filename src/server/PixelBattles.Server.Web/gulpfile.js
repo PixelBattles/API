@@ -35,7 +35,7 @@ var paths = {
     }
 };
 
-//Typescript complie
+//Typescript
 var tsProject = ts.createProject('tsconfig.json');
 var clientOutDir = tsProject.options.outDir;
 
@@ -71,4 +71,41 @@ gulp.task("dashboard:generate-pixel-battles-package", function (cb) {
         .pipe(gulp.dest(paths.dashboard.js.dest))
         .pipe(gzip())
         .pipe(gulp.dest(paths.dashboard.js.dest));;
+});
+
+//Vendors
+
+gulp.task('compile-vendors:clean', function () {
+    return del([
+        paths.src + 'vendors/css/**'
+    ]);
+});
+
+gulp.task('compile-vendors:sass', function () {
+    return gulp.src(paths.src + 'scss/vendors/**/*.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(autoprefixer())
+        .pipe(rename({ dirname: '' }))
+        .pipe(gulp.dest(paths.src + 'vendors/css/'))
+        .pipe(cssmin())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(rename({ dirname: '' }))
+        .pipe(gulp.dest(paths.src + 'vendors/css/'));
+});
+
+gulp.task('compile-vendors', function (callback) {
+    runSequence('compile-vendors:clean', 'compile-vendors:sass', callback);
+});
+
+//SCSS
+
+gulp.task('dashboard:create-sass', ['compile-vendors'], function () {
+    return gulp.src(paths.src + '/scss/style.scss')
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(gulp.dest(paths.src + 'css'))
+        .pipe(cssmin())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest(paths.src + 'css'))
+        .pipe(browserSync.stream());
 });
