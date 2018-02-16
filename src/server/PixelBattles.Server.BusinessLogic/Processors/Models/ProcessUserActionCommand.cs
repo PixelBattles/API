@@ -1,7 +1,7 @@
 ﻿using SixLabors.ImageSharp;
 using System;
 
-namespace PixelBattles.Server.BusinessLogic.Models
+namespace PixelBattles.Server.BusinessLogic.Processors
 {
     public class ProcessUserActionCommand
     {

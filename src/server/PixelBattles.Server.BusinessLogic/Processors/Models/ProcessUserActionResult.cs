@@ -1,7 +1,7 @@
 ﻿using PixelBattles.Server.Core;
 using System.Collections.Generic;
 
-namespace PixelBattles.Server.BusinessLogic.Models
+namespace PixelBattles.Server.BusinessLogic.Processors
 {
     public class ProcessUserActionResult : Result
     {
