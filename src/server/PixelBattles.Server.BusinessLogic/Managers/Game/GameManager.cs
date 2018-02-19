@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using PixelBattles.Server.DataStorage.Stores;
 
 namespace PixelBattles.Server.BusinessLogic.Managers
 {

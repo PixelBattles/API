@@ -1,5 +1,6 @@
 ﻿using PixelBattles.Server.BusinessLogic.Models;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Png;
 using System;
 using System.Collections.Concurrent;
@@ -8,70 +9,48 @@ using System.Threading;
 
 namespace PixelBattles.Server.BusinessLogic.Processors
 {
-    public abstract class GameProcessor : IGameProcessor
+    public abstract class GameProcessor : IDisposable
     {
-        public Guid GameId { get => Game.GameId; }
-
-        public int Height { get => Game.Height; }
-
-        public int Width { get => Game.Width; }
+        bool disposed = false;
 
         protected Rgba32[] Pixels { get; set; }
 
         protected byte[] State;
 
         protected int ChangeIndex;
-
-        protected int StateIndex;
-
+        
         protected Game Game { get; set; }
-
+        
         protected ConcurrentQueue<UserAction> ActionQueue { get; set; }
         
         public GameProcessor(Game game)
         {
             Game = game ?? throw new ArgumentNullException(nameof(game));
             ActionQueue = new ConcurrentQueue<UserAction>();
-        }
-
-        public ProcessUserActionResult ProcessUserAction(ProcessUserActionCommand command)
-        {
-            UserAction action = new UserAction()
+            
+            ChangeIndex = Game.ChangeIndex ?? default(int);
+            if (Game.State == null)
             {
-                GameId = Game.GameId,
-                Height = command.Height,
-                Width = command.Width,
-                Pixel = command.Pixel
-            };
-            ActionQueue.Enqueue(action);
-
-            var result = new ProcessUserActionResult();
-            return result;
+                Pixels = new Rgba32[Game.Height * Game.Width];
+            }
+            else
+            {
+                Pixels = GetPixelsFromBytes(game.State);
+            }
+            UpdateState();
         }
-
+        
         protected void UpdateState()
         {
             var items = ActionQueue.ToArray();
-
-            //UPDATE INDEXES
+            
             foreach (var item in items)
             {
                 item.ChangeIndex = Interlocked.Increment(ref ChangeIndex);
-                Pixels[item.Height * Width + item.Width] = item.Pixel;
+                Pixels[item.YIndex * Game.Width + item.XIndex] = item.Pixel;
             }
 
-            byte[] newState = new byte[State.Length];
-            using (MemoryStream stream = new MemoryStream())
-            {
-                var image = Image.LoadPixelData(this.Pixels, this.Width, this.Height);
-                PngEncoder pngEncoder = new PngEncoder
-                {
-                    IgnoreMetadata = true,
-                    PngColorType = PngColorType.Rgb
-                };
-                image.SaveAsPng(stream, pngEncoder);
-                newState = stream.ToArray();
-            }
+            byte[] newState = GetBytesFromPixels(Pixels);
 
             var oldState = Interlocked.Exchange(ref State, newState);
 
@@ -80,20 +59,61 @@ namespace PixelBattles.Server.BusinessLogic.Processors
                 ActionQueue.TryDequeue(out UserAction tempUserAction);
             }
         }
-                
+        
+        protected Rgba32[] GetPixelsFromBytes(byte[] imageArray)
+        {
+            Rgba32[] tempPixels = new Rgba32[Game.Height * Game.Width];
+            IImageDecoder imageDecoder = new PngDecoder()
+            {
+                IgnoreMetadata = true
+            };
+
+            var image = Image.Load(imageArray, imageDecoder);
+            for (int y = 0; y < Game.Height; y++)
+            {
+                for (int x = 0; x < Game.Width; x++)
+                {
+                    tempPixels[y * Game.Width + x] = image[x, y];
+                }
+            }
+            return tempPixels;
+        }
+
+        protected byte[] GetBytesFromPixels(Rgba32[] pixelArray)
+        {
+            byte[] byteArray;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                var image = Image.LoadPixelData(pixelArray, Game.Width, Game.Height);
+                PngEncoder pngEncoder = new PngEncoder
+                {
+                    IgnoreMetadata = true,
+                    CompressionLevel = 9,
+                    PngColorType = PngColorType.RgbWithAlpha
+                };
+                image.SaveAsPng(stream, pngEncoder);
+                byteArray = stream.ToArray();
+            }
+            return byteArray;
+        }
+
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
         
-        public GameState GetGameState()
+        protected virtual void Dispose(bool disposing)
         {
-            var gameState = new GameState()
+            if (disposed)
+                return;
+
+            if (disposing)
             {
-                State = State,
-                PendingActions = ActionQueue.ToArray()
-            };
-            return gameState;
+                //Free any managed objects here.
+            }
+            
+            disposed = true;
         }
     }
 }

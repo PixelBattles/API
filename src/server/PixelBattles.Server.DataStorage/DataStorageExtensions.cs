@@ -9,7 +9,6 @@ namespace PixelBattles.Server.DataStorage
     {
         public static IServiceCollection AddDataStorage(this IServiceCollection services, IConfigurationRoot configuration)
         {
-            
             return services
                 .AddDbContext<PixelBattlesDbContext>(options =>
                 {

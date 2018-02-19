@@ -9,6 +9,10 @@ namespace PixelBattles.Server.BusinessLogic.Models
         public int Height { get; set; }
 
         public int Width { get; set; }
+
+        public int? ChangeIndex { get; set; }
+
+        public byte[] State { get; set; }
     }
 
     public partial class BusinessLogicMappingProfile

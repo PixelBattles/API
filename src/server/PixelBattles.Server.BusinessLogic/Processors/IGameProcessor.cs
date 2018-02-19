@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace PixelBattles.Server.BusinessLogic.Processors
 {
     public interface IGameProcessor : IDisposable
     {
-        ProcessUserActionResult ProcessUserAction(ProcessUserActionCommand command);
+        Task<ProcessUserActionResult> ProcessUserActionAsync(ProcessUserActionCommand command);
 
-        GameState GetGameState();
+        Task<GameState> GetGameStateAsync();
     }
 }

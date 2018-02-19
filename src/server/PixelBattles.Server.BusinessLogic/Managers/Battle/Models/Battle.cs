@@ -10,6 +10,10 @@ namespace PixelBattles.Server.BusinessLogic.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public DateTime? StartDateUTC { get; set; }
+
+        public DateTime? EndDateUTC { get; set; }
     }
 
     public partial class BusinessLogicMappingProfile
