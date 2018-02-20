@@ -6,6 +6,7 @@ using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Server.DataStorage.Models;
 using PixelBattles.Server.DataStorage.Stores;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PixelBattles.Server.BusinessLogic.Managers
@@ -40,6 +41,37 @@ namespace PixelBattles.Server.BusinessLogic.Managers
         protected override void DisposeStores()
         {
             BattleStore.Dispose();
+        }
+
+        public async Task<CreateBattleResult> CreateBattleAsync(CreateBattleCommand command)
+        {
+            ThrowIfDisposed();
+            var game = new GameEntity()
+            {
+                ChangeIndex = 0,
+                Height = 1000,
+                Width = 1000,
+                State = null
+            };
+
+            var battle = new BattleEntity()
+            {
+                Description = command.Description,
+                Name = command.Name,
+                Status = BattleStatusEntity.Running,
+                Game = game, 
+                UserBattles = new List<UserBattleEntity> { new UserBattleEntity { UserId = command.UserId } }
+            };
+
+            var result = await BattleStore.CreateAsync(battle, CancellationToken);
+            if (result.Succeeded)
+            {
+                return new CreateBattleResult(battle.BattleId);
+            }
+            else
+            {
+                return new CreateBattleResult(result.Errors);
+            }
         }
     }
 }

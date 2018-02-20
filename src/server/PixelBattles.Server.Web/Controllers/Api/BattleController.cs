@@ -42,5 +42,25 @@ namespace PixelBattles.Server.Web.Controllers.Api
                 return Exception(exception, "Error while getting battles.");
             }
         }
+
+        [HttpPost("battle")]
+        public async Task<IActionResult> CreateBattleAsync(CreateBattleDTO commandDTO)
+        {
+            try
+            {
+                CreateBattleCommand command = new CreateBattleCommand()
+                {
+                    Name = commandDTO.Name,
+                    Description = commandDTO.Description
+                };
+                var result = await BattleManager.CreateBattleAsync(command);
+                var resultDTO = Mapper.Map<CreateBattleResult, CreateBattleResultDTO>(result);
+                return Ok(resultDTO);
+            }
+            catch (Exception exception)
+            {
+                return Exception(exception, "Error while creating battle.");
+            }
+        }
     }
 }

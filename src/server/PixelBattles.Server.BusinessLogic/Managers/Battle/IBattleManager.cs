@@ -7,5 +7,7 @@ namespace PixelBattles.Server.BusinessLogic.Managers
     public interface IBattleManager : IDisposable
     {
         Task<Battle> GetBattleAsync(Guid battleId);
+
+        Task<CreateBattleResult> CreateBattleAsync(CreateBattleCommand command);
     }
 }
