@@ -3,9 +3,9 @@ using System;
 
 namespace PixelBattles.Server.DataStorage.Models
 {
-    public class ActionEntity
+    public class UserActionEntity
     {
-        public Guid BattleId { get; set; }
+        public Guid GameId { get; set; }
 
         public Guid UserId { get; set; }
 
@@ -18,14 +18,14 @@ namespace PixelBattles.Server.DataStorage.Models
         public int Color { get; set; }
     }
 
-    class ActionEntityBuilder : IBuildable
+    class UserActionEntityBuilder : IBuildable
     {
         public void Build(ModelBuilder builder)
         {
-            builder.Entity<ActionEntity>(action =>
+            builder.Entity<UserActionEntity>(action =>
             {
-                action.ToTable("Action");
-                action.HasKey(t => new { t.BattleId, t.ChangeIndex });
+                action.ToTable("UserAction");
+                action.HasKey(t => new { t.GameId, t.ChangeIndex });
             });
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PixelBattles.Server.DataStorage.Models;
+using System;
 
 namespace PixelBattles.Server.BusinessLogic.Models
 {
@@ -19,7 +20,7 @@ namespace PixelBattles.Server.BusinessLogic.Models
     {
         private void InitializeGame()
         {
-            //CreateMap<GameEntity, Game>();
+            CreateMap<GameEntity, Game>();
         }
     }
 }

@@ -4,10 +4,7 @@ using Microsoft.Extensions.Logging;
 using PixelBattles.Server.BusinessLogic.Managers;
 using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Shared.DataTransfer.Api.Battle;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace PixelBattles.Server.Web.Controllers.Api

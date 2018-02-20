@@ -2,7 +2,7 @@
 
 namespace PixelBattles.Server.DataStorage.Stores
 {
-    public interface IActionStore : IStore<ActionEntity>
+    public interface IGameStore : IStore<GameEntity>
     {
     }
 }

@@ -3,10 +3,10 @@ using PixelBattles.Server.DataStorage.Models;
 
 namespace PixelBattles.Server.DataStorage.Stores
 {
-    [Register(typeof(IActionStore))]
-    public class ActionStore : BaseStore<ActionEntity>, IActionStore
+    [Register(typeof(IUserActionStore))]
+    public class UserActionStore : BaseStore<UserActionEntity>, IUserActionStore
     {
-        public ActionStore(
+        public UserActionStore(
             PixelBattlesDbContext context) : base(
                 context: context)
         {
