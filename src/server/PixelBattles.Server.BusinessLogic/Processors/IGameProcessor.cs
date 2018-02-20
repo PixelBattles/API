@@ -8,5 +8,7 @@ namespace PixelBattles.Server.BusinessLogic.Processors
         Task<ProcessUserActionResult> ProcessUserActionAsync(ProcessUserActionCommand command);
 
         Task<GameState> GetGameStateAsync();
+
+        Task<GameDeltaResult> GetGameDeltaAsync(int from, int to);
     }
 }

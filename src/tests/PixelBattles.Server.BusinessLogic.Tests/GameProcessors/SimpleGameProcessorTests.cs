@@ -150,7 +150,6 @@ namespace PixelBattles.Server.BusinessLogic.Tests
 
             var action = state.PendingActions.Single();
             Assert.Null(action.ChangeIndex);
-            Assert.Equal(action.GameId, game.GameId);
             Assert.Equal(action.XIndex, command.XIndex);
             Assert.Equal(action.YIndex, command.YIndex);
             Assert.Equal(action.Pixel, command.Pixel);

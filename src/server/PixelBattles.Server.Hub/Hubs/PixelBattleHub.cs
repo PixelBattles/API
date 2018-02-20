@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using PixelBattles.Server.BusinessLogic.Processors;
 using PixelBattles.Shared.DataTransfer.Hub;
 using SixLabors.ImageSharp;
@@ -7,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace PixelBattles.Server.Hub
 {
-    public class PixelBattleHub : Microsoft.AspNetCore.SignalR.Hub<IHubClient>
+    [Authorize]
+    public class PixelBattleHub : Microsoft.AspNetCore.SignalR.Hub
     {
         protected PixelBattleHubContext PixelBattleHubContext { get; set; }
 
@@ -33,7 +35,7 @@ namespace PixelBattles.Server.Hub
 
         public async Task<bool> ConnectGame(Guid gameId)
         {
-            if (PixelBattleHubContext.Games.ContainsKey(gameId))
+            if (PixelBattleHubContext.ContainsGame(gameId))
             {
                 await Groups.AddAsync(Context.ConnectionId, gameId.ToString());
                 return true;
@@ -44,9 +46,23 @@ namespace PixelBattles.Server.Hub
             }
         }
 
+        public async Task<bool> DisconnectGame(Guid gameId)
+        {
+            if (PixelBattleHubContext.ContainsGame(gameId))
+            {
+                await Groups.RemoveAsync(Context.ConnectionId, gameId.ToString());
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public async Task<GameStateDTO> GetGameState(Guid gameId)
         {
-            if (PixelBattleHubContext.Games.TryGetValue(gameId, out IGameProcessor gameProcessor))
+            IGameProcessor gameProcessor = PixelBattleHubContext.GetGame(gameId);
+            if (gameProcessor != null)
             {
                 var gameState = await gameProcessor.GetGameStateAsync();
                 var gameStateResult = Mapper.Map<GameState, GameStateDTO>(gameState);
@@ -57,7 +73,8 @@ namespace PixelBattles.Server.Hub
 
         public async Task<ProcessActionResultDTO> ProcessAction(ProcessActionDTO commandDTO)
         {
-            if (PixelBattleHubContext.Games.TryGetValue(commandDTO.GameId, out IGameProcessor gameProcessor))
+            IGameProcessor gameProcessor = PixelBattleHubContext.GetGame(commandDTO.GameId);
+            if (gameProcessor != null)
             {
                 ProcessUserActionCommand command = new ProcessUserActionCommand()
                 {
@@ -66,25 +83,27 @@ namespace PixelBattles.Server.Hub
                     XIndex = commandDTO.XIndex,
                     YIndex = commandDTO.YIndex
                 };
-
                 var result = await gameProcessor.ProcessUserActionAsync(command);
                 var resultDTO = Mapper.Map<ProcessUserActionResult, ProcessActionResultDTO>(result);
+                if (resultDTO.Succeeded)
+                {
+                    await Clients.Group(command.GameId.ToString()).InvokeAsync("OnAction", new object[] { resultDTO.userAction });
+                }                
                 return resultDTO;
             }
             return null;
         }
 
-        public async Task<bool> DisconnectGame(Guid gameId)
+        public async Task<GameDeltaResultDTO> GetGameDelta(Guid gameId, int from, int to)
         {
-            if (PixelBattleHubContext.Games.ContainsKey(gameId))
+            IGameProcessor gameProcessor = PixelBattleHubContext.GetGame(gameId);
+            if (gameProcessor != null)
             {
-                await Groups.RemoveAsync(Context.ConnectionId, gameId.ToString());
-                return true;
+                var gameDelta = await gameProcessor.GetGameDeltaAsync(from, to);
+                var gameDeltaResult = Mapper.Map<GameDeltaResult, GameDeltaResultDTO>(gameDelta);
+                return gameDeltaResult;
             }
-            else
-            {
-                return false;
-            }
+            return null;
         }
     }
 }

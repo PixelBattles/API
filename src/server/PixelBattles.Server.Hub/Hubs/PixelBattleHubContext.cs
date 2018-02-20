@@ -7,9 +7,9 @@ namespace PixelBattles.Server.Hub
 {
     public class PixelBattleHubContext
     {
-        public ConcurrentDictionary<Guid, IGameProcessor> Games { get; set; }
+        protected ConcurrentDictionary<Guid, IGameProcessor> Games { get; set; }
 
-        public IHubContext<PixelBattleHub> HubContext { get; set; }
+        protected IHubContext<PixelBattleHub> HubContext { get; set; }
 
         public PixelBattleHubContext(
             IHubContext<PixelBattleHub> hubContext)
@@ -17,7 +17,19 @@ namespace PixelBattles.Server.Hub
             this.HubContext = hubContext;
             this.Games = new ConcurrentDictionary<Guid, IGameProcessor>();
         }
-        
 
+        public IGameProcessor GetGame(Guid gameId)
+        {
+            if (Games.TryGetValue(gameId, out IGameProcessor game))
+            {
+                return game;
+            }
+            return null;
+        }
+
+        public bool ContainsGame(Guid gameId)
+        {
+            return Games.ContainsKey(gameId);
+        }
     }
 }

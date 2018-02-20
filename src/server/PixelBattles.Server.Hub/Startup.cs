@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +35,14 @@ namespace PixelBattles.Server.Hub
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login/";
+                });
+
+            services.AddAutoMapper();
+
             services.AddSockets();
 
             services.AddSignalR(option =>
@@ -44,7 +54,7 @@ namespace PixelBattles.Server.Hub
 
             services.AddBusinessLogic(Configuration);
 
-            services.AddSingleton(PixelBattleHubContextFactory.Create);
+            services.AddSingleton<PixelBattleHubContext>(PixelBattleHubContextFactory.Create);
 
             services.AddMvc(options => { })
                     .AddJsonOptions(options =>
@@ -78,15 +88,16 @@ namespace PixelBattles.Server.Hub
 
             app.UseStaticFiles();
 
+            app.UseAuthentication();
+
             app.UseSignalR(routes =>
             {
-                routes.MapHub<PixelBattleHub>("hub");
+                routes.MapHub<PixelBattleHub>("hub/game");
             });
 
             app.UseMvc(routes =>
             {
-                routes
-                .MapRoute(
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });

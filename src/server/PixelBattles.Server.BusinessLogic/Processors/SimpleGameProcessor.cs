@@ -46,7 +46,6 @@ namespace PixelBattles.Server.BusinessLogic.Processors
         {
             UserAction action = new UserAction()
             {
-                GameId = Game.GameId,
                 YIndex = command.YIndex,
                 XIndex = command.XIndex,
                 Pixel = command.Pixel
@@ -91,6 +90,11 @@ namespace PixelBattles.Server.BusinessLogic.Processors
             disposed = true;
 
             base.Dispose(disposing);
+        }
+
+        public Task<GameDeltaResult> GetGameDeltaAsync(int from, int to)
+        {
+            throw new NotImplementedException();
         }
     }
 }

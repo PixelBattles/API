@@ -6,6 +6,6 @@ namespace PixelBattles.Shared.DataTransfer.Hub
     {
         public byte[] State { get; set; }
 
-        public IEnumerable<PendingActionDTO> PendingActions { get; set; }
+        public IEnumerable<UserActionDTO> PendingActions { get; set; }
     }
 }
