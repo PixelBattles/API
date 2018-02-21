@@ -9,6 +9,7 @@ namespace PixelBattles.Server.DataStorage.Stores
     public interface IBattleStore : IStore<BattleEntity>
     {
         Task<BattleEntity> GetBattleAsync(Guid battleId, CancellationToken cancellationToken = default(CancellationToken));
+
         Task<IEnumerable<BattleEntity>> GetBattlesAsync(BattleEntityFilter battleFilter, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
