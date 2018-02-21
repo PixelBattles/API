@@ -5,6 +5,7 @@ using PixelBattles.Server.BusinessLogic.Managers;
 using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Shared.DataTransfer.Api.Battle;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PixelBattles.Server.Web.Controllers.Api
@@ -36,6 +37,32 @@ namespace PixelBattles.Server.Web.Controllers.Api
                 }
                 var result = Mapper.Map<Battle, BattleDTO>(battle);
                 return Ok(result);
+            }
+            catch (Exception exception)
+            {
+                return Exception(exception, "Error while getting battle.");
+            }
+        }
+
+        [HttpGet("battle")]
+        public async Task<IActionResult> GetBattlesAsync(BattleFilterDTO battleFilterDTO)
+        {
+            try
+            {
+                var battleFilter = new BattleFilter()
+                {
+                    Name = battleFilterDTO.Name,
+                    UserId = battleFilterDTO.UserId
+                };
+
+                var battles = await BattleManager.GetBattlesAsync(battleFilter);
+                if (battles == null)
+                {
+                    return NotFound();
+                }
+
+                var battlesResult = Mapper.Map<IEnumerable<Battle>, IEnumerable<BattleDTO>>(battles);
+                return Ok(battlesResult);
             }
             catch (Exception exception)
             {

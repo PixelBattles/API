@@ -5,7 +5,7 @@ namespace PixelBattles.Server.BusinessLogic.Models
 {
     public class UserAction
     {
-        public Guid UserActionId { get; set; }
+        public Guid UserId { get; set; }
 
         public Guid GameId { get; set; }
 

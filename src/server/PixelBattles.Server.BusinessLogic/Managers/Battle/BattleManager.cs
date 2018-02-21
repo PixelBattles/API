@@ -73,5 +73,19 @@ namespace PixelBattles.Server.BusinessLogic.Managers
                 return new CreateBattleResult(result.Errors);
             }
         }
+
+        public async Task<IEnumerable<Battle>> GetBattlesAsync(BattleFilter battleFilter)
+        {
+            ThrowIfDisposed();
+
+            var battleEntityFilter = new BattleEntityFilter
+            {
+                Name = battleFilter.Name,
+                UserId = battleFilter.UserId
+            };
+
+            var battles = await BattleStore.GetBattlesAsync(battleEntityFilter, CancellationToken);
+            return Mapper.Map<IEnumerable<BattleEntity>, IEnumerable<Battle>>(battles);
+        }
     }
 }
