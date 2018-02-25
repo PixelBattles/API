@@ -36,14 +36,26 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 
         private CancellationTokenSource updateCancellationTokenSource;
 
+        private IUserActionCache userActionCache;
+
         private IUserActionStore userActionStore;
 
+        private Task UpdateTask;
+
         public BatchGameProcessor(
-            Game game,
-            IUserActionStore userActionStore)
+            Game game)
         {
             this.game = game;
-            this.userActionStore = userActionStore;
+            this.state = game.State;
+            this.stateChangeIndex = game.ChangeIndex.Value;
+            this.batchLimit = 100;
+            this.changeIndex = game.ChangeIndex ?? 0;
+            this.pixels = new Rgba32[game.Height * game.Width];
+            this.userActionCache = new UserActionCache(1000);
+            this.pendingActions = new ConcurrentDictionary<int, UserAction>();
+            this.updateSemaphore = new SemaphoreSlim(1);
+            this.updateCancellationTokenSource = new CancellationTokenSource();
+            this.UpdateTask = Task.Run(UpdateStateAsync);
         }
         
         public void Dispose()
@@ -76,9 +88,16 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 
             if (localChangeIndex >= fromChangeIndex)
             {
-                //further cache search
-                //not resolved for now
-                return Task.FromResult(new GameDeltaResult(new Error("Cache miss", "Cache miss")));
+                var cacheRessult = userActionCache.GetRange(fromChangeIndex, localChangeIndex);
+                if (cacheRessult == null)
+                {
+                    return Task.FromResult(new GameDeltaResult(new Error("Cache miss", "Cache miss")));
+                }
+                for (int i = cacheRessult.Length - 1; i >= 0 ; i--)
+                {
+                    resultUserActions.Push(cacheRessult[i]);
+                }
+                return Task.FromResult(new GameDeltaResult(resultUserActions));
             }
 
             return Task.FromResult(new GameDeltaResult(resultUserActions));
@@ -164,6 +183,8 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 
             var oldState = Interlocked.Exchange(ref state, newState);
             var oldStateChangeIndex = Interlocked.Exchange(ref stateChangeIndex, --currentStateChangeIndex);
+
+            userActionCache.Push(batchPendingActions);
 
             foreach (var pendingAction in batchPendingActions)
             {

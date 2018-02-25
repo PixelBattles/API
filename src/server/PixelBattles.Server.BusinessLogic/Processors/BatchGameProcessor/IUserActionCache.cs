@@ -12,6 +12,6 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 
         void Clear();
 
-        ICollection<UserAction> GetRange(int fromChangeIndex, int toChangeIndex);
+        UserAction[] GetRange(int fromChangeIndex, int toChangeIndex);
     }
 }

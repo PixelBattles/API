@@ -76,6 +76,11 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 
         public UserActionCache(int sizeLimit)
         {
+            if (sizeLimit < 1)
+            {
+                throw new ArgumentException("Size limit can't be 0 or less.");
+            }
+
             this.sizeLimit = sizeLimit;
             this.userActions = new UserAction[sizeLimit];
             this.collectionLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
@@ -200,7 +205,7 @@ namespace PixelBattles.Server.BusinessLogic.Processors
             maxChangeIndex = 0;
         }
         
-        public ICollection<UserAction> GetRange(int fromChangeIndex, int toChangeIndex)
+        public UserAction[] GetRange(int fromChangeIndex, int toChangeIndex)
         {
             try
             {
@@ -213,7 +218,7 @@ namespace PixelBattles.Server.BusinessLogic.Processors
             }
         }
 
-        private ICollection<UserAction> GetRangeInternal(int fromChangeIndex, int toChangeIndex)
+        private UserAction[] GetRangeInternal(int fromChangeIndex, int toChangeIndex)
         {
             if (minChangeIndex > fromChangeIndex || maxChangeIndex < toChangeIndex)
             {

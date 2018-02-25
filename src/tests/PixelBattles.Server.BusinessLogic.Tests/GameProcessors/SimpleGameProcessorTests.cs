@@ -15,14 +15,14 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         {
             Game game = new Game()
             {
-                ChangeIndex = null,
+                ChangeIndex = 1,
                 GameId = Guid.NewGuid(),
                 Height = 1000,
                 Width = 1000,
-                State = null
+                State = GetByteImageSample(1000, 1000)
             };
 
-            IGameProcessor gameProcessor = new SimpleGameProcessor(game);
+            IGameProcessor gameProcessor = new BatchGameProcessor(game);
 
             Assert.NotNull(gameProcessor);
         }
@@ -32,14 +32,14 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         {
             Game game = new Game()
             {
-                ChangeIndex = null,
+                ChangeIndex = 1,
                 GameId = Guid.NewGuid(),
                 Height = 1000,
                 Width = 1000,
-                State = null
+                State = GetByteImageSample(1000, 1000)
             };
 
-            IGameProcessor gameProcessor = new SimpleGameProcessor(game);
+            IGameProcessor gameProcessor = new BatchGameProcessor(game);
 
             var gameState = await gameProcessor.GetGameStateAsync();
 
@@ -55,14 +55,14 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         {
             Game game = new Game()
             {
-                ChangeIndex = 234,
+                ChangeIndex = 1,
                 GameId = Guid.NewGuid(),
                 Height = 1000,
                 Width = 1000,
                 State = GetByteImageSample(1000, 1000)
             };
             
-            IGameProcessor gameProcessor = new SimpleGameProcessor(game);
+            IGameProcessor gameProcessor = new BatchGameProcessor(game);
 
             Assert.NotNull(gameProcessor);
         }
@@ -72,14 +72,14 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         {
             Game game = new Game()
             {
-                ChangeIndex = 234,
+                ChangeIndex = 1,
                 GameId = Guid.NewGuid(),
                 Height = 1000,
                 Width = 1000,
                 State = GetByteImageSample(1000, 1000)
             };
 
-            IGameProcessor gameProcessor = new SimpleGameProcessor(game);
+            IGameProcessor gameProcessor = new BatchGameProcessor(game);
 
             var gameState = await gameProcessor.GetGameStateAsync();
 
@@ -96,7 +96,7 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         {
             Game game = new Game()
             {
-                ChangeIndex = 234,
+                ChangeIndex = 1,
                 GameId = Guid.NewGuid(),
                 Height = 1000,
                 Width = 1000,
@@ -111,7 +111,7 @@ namespace PixelBattles.Server.BusinessLogic.Tests
                 Pixel = new Rgba32(255, 255, 255, byte.MaxValue)
             };
 
-            IGameProcessor gameProcessor = new SimpleGameProcessor(game);
+            IGameProcessor gameProcessor = new BatchGameProcessor(game);
 
             var result = await gameProcessor.ProcessUserActionAsync(command);
 
@@ -125,7 +125,7 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         {
             Game game = new Game()
             {
-                ChangeIndex = 234,
+                ChangeIndex = 1,
                 GameId = Guid.NewGuid(),
                 Height = 1000,
                 Width = 1000,
@@ -140,7 +140,7 @@ namespace PixelBattles.Server.BusinessLogic.Tests
                 Pixel = new Rgba32(255, 255, 255, byte.MaxValue)
             };
 
-            IGameProcessor gameProcessor = new SimpleGameProcessor(game);
+            IGameProcessor gameProcessor = new BatchGameProcessor(game);
 
             var result = await gameProcessor.ProcessUserActionAsync(command);
 
@@ -149,10 +149,11 @@ namespace PixelBattles.Server.BusinessLogic.Tests
             Assert.Single(state.PendingActions);
 
             var action = state.PendingActions.Single();
-            Assert.Null(action.ChangeIndex);
-            Assert.Equal(action.XIndex, command.XIndex);
-            Assert.Equal(action.YIndex, command.YIndex);
-            Assert.Equal(action.Pixel, command.Pixel);
+            Assert.Equal(action.Key, game.ChangeIndex + 1);
+            Assert.Equal(action.Value.ChangeIndex, game.ChangeIndex + 1);
+            Assert.Equal(action.Value.XIndex, command.XIndex);
+            Assert.Equal(action.Value.YIndex, command.YIndex);
+            Assert.Equal(action.Value.Pixel, command.Pixel);
         }
     }
 }
