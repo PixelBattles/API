@@ -8,10 +8,10 @@ using Xunit;
 
 namespace PixelBattles.Server.BusinessLogic.Tests
 {
-    public class SimpleGameProcessorTests : BaseGameProcessorTests
+    public class BatchGameProcessorTests : BaseGameProcessorTests
     {
         [Fact]
-        public void SimpleGameProcessor_CanBeCreated_FromEmptyGame()
+        public void BatchGameProcessor_CanBeCreated_FromEmptyGame()
         {
             Game game = new Game()
             {
@@ -28,7 +28,7 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         }
 
         [Fact]
-        public async Task SimpleGameProcessor_ReturnValidState_FromEmpyState()
+        public async Task BatchGameProcessor_ReturnValidState_FromEmpyState()
         {
             Game game = new Game()
             {
@@ -51,7 +51,7 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         }
 
         [Fact]
-        public void SimpleGameProcessor_CanBeCreated_FromNonEmptyGame()
+        public void BatchGameProcessor_CanBeCreated_FromNonEmptyGame()
         {
             Game game = new Game()
             {
@@ -68,7 +68,7 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         }
 
         [Fact]
-        public async Task SimpleGameProcessor_ReturnValidState_FromNonEmpyState()
+        public async Task BatchGameProcessor_ReturnValidState_FromNonEmpyState()
         {
             Game game = new Game()
             {
@@ -92,7 +92,7 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         }
 
         [Fact]
-        public async Task SimpleGameProcessor_CanHandle_UserAction()
+        public async Task BatchGameProcessor_CanHandle_UserAction()
         {
             Game game = new Game()
             {
@@ -121,7 +121,7 @@ namespace PixelBattles.Server.BusinessLogic.Tests
         }
 
         [Fact]
-        public async Task SimpleGameProcessor_HandleUserAction_ReturnProperState()
+        public async Task BatchGameProcessor_HandleUserAction_ReturnProperState()
         {
             Game game = new Game()
             {
