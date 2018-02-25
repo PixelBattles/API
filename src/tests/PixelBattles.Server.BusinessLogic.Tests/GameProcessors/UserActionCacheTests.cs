@@ -1,6 +1,5 @@
 ﻿using PixelBattles.Server.BusinessLogic.Processors;
 using SixLabors.ImageSharp;
-using System;
 using Xunit;
 
 namespace PixelBattles.Server.BusinessLogic.Tests
@@ -65,6 +64,56 @@ namespace PixelBattles.Server.BusinessLogic.Tests
             Assert.NotNull(result);
             Assert.Equal(result.Length, 1);
             Assert.Equal(result[0].ChangeIndex, 12);
+        }
+
+        [Fact]
+        public void UserActionCache_ReturnNull_WhenCacheShifted()
+        {
+            int changeIndex = 11;
+            int sizeLimit = 1;
+            IUserActionCache userActionCache = new UserActionCache(sizeLimit);
+            userActionCache.Push(new UserAction
+            {
+                ChangeIndex = ++changeIndex,
+                Pixel = new Rgba32(0),
+                XIndex = 0,
+                YIndex = 0
+            });
+            userActionCache.Push(new UserAction
+            {
+                ChangeIndex = ++changeIndex,
+                Pixel = new Rgba32(0),
+                XIndex = 0,
+                YIndex = 0
+            });
+            var notFoundResult = userActionCache.GetRange(12, 12);
+            Assert.Null(notFoundResult);
+        }
+
+        [Fact]
+        public void UserActionCache_ReturnResult_WithNewShiftedResults()
+        {
+            int changeIndex = 11;
+            int sizeLimit = 1;
+            IUserActionCache userActionCache = new UserActionCache(sizeLimit);
+            userActionCache.Push(new UserAction
+            {
+                ChangeIndex = ++changeIndex,
+                Pixel = new Rgba32(0),
+                XIndex = 0,
+                YIndex = 0
+            });
+            userActionCache.Push(new UserAction
+            {
+                ChangeIndex = ++changeIndex,
+                Pixel = new Rgba32(0),
+                XIndex = 0,
+                YIndex = 0
+            });
+            var result = userActionCache.GetRange(13, 13);
+            Assert.NotNull(result);
+            Assert.Equal(result.Length, 1);
+            Assert.Equal(result[0].ChangeIndex, 13);
         }
     }
 }

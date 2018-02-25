@@ -117,22 +117,23 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 
         private void PushInternal(UserAction item)
         {
-            if (maxChangeIndex == 0)
+            if (maxChangeIndex == 0 || userActions.Length == 1)
             {
                 userActions[0] = item;
                 maxChangeIndex = item.ChangeIndex;
                 minChangeIndex = item.ChangeIndex;
-                return;
             }
-            
-            int newItemIndex = maxChangeIndex - minChangeIndex + 1;
-            if (userActions.Length - newItemIndex == 0)
+            else
             {
-                ShiftItemsInternal(1);
-                minChangeIndex = userActions[0].ChangeIndex;
+                int newItemIndex = maxChangeIndex - minChangeIndex + 1;
+                if (userActions.Length - newItemIndex == 0)
+                {
+                    ShiftItemsInternal(1);
+                    minChangeIndex = userActions[0].ChangeIndex;
+                }
+                userActions[newItemIndex] = item;
+                maxChangeIndex = item.ChangeIndex;
             }
-            userActions[newItemIndex] = item;
-            maxChangeIndex = item.ChangeIndex;
         }
 
         private void ShiftItemsInternal(int offset)
