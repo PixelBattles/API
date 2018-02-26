@@ -79,6 +79,7 @@ namespace PixelBattles.Server.Hub
                 ProcessUserActionCommand command = new ProcessUserActionCommand()
                 {
                     GameId = commandDTO.GameId,
+                    UserId = GetUserId(),
                     Pixel = new Rgba32(commandDTO.Pixel[0], commandDTO.Pixel[1], commandDTO.Pixel[2]),
                     XIndex = commandDTO.XIndex,
                     YIndex = commandDTO.YIndex
@@ -104,6 +105,12 @@ namespace PixelBattles.Server.Hub
                 return gameDeltaResult;
             }
             return null;
+        }
+
+        private Guid GetUserId()
+        {
+            //implement
+            return Guid.Empty;
         }
     }
 }

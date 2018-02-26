@@ -8,7 +8,7 @@ namespace PixelBattles.Server.Hub
     public class PixelBattleHubContext
     {
         protected ConcurrentDictionary<Guid, IGameProcessor> Games { get; set; }
-
+        
         protected IHubContext<PixelBattleHub> HubContext { get; set; }
 
         public PixelBattleHubContext(

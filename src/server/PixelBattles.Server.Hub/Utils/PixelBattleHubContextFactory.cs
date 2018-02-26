@@ -11,7 +11,7 @@ namespace PixelBattles.Server.Hub.Utils
             using (IServiceScope serviceScope = serviceProvider.CreateScope())
             {
                 IHubContext<PixelBattleHub> hubContext = serviceScope.ServiceProvider.GetRequiredService<IHubContext<PixelBattleHub>>();
-
+                
                 PixelBattleHubContext serverHub = new PixelBattleHubContext(hubContext);
 
                 return serverHub;

@@ -125,7 +125,7 @@ namespace PixelBattles.Server.BusinessLogic.Processors
                 GameId = game.GameId,
                 UserId = command.UserId
             };
-
+            
             if (!pendingActions.TryAdd(actionChangeIndex, action))
             {
                 return Task.FromResult(new ProcessUserActionResult(new Error("Error while processing action", "Error while processing action")));
