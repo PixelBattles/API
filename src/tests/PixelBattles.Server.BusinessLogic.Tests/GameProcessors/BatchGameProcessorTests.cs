@@ -1,4 +1,6 @@
-﻿using PixelBattles.Server.BusinessLogic.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Server.BusinessLogic.Processors;
 using SixLabors.ImageSharp;
 using System;
@@ -6,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace PixelBattles.Server.BusinessLogic.Tests
+namespace PixelBattles.Server.BusinessLogic.Tests.GameProcessors.Tests
 {
     public class BatchGameProcessorTests : BaseGameProcessorTests
     {
@@ -21,8 +23,10 @@ namespace PixelBattles.Server.BusinessLogic.Tests
                 Width = 1000,
                 State = GetByteImageSample(1000, 1000)
             };
+            
+            Mock<IServiceScopeFactory> serviceScopeFactory = new Mock<IServiceScopeFactory>();
 
-            IGameProcessor gameProcessor = new BatchGameProcessor(game);
+            IGameProcessor gameProcessor = new BatchGameProcessor(game, serviceScopeFactory.Object);
 
             Assert.NotNull(gameProcessor);
         }
@@ -39,7 +43,9 @@ namespace PixelBattles.Server.BusinessLogic.Tests
                 State = GetByteImageSample(1000, 1000)
             };
 
-            IGameProcessor gameProcessor = new BatchGameProcessor(game);
+            Mock<IServiceScopeFactory> serviceScopeFactory = new Mock<IServiceScopeFactory>();
+
+            IGameProcessor gameProcessor = new BatchGameProcessor(game, serviceScopeFactory.Object);
 
             var gameState = await gameProcessor.GetGameStateAsync();
 
@@ -61,8 +67,10 @@ namespace PixelBattles.Server.BusinessLogic.Tests
                 Width = 1000,
                 State = GetByteImageSample(1000, 1000)
             };
-            
-            IGameProcessor gameProcessor = new BatchGameProcessor(game);
+
+            Mock<IServiceScopeFactory> serviceScopeFactory = new Mock<IServiceScopeFactory>();
+
+            IGameProcessor gameProcessor = new BatchGameProcessor(game, serviceScopeFactory.Object);
 
             Assert.NotNull(gameProcessor);
         }
@@ -79,7 +87,9 @@ namespace PixelBattles.Server.BusinessLogic.Tests
                 State = GetByteImageSample(1000, 1000)
             };
 
-            IGameProcessor gameProcessor = new BatchGameProcessor(game);
+            Mock<IServiceScopeFactory> serviceScopeFactory = new Mock<IServiceScopeFactory>();
+
+            IGameProcessor gameProcessor = new BatchGameProcessor(game, serviceScopeFactory.Object);
 
             var gameState = await gameProcessor.GetGameStateAsync();
 
@@ -108,10 +118,13 @@ namespace PixelBattles.Server.BusinessLogic.Tests
                 GameId = game.GameId,
                 XIndex = 0,
                 YIndex = 0,
-                Pixel = new Rgba32(255, 255, 255, byte.MaxValue)
+                Pixel = new Rgba32(255, 255, 255, byte.MaxValue),
+                UserId = Guid.NewGuid()
             };
 
-            IGameProcessor gameProcessor = new BatchGameProcessor(game);
+            Mock<IServiceScopeFactory> serviceScopeFactory = new Mock<IServiceScopeFactory>();
+
+            IGameProcessor gameProcessor = new BatchGameProcessor(game, serviceScopeFactory.Object);
 
             var result = await gameProcessor.ProcessUserActionAsync(command);
 
@@ -137,10 +150,13 @@ namespace PixelBattles.Server.BusinessLogic.Tests
                 GameId = game.GameId,
                 XIndex = 0,
                 YIndex = 0,
-                Pixel = new Rgba32(255, 255, 255, byte.MaxValue)
+                Pixel = new Rgba32(255, 255, 255, byte.MaxValue),
+                UserId = Guid.NewGuid()
             };
 
-            IGameProcessor gameProcessor = new BatchGameProcessor(game);
+            Mock<IServiceScopeFactory> serviceScopeFactory = new Mock<IServiceScopeFactory>();
+
+            IGameProcessor gameProcessor = new BatchGameProcessor(game, serviceScopeFactory.Object);
 
             var result = await gameProcessor.ProcessUserActionAsync(command);
 
@@ -152,6 +168,7 @@ namespace PixelBattles.Server.BusinessLogic.Tests
             Assert.Equal(action.Key, game.ChangeIndex + 1);
             Assert.Equal(action.Value.ChangeIndex, game.ChangeIndex + 1);
             Assert.Equal(action.Value.XIndex, command.XIndex);
+            Assert.Equal(action.Value.UserId, command.UserId);
             Assert.Equal(action.Value.YIndex, command.YIndex);
             Assert.Equal(action.Value.Pixel, command.Pixel);
         }

@@ -1,5 +1,7 @@
-﻿using PixelBattles.Server.BusinessLogic.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Server.Core;
+using PixelBattles.Server.DataStorage.Models;
 using PixelBattles.Server.DataStorage.Stores;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -16,6 +18,8 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 {
     public sealed class BatchGameProcessor : IGameProcessor
     {
+        private bool disposed = false;
+
         private Game game;
 
         private int changeIndex;
@@ -38,28 +42,34 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 
         private IUserActionCache userActionCache;
 
-        private IUserActionStore userActionStore;
+        private IServiceScopeFactory serviceScopeFactory;
 
-        private Task UpdateTask;
+        private Task updateTask;
 
         public BatchGameProcessor(
-            Game game)
+            Game game,
+            IServiceScopeFactory serviceScopeFactory,
+            IEnumerable<UserAction> pendingActions = null,
+            int batchLimit = 100,
+            int cacheSize = 1000)
         {
+            this.batchLimit = batchLimit;
+            this.userActionCache = new UserActionCache(cacheSize);
+
             this.game = game;
             this.state = game.State;
-            this.stateChangeIndex = game.ChangeIndex.Value;
-            this.batchLimit = 100;
+            this.stateChangeIndex = game.ChangeIndex ?? 0;
             this.changeIndex = game.ChangeIndex ?? 0;
             this.pixels = new Rgba32[game.Height * game.Width];
-            this.userActionCache = new UserActionCache(1000);
-            this.pendingActions = new ConcurrentDictionary<int, UserAction>();
+            
+            this.pendingActions = new ConcurrentDictionary<int, UserAction>(
+                (pendingActions ?? Enumerable.Empty<UserAction>())
+                .Select(t => new KeyValuePair<int, UserAction>(t.ChangeIndex, t)));
+
             this.updateSemaphore = new SemaphoreSlim(1);
             this.updateCancellationTokenSource = new CancellationTokenSource();
-            this.UpdateTask = Task.Run(UpdateStateAsync);
-        }
-        
-        public void Dispose()
-        {
+            this.serviceScopeFactory = serviceScopeFactory;
+            this.updateTask = Task.Run(UpdateStateAsync, updateCancellationTokenSource.Token);
         }
         
         public Task<GameDeltaResult> GetGameDeltaAsync(int fromChangeIndex, int toChangeIndex)
@@ -111,7 +121,9 @@ namespace PixelBattles.Server.BusinessLogic.Processors
                 YIndex = command.YIndex,
                 XIndex = command.XIndex,
                 Pixel = command.Pixel,
-                ChangeIndex = actionChangeIndex
+                ChangeIndex = actionChangeIndex,
+                GameId = game.GameId,
+                UserId = command.UserId
             };
 
             if (!pendingActions.TryAdd(actionChangeIndex, action))
@@ -153,7 +165,7 @@ namespace PixelBattles.Server.BusinessLogic.Processors
                         continue;
                     }
                     
-                    UpdateState();
+                    await UpdateStateInternalAsync(updateCancellationTokenSource.Token);
                 }
                 catch (Exception)
                 {
@@ -162,27 +174,34 @@ namespace PixelBattles.Server.BusinessLogic.Processors
             }
         }
 
-        private void UpdateState()
+        private async Task UpdateStateInternalAsync(CancellationToken cancellationToken)
         {
             int currentStateChangeIndex = stateChangeIndex;
+
             List<UserAction> batchPendingActions = new List<UserAction>();
+
+            Rgba32[] newPixels = (Rgba32[])pixels.Clone();
 
             while (pendingActions.TryGetValue(++currentStateChangeIndex, out UserAction pendingAction))
             {
                 batchPendingActions.Add(pendingAction);
             }
-
-            //Save not implemented
             
             foreach (var action in batchPendingActions)
             {
-                pixels[action.YIndex * game.Width + action.XIndex] = action.Pixel;
+                newPixels[action.YIndex * game.Width + action.XIndex] = action.Pixel;
             }
 
-            byte[] newState = GetBytesFromPixels(pixels);
+            byte[] newState = GetBytesFromPixels(newPixels);
+
+            var saveResult = await SaveGameAsync(game.GameId, newState, --currentStateChangeIndex, batchPendingActions, cancellationToken);
+            if (!saveResult)
+            {
+                return;
+            }
 
             var oldState = Interlocked.Exchange(ref state, newState);
-            var oldStateChangeIndex = Interlocked.Exchange(ref stateChangeIndex, --currentStateChangeIndex);
+            var oldStateChangeIndex = Interlocked.Exchange(ref stateChangeIndex, currentStateChangeIndex);
 
             userActionCache.Push(batchPendingActions);
 
@@ -192,6 +211,42 @@ namespace PixelBattles.Server.BusinessLogic.Processors
             }
         }
 
+        private async Task<bool> SaveGameAsync(Guid gameId, byte[] state, int changeIndex, IEnumerable<UserAction> userActions, CancellationToken cancellationToken)
+        {
+            try
+            {
+                using (var scope = serviceScopeFactory.CreateScope())
+                {
+                    using (var userActionStore = scope.ServiceProvider.GetRequiredService<IUserActionStore>())
+                    using (var gameStore = scope.ServiceProvider.GetRequiredService<IGameStore>())
+                    {
+                        var game = await gameStore.GetGameAsync(gameId, cancellationToken);
+                        game.ChangeIndex = changeIndex;
+                        game.State = state;
+
+                        var userActionEntities = userActions
+                            .Select(t => new UserActionEntity
+                            {
+                                ChangeIndex = t.ChangeIndex,
+                                GameId = t.GameId,
+                                Color = t.Pixel.PackedValue,
+                                UserId = t.UserId,
+                                XIndex = t.XIndex,
+                                YIndex = t.YIndex
+                            });
+
+                        await userActionStore.CreateBatchAsync(userActionEntities, cancellationToken);
+                    }
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                //log error
+                return false;
+            }
+        }
+        
         private Rgba32[] GetPixelsFromBytes(byte[] imageArray)
         {
             Rgba32[] tempPixels = new Rgba32[game.Height * game.Width];
@@ -227,6 +282,32 @@ namespace PixelBattles.Server.BusinessLogic.Processors
                 byteArray = stream.ToArray();
             }
             return byteArray;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                updateCancellationTokenSource.Cancel();
+                updateTask.Wait();
+
+                
+                updateCancellationTokenSource.Dispose();
+                updateTask.Dispose();
+                updateSemaphore.Dispose();
+                userActionCache.Dispose();
+            }
+
+            disposed = true;
         }
     }
 }

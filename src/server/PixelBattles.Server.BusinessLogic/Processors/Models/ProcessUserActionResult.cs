@@ -1,4 +1,5 @@
-﻿using PixelBattles.Server.Core;
+﻿using PixelBattles.Server.BusinessLogic.Models;
+using PixelBattles.Server.Core;
 using System.Collections.Generic;
 
 namespace PixelBattles.Server.BusinessLogic.Processors

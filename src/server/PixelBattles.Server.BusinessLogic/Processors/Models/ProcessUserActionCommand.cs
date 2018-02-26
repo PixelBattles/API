@@ -7,6 +7,8 @@ namespace PixelBattles.Server.BusinessLogic.Processors
     {
         public Guid GameId { get; set; }
 
+        public Guid UserId { get; set; }
+
         public int YIndex { get; set; }
 
         public int XIndex { get; set; }

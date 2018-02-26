@@ -11,11 +11,11 @@ namespace PixelBattles.Server.DataStorage.Models
 
         public int ChangeIndex { get; set; }
 
-        public int Height { get; set; }
+        public int YIndex { get; set; }
 
-        public int Width { get; set; }
+        public int XIndex { get; set; }
 
-        public int Color { get; set; }
+        public uint Color { get; set; }
     }
 
     class UserActionEntityBuilder : IBuildable

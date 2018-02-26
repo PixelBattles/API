@@ -2,7 +2,7 @@
 using SixLabors.ImageSharp.Formats.Png;
 using System.IO;
 
-namespace PixelBattles.Server.BusinessLogic.Tests
+namespace PixelBattles.Server.BusinessLogic.Tests.GameProcessors.Tests
 {
     public abstract class BaseGameProcessorTests
     {

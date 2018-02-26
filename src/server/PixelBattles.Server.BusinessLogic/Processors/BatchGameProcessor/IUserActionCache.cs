@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using PixelBattles.Server.BusinessLogic.Models;
+using System;
+using System.Collections.Generic;
 
 namespace PixelBattles.Server.BusinessLogic.Processors
 {
-    public interface IUserActionCache
+    public interface IUserActionCache : IDisposable
     {
         int SizeLimit { get; set; }
 

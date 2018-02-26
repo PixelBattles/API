@@ -1,12 +1,15 @@
-﻿using System;
+﻿using PixelBattles.Server.BusinessLogic.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
 namespace PixelBattles.Server.BusinessLogic.Processors
 {
-    public class UserActionCache : IUserActionCache
+    public sealed class UserActionCache : IUserActionCache
     {
+        private bool disposed = false;
+
         private ReaderWriterLockSlim collectionLock;
         
         private UserAction[] userActions;
@@ -85,7 +88,7 @@ namespace PixelBattles.Server.BusinessLogic.Processors
             this.userActions = new UserAction[sizeLimit];
             this.collectionLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
         }
-
+        
         private void ResizeInternal(int size)
         {
             if (size >= userActions.Length)
@@ -232,6 +235,25 @@ namespace PixelBattles.Server.BusinessLogic.Processors
                 Array.Copy(userActions, fromChangeIndex - minChangeIndex, resultArray, 0, itemsToCopy);
                 return resultArray;
             }
-        } 
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                collectionLock.Dispose();
+            }
+            
+            disposed = true;
+        }
     }
 }

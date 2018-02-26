@@ -9,7 +9,7 @@ namespace PixelBattles.Server.BusinessLogic.Models
 
         public Guid GameId { get; set; }
 
-        public int? ChangeIndex { get; set; }
+        public int ChangeIndex { get; set; }
 
         public int YIndex { get; set; }
 
