@@ -7,6 +7,8 @@ namespace PixelBattles.Server.DataStorage.Models
     {
         public Guid GameId { get; set; }
 
+        public Guid BattleId { get; set; }
+
         public byte[] State { get; set; }
 
         public int Height { get; set; }

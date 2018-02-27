@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using PixelBattles.Server.BusinessLogic.Managers;
 using PixelBattles.Server.BusinessLogic.Processors;
 using PixelBattles.Shared.DataTransfer.Hub;
 using SixLabors.ImageSharp;
@@ -33,7 +35,7 @@ namespace PixelBattles.Server.Hub
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task<bool> ConnectGame(Guid gameId)
+        public async Task<bool> ConnectGame(Guid gameId, [FromServices] IUserBattleManager userBattleManager)
         {
             if (PixelBattleHubContext.ContainsGame(gameId))
             {
@@ -88,7 +90,7 @@ namespace PixelBattles.Server.Hub
                 var resultDTO = Mapper.Map<ProcessUserActionResult, ProcessActionResultDTO>(result);
                 if (resultDTO.Succeeded)
                 {
-                    await Clients.Group(command.GameId.ToString()).InvokeAsync("OnAction", new object[] { resultDTO.userAction });
+                    await Clients.Group(command.GameId.ToString()).InvokeAsync("OnAction", new object[] { resultDTO.UserAction });
                 }                
                 return resultDTO;
             }

@@ -2,6 +2,6 @@
 {
     public class ProcessActionResultDTO : ResultDTO
     {
-        public UserActionDTO userAction { get; set; }
+        public UserActionDTO UserAction { get; set; }
     }
 }
