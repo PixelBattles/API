@@ -4,23 +4,32 @@ using System.Collections.Generic;
 
 namespace PixelBattles.Server.BusinessLogic.Processors
 {
-    public sealed class UserActionThrottler
+    public sealed class UserActionThrottler : IUserActionThrottler
     {
-        private TimeSpan timeSpan;
+        private TimeSpan cooldown;
 
-        public UserActionThrottler(TimeSpan timeSpan)
+        public TimeSpan Cooldown
         {
-            this.timeSpan = timeSpan;
-            this.userActions = new ConcurrentDictionary<Guid, UserLastAction>();
+            get { return cooldown; }
         }
         
         private ConcurrentDictionary<Guid, UserLastAction> userActions;
 
+        public UserActionThrottler(TimeSpan cooldown)
+        {
+            this.cooldown = cooldown;
+            this.userActions = new ConcurrentDictionary<Guid, UserLastAction>();
+        }
+        
         public bool CanUserContinue(Guid userId, DateTime actionDateTime)
         {
             var newUserAction = new UserLastAction(userId, actionDateTime);
             
-            var resultUserAction = userActions.AddOrUpdate(userId, newUserAction, (key, currentLastAction) => currentLastAction.LastAction.Add(timeSpan) > actionDateTime ? currentLastAction : newUserAction);
+            var resultUserAction = userActions.AddOrUpdate(
+                key: userId,
+                addValue: newUserAction,
+                updateValueFactory: (key, userLastAction) => 
+                    userLastAction.ActionDateTime.Add(cooldown) > actionDateTime ? userLastAction : newUserAction);
 
             return ReferenceEquals(newUserAction, resultUserAction);
         }
@@ -29,7 +38,7 @@ namespace PixelBattles.Server.BusinessLogic.Processors
         {
             foreach (var userAction in userActions)
             {
-                if (userAction.Value.LastAction.Add(timeSpan) < actionDateTime)
+                if (userAction.Value.ActionDateTime.Add(cooldown) < actionDateTime)
                 {
                     ((ICollection<KeyValuePair<Guid, UserLastAction>>)userActions).Remove(userAction);
                 }
@@ -40,18 +49,18 @@ namespace PixelBattles.Server.BusinessLogic.Processors
         {
             public Guid UserId { get; private set; }
 
-            public DateTime LastAction { get; private set; }
+            public DateTime ActionDateTime { get; private set; }
 
-            public UserLastAction(Guid userId, DateTime dateTime)
+            public UserLastAction(Guid userId, DateTime actionDateTime)
             {
                 UserId = userId;
-                LastAction = dateTime;
+                ActionDateTime = actionDateTime;
             }
 
             public bool Equals(UserLastAction userLastAction)
             {
                 return UserId == userLastAction.UserId 
-                    && LastAction == userLastAction.LastAction;
+                    && ActionDateTime == userLastAction.ActionDateTime;
             }
 
             public override bool Equals(object obj)
@@ -61,7 +70,7 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 
             public override int GetHashCode()
             {
-                return UserId.GetHashCode() ^ LastAction.GetHashCode();
+                return UserId.GetHashCode() ^ ActionDateTime.GetHashCode();
             }
         }
     }
