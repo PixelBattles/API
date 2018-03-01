@@ -6,6 +6,7 @@ using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Server.DataStorage.Models;
 using PixelBattles.Server.DataStorage.Stores;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PixelBattles.Server.BusinessLogic.Managers
@@ -40,6 +41,46 @@ namespace PixelBattles.Server.BusinessLogic.Managers
             ThrowIfDisposed();
             var game = await GameStore.GetGameAsync(gameId, CancellationToken);
             return Mapper.Map<GameEntity, Game>(game);
+        }
+
+        public async Task<IEnumerable<Game>> GetBattleGamesAsync(Guid battleId)
+        {
+            ThrowIfDisposed();
+            var games = await GameStore.GetBattleGamesAsync(battleId, CancellationToken);
+            return Mapper.Map<IEnumerable<GameEntity>, IEnumerable<Game>>(games);
+        }
+
+        public async Task<Game> GetBattleGameAsync(Guid battleId)
+        {
+            ThrowIfDisposed();
+            var game = await GameStore.GetBattleGameAsync(battleId, CancellationToken);
+            return Mapper.Map<GameEntity, Game>(game);
+        }
+
+        public async Task<CreateGameResult> CreateGameAsync(CreateGameCommand command)
+        {
+            ThrowIfDisposed();
+            var game = new GameEntity()
+            {
+                ChangeIndex = 0,
+                BattleId = command.BattleId,
+                Height = command.Height,
+                Width = command.Width,
+                Cooldown = command.Cooldown,
+                StartDateUTC = command.StartDateUTC,
+                EndDateUTC = command.EndDateUTC,
+                State = null
+            };
+            
+            var result = await GameStore.CreateAsync(game, CancellationToken);
+            if (result.Succeeded)
+            {
+                return new CreateGameResult(game.GameId);
+            }
+            else
+            {
+                return new CreateGameResult(result.Errors);
+            }
         }
     }
 }

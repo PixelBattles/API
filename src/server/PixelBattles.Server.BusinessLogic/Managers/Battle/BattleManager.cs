@@ -46,20 +46,12 @@ namespace PixelBattles.Server.BusinessLogic.Managers
         public async Task<CreateBattleResult> CreateBattleAsync(CreateBattleCommand command)
         {
             ThrowIfDisposed();
-            var game = new GameEntity()
-            {
-                ChangeIndex = 0,
-                Height = 1000,
-                Width = 1000,
-                State = null
-            };
 
             var battle = new BattleEntity()
             {
                 Description = command.Description,
                 Name = command.Name,
                 Status = BattleStatusEntity.Running,
-                Game = game, 
                 UserBattles = new List<UserBattleEntity> { new UserBattleEntity { UserId = command.UserId } }
             };
 

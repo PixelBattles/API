@@ -14,7 +14,7 @@ namespace PixelBattles.Server.DataStorage.Models
                 
         public BattleStatusEntity Status { get; set; }
 
-        public virtual GameEntity Game { get; set; }
+        public virtual ICollection<GameEntity> Games { get; set; }
 
         public virtual ICollection<UserBattleEntity> UserBattles { get; set; }
     }

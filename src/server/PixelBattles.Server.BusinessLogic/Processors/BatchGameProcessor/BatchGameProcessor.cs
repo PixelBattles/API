@@ -58,8 +58,8 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 
             this.game = game;
             this.state = game.State;
-            this.stateChangeIndex = game.ChangeIndex ?? 0;
-            this.changeIndex = game.ChangeIndex ?? 0;
+            this.stateChangeIndex = game.ChangeIndex;
+            this.changeIndex = game.ChangeIndex;
             this.pixels = new Rgba32[game.Height * game.Width];
             
             this.pendingActions = new ConcurrentDictionary<int, UserAction>(

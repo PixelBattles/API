@@ -15,7 +15,13 @@ namespace PixelBattles.Server.DataStorage.Models
 
         public int Width { get; set; }
 
+        public int Cooldown { get; set; }
+
         public int ChangeIndex { get; set; }
+        
+        public DateTime StartDateUTC { get; set; }
+
+        public DateTime EndDateUTC { get; set; }
     }
 
     class GameEntityBuilder : IBuildable
