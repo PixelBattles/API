@@ -229,7 +229,7 @@ namespace PixelBattles.Server.BusinessLogic.Processors
                             {
                                 ChangeIndex = t.ChangeIndex,
                                 GameId = t.GameId,
-                                Color = t.Pixel.PackedValue,
+                                Color = (int)t.Pixel.PackedValue,
                                 UserId = t.UserId,
                                 XIndex = t.XIndex,
                                 YIndex = t.YIndex

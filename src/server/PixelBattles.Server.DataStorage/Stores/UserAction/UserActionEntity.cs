@@ -15,7 +15,7 @@ namespace PixelBattles.Server.DataStorage.Models
 
         public int XIndex { get; set; }
 
-        public uint Color { get; set; }
+        public int Color { get; set; }
     }
 
     class UserActionEntityBuilder : IBuildable
