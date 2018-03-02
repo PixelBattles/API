@@ -88,9 +88,9 @@ gulp.task("dashboard:compile-typescript", function (cb) {
 });
 
 gulp.task("dashboard:generate-pixel-battles-package", function (cb) {
-    return browserify(clientOutDir + '/PixelBattle.js', { standalone: 'pixelBattles' })
+    return browserify(clientOutDir + '/PixelBattle.js', { standalone: 'pixelBattle' })
         .bundle()
-        .pipe(source('pixelBattles.js'))
+        .pipe(source('pixelBattle.js'))
         .pipe(gulp.dest(paths.dashboard.js.dest))
         .pipe(buffer())
         .pipe(rename({ extname: '.min.js' }))

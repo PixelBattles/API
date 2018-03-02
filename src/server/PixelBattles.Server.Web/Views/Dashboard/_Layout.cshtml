@@ -6,8 +6,29 @@
     <title>Pixel battles</title>
     <meta name="viewport" content="width=device-width">
     <meta name="keywords" content="pixel,battle">
+    <link rel="icon" href="/favicon.ico">
+    <environment names="Development">
+        <link href="~/dash/libs/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="~/dash/css/style.css" rel="stylesheet" asp-append-version="true">
+    </environment>
+    <environment names="Staging,Production">
+        <link href="~/dash/libs/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="~/dash/css/style.css" rel="stylesheet" asp-append-version="true">
+    </environment>
 </head>
 <body>
     @RenderBody()
+    <environment names="Development">
+        <script src="~/dash/libs/jquery/jquery.js"></script>
+        <script src="~/dash/libs/bootstrap/js/bootstrap.js"></script>
+        <script src="~/dash/js/pixelBattle.js" asp-append-version="true"></script>
+        <script src="~/dash/js/app.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/dash/libs/jquery/jquery.js"></script>
+        <script src="~/dash/libs/bootstrap/js/bootstrap.js"></script>
+        <script src="~/dash/js/pixelBattle.js" asp-append-version="true"></script>
+        <script src="~/dash/js/app.js" asp-append-version="true"></script>
+    </environment>
 </body>
 </html>
