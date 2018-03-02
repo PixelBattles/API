@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Client\Dashboard\App\scss\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

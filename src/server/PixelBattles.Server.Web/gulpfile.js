@@ -25,9 +25,37 @@ var paths = {
     dashboard: {
         js: {
             src: [
-                "./Client/Dashboard/App/**/*.js"
+                "./Client/Dashboard/app/**/*.js"
             ],
             dest: "./wwwroot/dash/js/"
+        },
+        img: {
+            faviconSrc: [
+                "./Client/Dashboard/img/favicon/favicon.ico"
+            ],
+            faviconDest: "./wwwroot/",
+            src: [
+                "./Client/Dashboard/img/**/*.*"
+            ],
+            dest: "./wwwroot/dash/img/"
+        },
+        css: {
+            src: [
+                "./Client/Dashboard/css/**/*.css"
+            ],
+            dest: "./wwwroot/dash/css/"
+        },
+        html: {
+            src: [
+                "./Client/Dashboard/app/**/*.html"
+            ],
+            dest: "./wwwroot/dash/html/"
+        },
+        fonts: {
+        },
+        vendors: {
+            src: "./node_modules/",
+            dest: "./wwwroot/dash/libs/"
         }
     },
     landing: {
@@ -35,7 +63,7 @@ var paths = {
     }
 };
 
-//Typescript
+/*Typescript*/
 var tsProject = ts.createProject('tsconfig.json');
 var clientOutDir = tsProject.options.outDir;
 
@@ -45,9 +73,8 @@ gulp.task("dashboard:create-pixel-battles-js", function (cb) {
         "dashboard:compile-typescript",
         "dashboard:generate-pixel-battles-package",
         "dashboard:clean-typescript-temps",
-        function () {
-            cb();
-        });
+        cb
+    );
 });
 
 gulp.task("dashboard:clean-typescript-temps", function (cb) {
@@ -73,39 +100,98 @@ gulp.task("dashboard:generate-pixel-battles-package", function (cb) {
         .pipe(gulp.dest(paths.dashboard.js.dest));;
 });
 
-//Vendors
+/*JavaScript*/
 
-gulp.task('compile-vendors:clean', function () {
-    return del([
-        paths.src + 'vendors/css/**'
-    ]);
+gulp.task("dashboard:create-js", function (cb) {
+    runSequence(
+        "dashboard:clean-js",
+        "dashboard:create-custom-js",
+        "dashboard:create-pixel-battles-js",
+        cb
+    );
 });
 
-gulp.task('compile-vendors:sass', function () {
-    return gulp.src(paths.src + 'scss/vendors/**/*.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(autoprefixer())
-        .pipe(rename({ dirname: '' }))
-        .pipe(gulp.dest(paths.src + 'vendors/css/'))
-        .pipe(cssmin())
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(rename({ dirname: '' }))
-        .pipe(gulp.dest(paths.src + 'vendors/css/'));
+gulp.task("dashboard:create-custom-js", function (cb) {
+    return gulp.src(paths.dashboard.js.src)
+        .pipe(concat("app.js"))
+        .pipe(gulp.dest(paths.dashboard.js.dest))
+        .pipe(rename("app.min.js"))
+        .pipe(uglify())
+        .pipe(gulp.dest(paths.dashboard.js.dest))
+        .pipe(gzip())
+        .pipe(gulp.dest(paths.dashboard.js.dest));
 });
 
-gulp.task('compile-vendors', function (callback) {
-    runSequence('compile-vendors:clean', 'compile-vendors:sass', callback);
+gulp.task("dashboard:clean-js", function (cb) {
+    rimraf(paths.dashboard.js.dest, cb);
 });
 
-//SCSS
+/*Styles*/
 
-gulp.task('dashboard:create-sass', ['compile-vendors'], function () {
-    return gulp.src(paths.src + '/scss/style.scss')
-        .pipe(sass())
-        .pipe(autoprefixer())
-        .pipe(gulp.dest(paths.src + 'css'))
-        .pipe(cssmin())
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest(paths.src + 'css'))
-        .pipe(browserSync.stream());
+gulp.task("dashboard:create-css", ["dashboard:clean-css"], function () {
+    return gulp.src(paths.dashboard.css.src)
+        .pipe(concat("style.css"))
+        .pipe(gulp.dest(paths.dashboard.css.dest))
+        .pipe(rename("style.min.css"))
+        .pipe(minifyCss())
+        .pipe(gulp.dest(paths.dashboard.css.dest))
+        .pipe(gzip())
+        .pipe(gulp.dest(paths.dashboard.css.dest));
+});
+
+gulp.task("dashboard:clean-css", function (cb) {
+    rimraf(paths.dashboard.css.dest, cb);
+});
+
+/*Vendors*/
+
+gulp.task("dashboard:create-vendors", ["dashboard:clean-vendors"], function (cb) {
+    var libs = {
+        "bootstrap": "bootstrap/dist/**/*.{js,map,css,ttf,svg,woff,woff2,eot}",
+        "jquery": "jquery/dist/jquery*.{js,map,css,ttf,svg,woff,eot}",
+    }
+    for (var lib in libs) {
+        gulp.src(paths.dashboard.vendors.src + libs[lib])
+            .pipe(gulp.dest(paths.dashboard.vendors.dest + lib))
+            .pipe(gzip())
+            .pipe(gulp.dest(paths.dashboard.vendors.dest + lib));
+    }
+    cb();
+});
+
+gulp.task("dashboard:clean-vendors", function (cb) {
+    rimraf(paths.dashboard.vendors.dest, cb);
+});
+
+/*Images*/
+
+gulp.task("dashboard:create-img", ["dashboard:clean-img"], function (cb) {
+    return gulp.src(paths.dashboard.img.src)
+        .pipe(gulp.dest(paths.dashboard.img.dest));
+});
+
+gulp.task("dashboard:clean-img", function (cb) {
+    rimraf(paths.dashboard.img.dest, cb);
+});
+
+gulp.task("dashboard:create-img-favicon", ["dashboard:clean-img-favicon"], function (cb) {
+    return gulp.src(paths.dashboard.img.faviconSrc)
+        .pipe(gulp.dest(paths.dashboard.img.faviconDest));
+});
+
+gulp.task("dashboard:clean-img-favicon", function (cb) {
+    return del(paths.dashboard.img.faviconDest + "favicon.ico");
+});
+
+/*Global*/
+
+gulp.task("dashboard:rebuild", function (cb) {
+    runSequence(
+        "dashboard:create-js",
+        "dashboard:create-css",
+        "dashboard:create-vendors",
+        "dashboard:create-img",
+        "dashboard:create-img-favicon",
+        cb
+    );
 });
