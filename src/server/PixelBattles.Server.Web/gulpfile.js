@@ -97,7 +97,7 @@ gulp.task("dashboard:generate-pixel-battles-package", function (cb) {
         .pipe(babel({ presets: ['minify'] }))
         .pipe(gulp.dest(paths.dashboard.js.dest))
         .pipe(gzip())
-        .pipe(gulp.dest(paths.dashboard.js.dest));;
+        .pipe(gulp.dest(paths.dashboard.js.dest));
 });
 
 /*JavaScript*/
@@ -150,7 +150,7 @@ gulp.task("dashboard:create-vendors", ["dashboard:clean-vendors"], function (cb)
         "bootstrap": "bootstrap/dist/**/*.{js,map,css,ttf,svg,woff,woff2,eot}",
         "jquery": "jquery/dist/jquery*.{js,map,css,ttf,svg,woff,eot}",
         "interact": "interact.js/dist/*.{js,map}"
-    }
+    };
     for (var lib in libs) {
         gulp.src(paths.dashboard.vendors.src + libs[lib])
             .pipe(gulp.dest(paths.dashboard.vendors.dest + lib))

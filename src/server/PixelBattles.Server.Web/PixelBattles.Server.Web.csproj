@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Client\PixelBattle\IApiClient.ts" />
+    <None Remove="Client\PixelBattle\IHubClient.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -19,6 +24,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\shared\PixelBattles.Shared.DataTransfer\PixelBattles.Shared.DataTransfer.csproj" />
     <ProjectReference Include="..\PixelBattles.Server.BusinessLogic\PixelBattles.Server.BusinessLogic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="Client\PixelBattle\IApiClient.ts" />
+    <TypeScriptCompile Include="Client\PixelBattle\IHubClient.ts" />
   </ItemGroup>
 
 </Project>

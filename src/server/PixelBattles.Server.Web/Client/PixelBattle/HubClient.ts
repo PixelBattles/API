@@ -1,6 +1,23 @@
 ﻿import { HubConnection, TransportType, ConsoleLogger, LogLevel } from "@aspnet/signalr-client"
+import { IHubClient, IUserAction, IGameState, IActionResult, IDeltaResult } from "./IHubClient";
 
-export class HubClient {
+export class HubClient implements IHubClient {
+    connectToGame(gameId: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    disconnectFromGame(gameId: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    getGameState(gameId: string): Promise<IGameState> {
+        throw new Error("Method not implemented.");
+    }
+    processAction(action: IUserAction): Promise<IActionResult> {
+        throw new Error("Method not implemented.");
+    }
+    getGameDelta(gameId: string, from: number, to: number): Promise<IDeltaResult> {
+        throw new Error("Method not implemented.");
+    }
+
     private hubConnection: HubConnection;
     private url: string;
     private token: string;
@@ -27,6 +44,7 @@ export class HubClient {
         });
     }
 
-    private onActionMessage(message: any): void {
+    private onActionMessage(): void {
+
     }
 }

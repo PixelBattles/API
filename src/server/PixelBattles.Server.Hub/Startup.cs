@@ -54,7 +54,7 @@ namespace PixelBattles.Server.Hub
 
             services.AddBusinessLogic(Configuration);
 
-            services.AddSingleton<PixelBattleHubContext>(PixelBattleHubContextFactory.Create);
+            services.AddSingleton(PixelBattleHubContextFactory.Create);
 
             services.AddMvc(options => { })
                     .AddJsonOptions(options =>
