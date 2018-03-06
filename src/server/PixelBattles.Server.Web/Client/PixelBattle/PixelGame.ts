@@ -2,20 +2,33 @@
 import { PixelCanvas } from "./PixelCanvas";
 
 export class PixelGame {
-    private container: HTMLElement;
-    private hubClient: HubClient;
+    private gameContainer: HTMLDivElement;
+    private gameId: string;
+
     private pixelCanvas: PixelCanvas;
+    private canvasContainer: HTMLDivElement
+    
+    private hubClient: HubClient;
+    
+    constructor(gameContainer: HTMLDivElement, gameId: string) {
+        this.gameContainer = gameContainer;
+        this.gameId = gameId;
 
-    constructor(container: HTMLElement, battleId: string, hubUrl: string, hubToken: string) {
-        this.container = container;
+        this.canvasContainer = this.createCanvasContainer();
+        this.gameContainer.appendChild(this.canvasContainer);
+        this.pixelCanvas = this.createCanvas(this.canvasContainer);
 
-        let canvasElement = document.createElement('canvas');
-        canvasElement.id = battleId;
-        canvasElement.height = 1000;
-        canvasElement.width = 1000;
-        this.container.appendChild<HTMLCanvasElement>(canvasElement);
+        //this.hubClient = new HubClient(hubUrl, hubToken);
+    }
 
-        this.hubClient = new HubClient(hubUrl, hubToken);
-        this.pixelCanvas = new PixelCanvas(canvasElement);
+    private createCanvasContainer(): HTMLDivElement {
+        let canvasContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+        canvasContainer.className = "canvasContainer";
+        return canvasContainer;
+    }
+
+    private createCanvas(canvasContainer: HTMLDivElement): PixelCanvas {
+        let pixelCanvas: PixelCanvas = new PixelCanvas(canvasContainer);
+        return pixelCanvas;
     }
 }

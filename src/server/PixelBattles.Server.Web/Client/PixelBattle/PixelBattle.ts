@@ -1,9 +1,29 @@
 ﻿import { PixelGame } from "./PixelGame";
 
 export class PixelBattle {
-    private game: PixelGame;
+    private battleId: string;
+    private battleContainer: HTMLDivElement;
 
-    constructor(container: HTMLElement, battleId: string, hubUrl: string, hubToken: string) {
-        this.game = new PixelGame(container, battleId, hubUrl, hubUrl);
+    private game: PixelGame;
+    private gameContainer: HTMLDivElement;
+    
+    constructor(battleContainer: HTMLDivElement, battleId: string) {
+        this.battleContainer = battleContainer;
+        this.battleId = battleId;
+
+        this.gameContainer = this.createGameContainer();
+        this.battleContainer.appendChild(this.gameContainer);
+        this.game = this.createGame(this.gameContainer, this.battleId);
+    }
+
+    private createGameContainer(): HTMLDivElement {
+        let gameContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+        gameContainer.className = "gameContainer";
+        return gameContainer;
+    }
+
+    private createGame(gameContainer: HTMLDivElement, battleId : string): PixelGame {
+        let game: PixelGame = new PixelGame(gameContainer, battleId);
+        return game;
     }
 }
