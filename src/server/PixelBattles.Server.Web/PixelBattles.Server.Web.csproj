@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Client\Landing\img\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

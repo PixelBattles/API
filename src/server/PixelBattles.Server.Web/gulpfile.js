@@ -59,7 +59,22 @@ var paths = {
         }
     },
     landing: {
-
+        img: {
+            src: [
+                "./Client/Landing/img/**/*.*"
+            ],
+            dest: "./wwwroot/landing/img/"
+        },
+        css: {
+            src: [
+                "./Client/Landing/css/**/*.css"
+            ],
+            dest: "./wwwroot/landing/css/"
+        },
+        vendors: {
+            src: "./node_modules/",
+            dest: "./wwwroot/landing/libs/"
+        }
     }
 };
 
@@ -143,6 +158,21 @@ gulp.task("dashboard:clean-css", function (cb) {
     rimraf(paths.dashboard.css.dest, cb);
 });
 
+gulp.task("landing:create-css", ["landing:clean-css"], function () {
+    return gulp.src(paths.landing.css.src)
+        .pipe(concat("style.css"))
+        .pipe(gulp.dest(paths.landing.css.dest))
+        .pipe(rename("style.min.css"))
+        .pipe(minifyCss())
+        .pipe(gulp.dest(paths.landing.css.dest))
+        .pipe(gzip())
+        .pipe(gulp.dest(paths.landing.css.dest));
+});
+
+gulp.task("landing:clean-css", function (cb) {
+    rimraf(paths.landing.css.dest, cb);
+});
+
 /*Vendors*/
 
 gulp.task("dashboard:create-vendors", ["dashboard:clean-vendors"], function (cb) {
@@ -164,6 +194,24 @@ gulp.task("dashboard:clean-vendors", function (cb) {
     rimraf(paths.dashboard.vendors.dest, cb);
 });
 
+gulp.task("landing:create-vendors", ["landing:clean-vendors"], function (cb) {
+    var libs = {
+        "bootstrap": "bootstrap/dist/**/*.{js,map,css,ttf,svg,woff,woff2,eot}",
+        "jquery": "jquery/dist/jquery*.{js,map,css,ttf,svg,woff,eot}"
+    };
+    for (var lib in libs) {
+        gulp.src(paths.landing.vendors.src + libs[lib])
+            .pipe(gulp.dest(paths.landing.vendors.dest + lib))
+            .pipe(gzip())
+            .pipe(gulp.dest(paths.landing.vendors.dest + lib));
+    }
+    cb();
+});
+
+gulp.task("landing:clean-vendors", function (cb) {
+    rimraf(paths.landing.vendors.dest, cb);
+});
+
 /*Images*/
 
 gulp.task("dashboard:create-img", ["dashboard:clean-img"], function (cb) {
@@ -173,6 +221,15 @@ gulp.task("dashboard:create-img", ["dashboard:clean-img"], function (cb) {
 
 gulp.task("dashboard:clean-img", function (cb) {
     rimraf(paths.dashboard.img.dest, cb);
+});
+
+gulp.task("landing:create-img", ["landing:clean-img"], function (cb) {
+    return gulp.src(paths.landing.img.src)
+        .pipe(gulp.dest(paths.landing.img.dest));
+});
+
+gulp.task("landing:clean-img", function (cb) {
+    rimraf(paths.landing.img.dest, cb);
 });
 
 gulp.task("dashboard:create-img-favicon", ["dashboard:clean-img-favicon"], function (cb) {
@@ -193,6 +250,23 @@ gulp.task("dashboard:rebuild", function (cb) {
         "dashboard:create-vendors",
         "dashboard:create-img",
         "dashboard:create-img-favicon",
+        cb
+    );
+});
+
+gulp.task("landing:rebuild", function (cb) {
+    runSequence(
+        "landing:create-css",
+        "landing:create-vendors",
+        "landing:create-img",
+        cb
+    );
+});
+
+gulp.task("global:rebuild", function (cb) {
+    runSequence(
+        "dashboard:rebuild",
+        "landing:rebuild",
         cb
     );
 });
