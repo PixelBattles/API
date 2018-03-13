@@ -27,15 +27,21 @@ namespace PixelBattles.Server.Core
 
         private static readonly Result success = new Result { Succeeded = true };
 
+        private static IEnumerable<Error> ToEnumerableError(Error error)
+        {
+            yield return error;
+        }
+
         public static Result Success => success;
 
         public static Result Failed(params Error[] errors)
         {
-            return new Result
-            {
-                Succeeded = false,
-                Errors = errors?.ToList()
-            };
+            return Failed(errors as IEnumerable<Error>);
+        }
+
+        public static Result Failed(Error error)
+        {
+            return Failed(ToEnumerableError(error));
         }
 
         public static Result Failed(IEnumerable<Error> errors)
@@ -51,7 +57,7 @@ namespace PixelBattles.Server.Core
         {
             return Succeeded ?
                    "Succeeded" :
-                   string.Format("Failed : {1}", string.Join(",", Errors.Select(x => x.Code).ToList()));
+                   string.Format("Failed : {0}", string.Join(",", Errors.Select(x => x.Code).ToList()));
         }
     }
 }

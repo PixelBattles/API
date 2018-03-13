@@ -14,10 +14,12 @@ namespace PixelBattles.Server.DataStorage.Models
     {
         public void Build(ModelBuilder builder)
         {
-            builder.Entity<HubEntity>(battle =>
+            builder.Entity<HubEntity>(hub =>
             {
-                battle.ToTable("Hub");
-                battle.HasKey(t => t.HubId);
+                hub.ToTable("Hub");
+                hub.HasKey(t => t.HubId);
+                hub.HasIndex(t => t.Name).IsUnique();
+                hub.Property(t => t.Name).IsRequired();
             });
         }
     }

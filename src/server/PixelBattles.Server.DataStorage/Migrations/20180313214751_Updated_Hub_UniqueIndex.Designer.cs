@@ -12,9 +12,10 @@ using System;
 namespace PixelBattles.Server.DataStorage.Migrations
 {
     [DbContext(typeof(PixelBattlesDbContext))]
-    partial class PixelBattlesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180313214751_Updated_Hub_UniqueIndex")]
+    partial class Updated_Hub_UniqueIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,13 +71,13 @@ namespace PixelBattles.Server.DataStorage.Migrations
                     b.Property<Guid>("HubId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name")
-                        .IsRequired();
+                    b.Property<string>("Name");
 
                     b.HasKey("HubId");
 
                     b.HasIndex("Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Hub");
                 });

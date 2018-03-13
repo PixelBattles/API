@@ -40,7 +40,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
             }
             catch (Exception exception)
             {
-                return Exception(exception, "Error while getting battle.");
+                return OnException(exception, "Error while getting battle.");
             }
         }
 
@@ -66,7 +66,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
             }
             catch (Exception exception)
             {
-                return Exception(exception, "Error while getting battles.");
+                return OnException(exception, "Error while getting battles.");
             }
         }
 
@@ -86,7 +86,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
             }
             catch (Exception exception)
             {
-                return Exception(exception, "Error while creating battle.");
+                return OnException(exception, "Error while creating battle.");
             }
         }
     }

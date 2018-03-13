@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PixelBattles.Server.Core;
+using PixelBattles.Shared.DataTransfer;
 using System;
 
 namespace PixelBattles.Server.Web.Controllers.Api
@@ -17,13 +18,13 @@ namespace PixelBattles.Server.Web.Controllers.Api
             this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        protected ObjectResult Exception(Exception exception, string message, params object[] args)
+        protected ObjectResult OnException(Exception exception, string message, params object[] args)
         {
             Logger.LogError(-1, exception, message, args);
-            return StatusCode(500, Result.Failed(new Error("", message)));
+            return StatusCode(500, Result.Failed(new Error("Unknown error", message)));
         }
-
-        protected ActionResult OnResult(Result result)
+        
+        protected ActionResult OnResult(ResultDTO result)
         {
             if (result.Succeeded)
             {
@@ -31,7 +32,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
             }
             else
             {
-                return StatusCode(500, result);
+                return StatusCode(400, result);
             }
         }
     }

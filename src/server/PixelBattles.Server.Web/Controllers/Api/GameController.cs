@@ -39,7 +39,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
             }
             catch (Exception exception)
             {
-                return Exception(exception, "Error while getting game.");
+                return OnException(exception, "Error while getting game.");
             }
         }
 
@@ -57,7 +57,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
             }
             catch (Exception exception)
             {
-                return Exception(exception, "Error while getting game image.");
+                return OnException(exception, "Error while getting game image.");
             }
         }
     }
