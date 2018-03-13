@@ -82,7 +82,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
                 };
                 var result = await BattleManager.CreateBattleAsync(command);
                 var resultDTO = Mapper.Map<CreateBattleResult, CreateBattleResultDTO>(result);
-                return Ok(resultDTO);
+                return OnResult(resultDTO);
             }
             catch (Exception exception)
             {

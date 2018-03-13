@@ -30,6 +30,17 @@ namespace PixelBattles.Server.DataStorage.Stores
             return battle;
         }
 
+        public async Task<BattleEntity> GetBattleAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            var battle = await Entities
+                .FirstOrDefaultAsync(t => t.Name == name, cancellationToken);
+
+            return battle;
+        }
+
         public async Task<IEnumerable<BattleEntity>> GetBattlesAsync(BattleEntityFilter battleFilter, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();

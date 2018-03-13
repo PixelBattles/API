@@ -27,6 +27,8 @@ namespace PixelBattles.Server.DataStorage.Models
             {
                 battle.ToTable("Battle");
                 battle.HasKey(t => t.BattleId);
+                battle.HasIndex(t => t.Name).IsUnique();
+                battle.Property(t => t.Name).IsRequired();
             });
         }
     }

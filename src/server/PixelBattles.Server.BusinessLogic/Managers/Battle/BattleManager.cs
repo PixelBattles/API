@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PixelBattles.Server.BusinessLogic.Models;
+using PixelBattles.Server.Core;
 using PixelBattles.Server.DataStorage.Models;
 using PixelBattles.Server.DataStorage.Stores;
 using System;
@@ -46,6 +47,17 @@ namespace PixelBattles.Server.BusinessLogic.Managers
         public async Task<CreateBattleResult> CreateBattleAsync(CreateBattleCommand command)
         {
             ThrowIfDisposed();
+
+            if (String.IsNullOrWhiteSpace(command.Name))
+            {
+                return new CreateBattleResult(new Error("Empty name", "Name can't be empty"));
+            }
+
+            var existingBattle = await BattleStore.GetBattleAsync(command.Name, CancellationToken);
+            if (existingBattle != null)
+            {
+                return new CreateBattleResult(new Error("Name duplication", "Battle with the same name is already exist"));
+            }
 
             var battle = new BattleEntity()
             {

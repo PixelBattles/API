@@ -24,6 +24,8 @@ namespace PixelBattles.Server.Web.Mapping
         private void InitializeOrganization()
         {
             CreateMap<Battle, BattleDTO>();
+            CreateMap<BattleFilter, BattleFilterDTO>();
+            CreateMap<CreateBattleResult, CreateBattleResultDTO>();
         }
 
         private void InitializeHub()

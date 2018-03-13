@@ -72,7 +72,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
             {
                 var deleteResult = await HubManager.DeleteHubAsync(hubId);
                 var result = Mapper.Map<Result, ResultDTO>(deleteResult);
-                return Ok(result);
+                return OnResult(result);
             }
             catch (Exception exception)
             {

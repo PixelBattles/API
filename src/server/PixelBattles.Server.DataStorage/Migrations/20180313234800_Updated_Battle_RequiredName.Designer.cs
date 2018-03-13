@@ -12,9 +12,10 @@ using System;
 namespace PixelBattles.Server.DataStorage.Migrations
 {
     [DbContext(typeof(PixelBattlesDbContext))]
-    partial class PixelBattlesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180313234800_Updated_Battle_RequiredName")]
+    partial class Updated_Battle_RequiredName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

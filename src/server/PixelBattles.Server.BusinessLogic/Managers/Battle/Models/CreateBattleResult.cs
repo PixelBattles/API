@@ -6,7 +6,7 @@ namespace PixelBattles.Server.BusinessLogic.Models
 {
     public class CreateBattleResult : Result
     {
-        public Guid BattleId { get; set; }
+        public Guid? BattleId { get; set; }
 
         public CreateBattleResult(Guid battleId) : base(succeeded: true)
         {
@@ -14,6 +14,11 @@ namespace PixelBattles.Server.BusinessLogic.Models
         }
 
         public CreateBattleResult(params Error[] errors) : base(false, errors)
+        {
+
+        }
+
+        public CreateBattleResult(Error error) : base(false, error)
         {
 
         }
