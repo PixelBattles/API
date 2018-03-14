@@ -6,7 +6,7 @@ namespace PixelBattles.Server.BusinessLogic.Models
 {
     public class CreateGameResult : Result
     {
-        public Guid GameId { get; set; }
+        public Guid? GameId { get; set; }
 
         public CreateGameResult(Guid gameId) : base(succeeded: true)
         {

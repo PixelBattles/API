@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PixelBattles.Server.BusinessLogic.Models;
+using PixelBattles.Server.Core;
 using PixelBattles.Server.DataStorage.Models;
 using PixelBattles.Server.DataStorage.Stores;
 using System;
@@ -60,6 +61,21 @@ namespace PixelBattles.Server.BusinessLogic.Managers
         public async Task<CreateGameResult> CreateGameAsync(CreateGameCommand command)
         {
             ThrowIfDisposed();
+
+            if (command.StartDateUTC >= command.EndDateUTC)
+            {
+                return new CreateGameResult(new Error("Wrong time limits", "Start date can't be later than end date"));
+            }
+
+            var lastGame = await GameStore.GetBattleGameAsync(command.BattleId, CancellationToken);
+            if (lastGame != null)
+            {
+                if (command.StartDateUTC <= lastGame.EndDateUTC)
+                {
+                    return new CreateGameResult(new Error("Wrong time limits", "Start date can't be earlier than last game end date"));
+                }
+            }
+
             var game = new GameEntity()
             {
                 ChangeIndex = 0,
@@ -69,10 +85,12 @@ namespace PixelBattles.Server.BusinessLogic.Managers
                 Cooldown = command.Cooldown,
                 StartDateUTC = command.StartDateUTC,
                 EndDateUTC = command.EndDateUTC,
-                State = null
+                State = null,
+                Name = command.Name
             };
             
             var result = await GameStore.CreateAsync(game, CancellationToken);
+
             if (result.Succeeded)
             {
                 return new CreateGameResult(game.GameId);

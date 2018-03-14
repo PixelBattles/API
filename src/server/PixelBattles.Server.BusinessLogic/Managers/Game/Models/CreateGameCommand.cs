@@ -6,6 +6,8 @@ namespace PixelBattles.Server.BusinessLogic.Models
     {
         public Guid BattleId { get; set; }
 
+        public string Name { get; set; }
+
         public DateTime StartDateUTC { get; set; }
 
         public DateTime EndDateUTC { get; set; }

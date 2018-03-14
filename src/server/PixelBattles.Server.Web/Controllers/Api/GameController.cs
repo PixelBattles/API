@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PixelBattles.Server.BusinessLogic.Managers;
 using PixelBattles.Server.BusinessLogic.Models;
+using PixelBattles.Shared.DataTransfer.Api.Battle;
 using PixelBattles.Shared.DataTransfer.Api.Game;
 using System;
 using System.Threading.Tasks;
@@ -29,7 +30,26 @@ namespace PixelBattles.Server.Web.Controllers.Api
         {
             try
             {
-                Game game = await GameManager.GetGameAsync(gameId);
+                var game = await GameManager.GetGameAsync(gameId);
+                if (game == null)
+                {
+                    return NotFound();
+                }
+                var result = Mapper.Map<Game, GameDTO>(game);
+                return Ok(result);
+            }
+            catch (Exception exception)
+            {
+                return OnException(exception, "Error while getting game.");
+            }
+        }
+
+        [HttpGet("battle/{battleId:guid}/game")]
+        public async Task<IActionResult> GetBattleGameAsync(Guid battleId)
+        {
+            try
+            {
+                var game = await GameManager.GetBattleGameAsync(battleId);
                 if (game == null)
                 {
                     return NotFound();
@@ -58,6 +78,31 @@ namespace PixelBattles.Server.Web.Controllers.Api
             catch (Exception exception)
             {
                 return OnException(exception, "Error while getting game image.");
+            }
+        }
+
+        [HttpPost("game")]
+        public async Task<IActionResult> CreateGameAsync(CreateGameDTO commandDTO)
+        {
+            try
+            {
+                var command = new CreateGameCommand()
+                {
+                     BattleId = commandDTO.BattleId,
+                     Cooldown = commandDTO.Cooldown,
+                     StartDateUTC = commandDTO.StartDateUTC,
+                     EndDateUTC = commandDTO.EndDateUTC,
+                     Height = commandDTO.Height,
+                     Width = commandDTO.Width,
+                     Name = commandDTO.Name
+                };
+                var result = await GameManager.CreateGameAsync(command);
+                var resultDTO = Mapper.Map<CreateGameResult, CreateGameResultDTO>(result);
+                return OnResult(resultDTO);
+            }
+            catch (Exception exception)
+            {
+                return OnException(exception, "Error while creating game.");
             }
         }
     }
