@@ -31,7 +31,7 @@ var paths = {
         },
         img: {
             faviconSrc: [
-                "./Client/Dashboard/img/favicon/favicon.ico"
+                "./Client/Dashboard/img/favicon/*.*"
             ],
             faviconDest: "./wwwroot/",
             src: [
