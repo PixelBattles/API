@@ -1,6 +1,4 @@
-﻿declare var interact: any;
-
-export class PixelCanvas {
+﻿export class PixelCanvas {
     private canvasContainer: HTMLDivElement;
 
     private canvas: HTMLCanvasElement;
@@ -15,61 +13,40 @@ export class PixelCanvas {
     constructor(canvasContainer: HTMLDivElement) {
         this.canvasContainer = canvasContainer;
 
-        let canvasElement = document.createElement('canvas');
-        canvasElement.height = 1000;
-        canvasElement.width = 1000;
-        this.canvasContainer.appendChild<HTMLCanvasElement>(canvasElement);
+        this.canvas = document.createElement('canvas');
+        this.canvas.height = 1000;
+        this.canvas.width = 1000;
+        this.ctx = this.canvas.getContext("2d");
+        this.canvasContainer.appendChild<HTMLCanvasElement>(this.canvas);
 
-        this.canvas = canvasElement;
+        
+        
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         this.ctx = this.canvas.getContext("2d");
         
-        this.fillBlack(this.ctx);
         this.init();
     }
-
-    public drawPixel(x: number, y: number, color: string): void {
-        return;
-    }
-
-    public drawImage(image: HTMLImageElement): void {
-        this.ctx.drawImage(image, 0, 0);
-    }
-
+    
     private init(): void {
         this.x = 0;
         this.y = 0;
         this.scale = 1;
 
-        let handleMove = function (event: any) {
-            this.x = this.x + event.dx;
-            this.y = this.y + event.dy;
-            if (event.ds) {
-                this.scale = this.scale * (1 + event.ds);
-            }
-            
-            this.canvas.style.transform = 'translate(' + this.x + 'px, ' + this.y + 'px) scale(' + this.scale + ')';
-        }.bind(this);
-
-        interact(this.canvas).draggable({
-            inertia: true,
-            onmove: handleMove
-        }).gesturable({
-            onmove: function (evt: any) {
-                handleMove(evt);
-            }.bind(this)
-        });
+        window.addEventListener("resize", this.onResize.bind(this));
+        this.onResize();
+    }
+        
+    private render(): void {
+        this.ctx.beginPath();
+        this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = "black";
+        this.ctx.fill();
     }
 
-    private updateView() {
-
-    }
-    
-    private fillBlack(ctx: CanvasRenderingContext2D): void {
-        ctx.beginPath();
-        ctx.rect(0, 0, 1000, 1000);
-        ctx.fillStyle = "black";
-        ctx.fill();
+    private onResize(): void {
+        this.canvas.width = this.canvasContainer.clientWidth;
+        this.canvas.height = this.canvasContainer.clientWidth;
+        this.render();
     }
 }
