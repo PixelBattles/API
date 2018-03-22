@@ -11,9 +11,7 @@ export class PixelGame {
 
     private pixelCanvas: PixelCanvas;
     private canvasContainer: HTMLDivElement
-    
-    
-    
+        
     constructor(gameContainer: HTMLDivElement, apiClient: IApiClient, gameId: string) {
         this.gameContainer = gameContainer;
         this.gameId = gameId;
@@ -35,5 +33,9 @@ export class PixelGame {
     private createCanvas(canvasContainer: HTMLDivElement): PixelCanvas {
         let pixelCanvas: PixelCanvas = new PixelCanvas(canvasContainer);
         return pixelCanvas;
+    }
+
+    public resize(width: number, height: number) {
+        this.pixelCanvas.resize(width, height);
     }
 }
