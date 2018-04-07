@@ -2,15 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Server.Core;
 using PixelBattles.Server.DataStorage.Models;
 using PixelBattles.Server.DataStorage.Stores;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PixelBattles.Server.BusinessLogic.Managers
@@ -19,9 +16,11 @@ namespace PixelBattles.Server.BusinessLogic.Managers
     public class GameManager : BaseManager, IGameManager
     {
         protected IGameStore GameStore { get; set; }
+        protected IGameTokenGenerator GameTokenGenerator { get; set; }
 
         public GameManager(
             IGameStore gameStore,
+            IGameTokenGenerator gameTokenGenerator,
             IHttpContextAccessor contextAccessor,
             ErrorDescriber errorDescriber,
             IMapper mapper,
@@ -33,6 +32,7 @@ namespace PixelBattles.Server.BusinessLogic.Managers
                   logger: logger)
         {
             GameStore = gameStore ?? throw new ArgumentNullException(nameof(gameStore));
+            GameTokenGenerator = gameTokenGenerator ?? throw new ArgumentNullException(nameof(gameTokenGenerator));
         }
 
         protected override void DisposeStores()
@@ -104,7 +104,7 @@ namespace PixelBattles.Server.BusinessLogic.Managers
             }
         }
 
-        public async Task<CreateGameTokenResult> CreateGameAsync(CreateGameTokenCommand command)
+        public async Task<CreateGameTokenResult> CreateGameTokenAsync(CreateGameTokenCommand command)
         {
             ThrowIfDisposed();
             
@@ -114,41 +114,10 @@ namespace PixelBattles.Server.BusinessLogic.Managers
             {
                 return new CreateGameTokenResult(new Error("Game not found", "Game not found"));
             }
-            
-            var game = new GameEntity()
-            {
-                ChangeIndex = 0,
-                BattleId = command.BattleId,
-                Height = command.Height,
-                Width = command.Width,
-                Cooldown = command.Cooldown,
-                StartDateUTC = command.StartDateUTC,
-                EndDateUTC = command.EndDateUTC,
-                State = null,
-                Name = command.Name
-            };
 
-            var result = await GameStore.CreateAsync(game, CancellationToken);
+            string token = GameTokenGenerator.GenerateToken(command.GameId, command.UserId);
 
-            if (result.Succeeded)
-            {
-                return new CreateGameResult(game.GameId);
-            }
-            else
-            {
-                return new CreateGameResult(result.Errors);
-            }
+            return new CreateGameTokenResult(token);
         }
-
-        private string GenerateToken(HttpContext httpContext)
-        {
-            var claims = new[] { new Claim(ClaimTypes.NameIdentifier, httpContext.Request.Query["user"]) };
-            var credentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken("SignalRTestServer", "SignalRTests", claims, expires: DateTime.UtcNow.AddSeconds(30), signingCredentials: credentials);
-            return JwtTokenHandler.WriteToken(token);
-        }
-
-        private readonly SymmetricSecurityKey SecurityKey = new SymmetricSecurityKey(Guid.NewGuid().ToByteArray());
-        private readonly JwtSecurityTokenHandler JwtTokenHandler = new JwtSecurityTokenHandler();
     }
 }

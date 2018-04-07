@@ -107,27 +107,21 @@ namespace PixelBattles.Server.Web.Controllers.Api
         }
 
         [HttpPost("game/token")]
-        public async Task<IActionResult> CreateGameTokenAsync(CreateGameResultDTO commandDTO)
+        public async Task<IActionResult> CreateGameTokenAsync(CreateGameTokenDTO commandDTO)
         {
             try
             {
-                var command = new CreateGameCommand()
+                var command = new CreateGameTokenCommand()
                 {
-                    BattleId = commandDTO.BattleId,
-                    Cooldown = commandDTO.Cooldown,
-                    StartDateUTC = commandDTO.StartDateUTC,
-                    EndDateUTC = commandDTO.EndDateUTC,
-                    Height = commandDTO.Height,
-                    Width = commandDTO.Width,
-                    Name = commandDTO.Name
+                     GameId = commandDTO.GameId
                 };
-                var result = await GameManager.CreateGameAsync(command);
-                var resultDTO = Mapper.Map<CreateGameResult, CreateGameResultDTO>(result);
+                var result = await GameManager.CreateGameTokenAsync(command);
+                var resultDTO = Mapper.Map<CreateGameTokenResult, CreateGameTokenResultDTO>(result);
                 return OnResult(resultDTO);
             }
             catch (Exception exception)
             {
-                return OnException(exception, "Error while creating game.");
+                return OnException(exception, "Error while creating game token.");
             }
         }
     }
