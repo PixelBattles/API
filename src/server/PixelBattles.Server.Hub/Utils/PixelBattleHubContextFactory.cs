@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace PixelBattles.Server.Hub.Utils
+namespace PixelBattles.Server.Hubs.Utils
 {
     public static class PixelBattleHubContextFactory
     {

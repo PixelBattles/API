@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Shared.DataTransfer", "src\shared\PixelBattles.Shared.DataTransfer\PixelBattles.Shared.DataTransfer.csproj", "{A0193A49-EE7A-42A1-B3DA-E1C50B98C62C}"
 EndProject
@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Server.DataSto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Server.BusinessLogic", "src\server\PixelBattles.Server.BusinessLogic\PixelBattles.Server.BusinessLogic.csproj", "{8DF04B70-FF3C-4611-9F2C-8342B35C6C87}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Server.Hub", "src\server\PixelBattles.Server.Hub\PixelBattles.Server.Hub.csproj", "{A2523659-3DB8-4E73-A677-FC6686A0B17E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Server.Hubs", "src\server\PixelBattles.Server.Hub\PixelBattles.Server.Hubs.csproj", "{A2523659-3DB8-4E73-A677-FC6686A0B17E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Server.Web", "src\server\PixelBattles.Server.Web\PixelBattles.Server.Web.csproj", "{C796FEC2-3B83-4354-A304-44C11F97C09B}"
 EndProject
@@ -27,7 +27,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{0F9F731F-E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{14CAFEE6-5A4F-4F32-AC92-3AEA059DB69E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBattles.Server.BusinessLogic.Tests", "src\tests\PixelBattles.Server.BusinessLogic.Tests\PixelBattles.Server.BusinessLogic.Tests.csproj", "{427F6DD0-5E74-4F98-8BB4-B6FBB1C69793}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Server.BusinessLogic.Tests", "src\tests\PixelBattles.Server.BusinessLogic.Tests\PixelBattles.Server.BusinessLogic.Tests.csproj", "{427F6DD0-5E74-4F98-8BB4-B6FBB1C69793}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{F3C9C74A-957C-4C24-A501-F6260C8504A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBattles.Client.Emulator", "src\tools\PixelBattles.Client.Emulator\PixelBattles.Client.Emulator.csproj", "{6DFEA50B-C786-4917-832A-C96DB3AD9262}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +71,10 @@ Global
 		{427F6DD0-5E74-4F98-8BB4-B6FBB1C69793}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{427F6DD0-5E74-4F98-8BB4-B6FBB1C69793}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{427F6DD0-5E74-4F98-8BB4-B6FBB1C69793}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DFEA50B-C786-4917-832A-C96DB3AD9262}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DFEA50B-C786-4917-832A-C96DB3AD9262}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DFEA50B-C786-4917-832A-C96DB3AD9262}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DFEA50B-C786-4917-832A-C96DB3AD9262}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,6 +91,8 @@ Global
 		{B67E0A79-1AC9-43F7-AD32-2CC3CC927326} = {0CBC0211-8B5D-4627-BC64-A3F4D642A6A4}
 		{14CAFEE6-5A4F-4F32-AC92-3AEA059DB69E} = {0CBC0211-8B5D-4627-BC64-A3F4D642A6A4}
 		{427F6DD0-5E74-4F98-8BB4-B6FBB1C69793} = {14CAFEE6-5A4F-4F32-AC92-3AEA059DB69E}
+		{F3C9C74A-957C-4C24-A501-F6260C8504A6} = {0CBC0211-8B5D-4627-BC64-A3F4D642A6A4}
+		{6DFEA50B-C786-4917-832A-C96DB3AD9262} = {F3C9C74A-957C-4C24-A501-F6260C8504A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {92FE1D4D-731F-46E2-B2D6-DE83EB22C174}

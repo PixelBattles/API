@@ -1,4 +1,4 @@
-﻿namespace PixelBattles.Server.Hub.Models
+﻿namespace PixelBattles.Server.Hubs.Models
 {
     public class LoginViewModel
     {

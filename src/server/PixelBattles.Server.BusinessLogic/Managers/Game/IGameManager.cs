@@ -14,5 +14,7 @@ namespace PixelBattles.Server.BusinessLogic.Managers
         Task<Game> GetBattleGameAsync(Guid battleId);
 
         Task<CreateGameResult> CreateGameAsync(CreateGameCommand command);
+
+        Task<CreateGameTokenResult> CreateGameTokenAsync(CreateGameTokenCommand command);
     }
 }

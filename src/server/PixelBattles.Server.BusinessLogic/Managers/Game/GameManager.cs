@@ -2,12 +2,15 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Server.Core;
 using PixelBattles.Server.DataStorage.Models;
 using PixelBattles.Server.DataStorage.Stores;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PixelBattles.Server.BusinessLogic.Managers
@@ -100,5 +103,52 @@ namespace PixelBattles.Server.BusinessLogic.Managers
                 return new CreateGameResult(result.Errors);
             }
         }
+
+        public async Task<CreateGameTokenResult> CreateGameAsync(CreateGameTokenCommand command)
+        {
+            ThrowIfDisposed();
+            
+            var game = await GameStore.GetGameAsync(command.GameId, CancellationToken);
+
+            if (game == null)
+            {
+                return new CreateGameTokenResult(new Error("Game not found", "Game not found"));
+            }
+            
+            var game = new GameEntity()
+            {
+                ChangeIndex = 0,
+                BattleId = command.BattleId,
+                Height = command.Height,
+                Width = command.Width,
+                Cooldown = command.Cooldown,
+                StartDateUTC = command.StartDateUTC,
+                EndDateUTC = command.EndDateUTC,
+                State = null,
+                Name = command.Name
+            };
+
+            var result = await GameStore.CreateAsync(game, CancellationToken);
+
+            if (result.Succeeded)
+            {
+                return new CreateGameResult(game.GameId);
+            }
+            else
+            {
+                return new CreateGameResult(result.Errors);
+            }
+        }
+
+        private string GenerateToken(HttpContext httpContext)
+        {
+            var claims = new[] { new Claim(ClaimTypes.NameIdentifier, httpContext.Request.Query["user"]) };
+            var credentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken("SignalRTestServer", "SignalRTests", claims, expires: DateTime.UtcNow.AddSeconds(30), signingCredentials: credentials);
+            return JwtTokenHandler.WriteToken(token);
+        }
+
+        private readonly SymmetricSecurityKey SecurityKey = new SymmetricSecurityKey(Guid.NewGuid().ToByteArray());
+        private readonly JwtSecurityTokenHandler JwtTokenHandler = new JwtSecurityTokenHandler();
     }
 }

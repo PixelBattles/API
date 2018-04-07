@@ -9,13 +9,13 @@
   },
   "profiles": {
     "IIS Express": {
-      "commandName": "IISExpress",
+      "commandName": "Executable",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "PixelBattles.Server.Hub": {
+    "PixelBattles.Server.Hubs": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

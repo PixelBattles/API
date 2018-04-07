@@ -47,19 +47,19 @@ namespace PixelBattles.Server.BusinessLogic.Processors
 
         protected async Task UnloadInactiveChunksAsync()
         {
-            DateTime dateTimeToCompare = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1));
-            foreach (var chunk in chunks)
-            {
-                if (chunk.Value.LastUpdateTime < dateTimeToCompare)
-                {
-                    inactiveChunks.TryAdd(chunk.Key, chunk.Value);
-                }
-            }
+            //DateTime dateTimeToCompare = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1));
+            //foreach (var chunk in chunks)
+            //{
+            //    if (chunk.Value.LastUpdateTime < dateTimeToCompare)
+            //    {
+            //        inactiveChunks.TryAdd(chunk.Key, chunk.Value);
+            //    }
+            //}
 
-            foreach (var chunk in inactiveChunks)
-            {
-                chunks.TryRemove(chunk.Key, out var ignored);
-            }
+            //foreach (var chunk in inactiveChunks)
+            //{
+            //    chunks.TryRemove(chunk.Key, out var ignored);
+            //}
         }
     }
 }

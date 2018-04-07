@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using PixelBattles.Server.BusinessLogic.Managers;
 using PixelBattles.Server.BusinessLogic.Processors;
 using PixelBattles.Shared.DataTransfer.Hub;
@@ -8,10 +9,10 @@ using SixLabors.ImageSharp;
 using System;
 using System.Threading.Tasks;
 
-namespace PixelBattles.Server.Hub
+namespace PixelBattles.Server.Hubs
 {
     [Authorize]
-    public class PixelBattleHub : Microsoft.AspNetCore.SignalR.Hub
+    public class PixelBattleHub : Hub
     {
         protected PixelBattleHubContext PixelBattleHubContext { get; set; }
 

@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using PixelBattles.Server.BusinessLogic;
-using PixelBattles.Server.Hub.Utils;
+using PixelBattles.Server.Hubs.Utils;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
-namespace PixelBattles.Server.Hub
+namespace PixelBattles.Server.Hubs
 {
     public class Startup
     {
@@ -50,11 +54,52 @@ namespace PixelBattles.Server.Hub
                 option.JsonSerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
+                {
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireClaim(ClaimTypes.NameIdentifier);
+                });
+            });
+
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddJwtBearer(options =>
+            //    {
+            //        options.TokenValidationParameters =
+            //        new TokenValidationParameters
+            //        {
+            //            LifetimeValidator = (before, expires, token, parameters) => expires > DateTime.UtcNow,
+            //            ValidateAudience = false,
+            //            ValidateIssuer = false,
+            //            ValidateActor = false,
+            //            ValidateLifetime = true,
+            //            IssuerSigningKey = SecurityKey
+            //        };
+
+            //        options.Events = new JwtBearerEvents
+            //        {
+            //            OnMessageReceived = context =>
+            //            {
+            //                var accessToken = context.Request.Query["access_token"];
+
+            //                if (!string.IsNullOrEmpty(accessToken) &&
+            //                    (context.HttpContext.WebSockets.IsWebSocketRequest || context.Request.Headers["Accept"] == "text/event-stream"))
+            //                {
+            //                    context.Token = context.Request.Query["access_token"];
+            //                }
+            //                return Task.CompletedTask;
+            //            }
+            //        };
+            //    });
+
             services.AddAttributeRegistration();
 
             services.AddBusinessLogic(Configuration);
 
             services.AddSingleton(PixelBattleHubContextFactory.Create);
+
+            services.AddScoped<TestHub>();
 
             services.AddMvc(options => { })
                     .AddJsonOptions(options =>
@@ -93,6 +138,7 @@ namespace PixelBattles.Server.Hub
             app.UseSignalR(routes =>
             {
                 routes.MapHub<PixelBattleHub>("hub/game");
+                routes.MapHub<TestHub>("hub/test");
             });
 
             app.UseMvc(routes =>

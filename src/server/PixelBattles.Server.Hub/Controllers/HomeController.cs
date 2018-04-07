@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace PixelBattles.Server.Hub.Controllers
+namespace PixelBattles.Server.Hubs.Controllers
 {
     public class HomeController : Controller
     {

@@ -3,7 +3,7 @@ using PixelBattles.Server.BusinessLogic.Processors;
 using System;
 using System.Collections.Concurrent;
 
-namespace PixelBattles.Server.Hub
+namespace PixelBattles.Server.Hubs
 {
     public class PixelBattleHubContext
     {

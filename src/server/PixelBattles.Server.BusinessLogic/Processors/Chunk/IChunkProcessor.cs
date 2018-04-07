@@ -11,15 +11,11 @@ namespace PixelBattles.Server.BusinessLogic.Processors.Chunk
         int Height { get; }
 
         int ChangeIndex { get; }
-
-        DateTime LastUpdateTime { get; }
-
+        
         Task<ProcessActionResult> ProcessActionAsync(ProcessActionCommand command);
 
         Task<ChunkState> GetChunkStateAsync();
 
         Task<ChunkDeltaResult> GetChunkDeltaAsync(int changeIndexFrom, int changeIndexTo);
-
-        Task SaveAsync();
     }
 }

@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PixelBattles.Server.Hub.Models;
+using PixelBattles.Server.Hubs.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace PixelBattles.Server.Hub.Controllers
+namespace PixelBattles.Server.Hubs.Controllers
 {
     [AllowAnonymous]
     public class AccountController : Controller
