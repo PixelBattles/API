@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PixelBattles.Server.BusinessLogic;
+using PixelBattles.Server.BusinessLogic.Managers;
 using System;
 using System.Security.Claims;
 using System.Text;
@@ -64,7 +65,7 @@ namespace PixelBattles.Server.Hubs
                         ValidateIssuer = false,
                         ValidateActor = false,
                         ValidateLifetime = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("This is default key for dev purposes"))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetGameTokenOptions().SecretKey))
                     };
 
                     options.Events = new JwtBearerEvents

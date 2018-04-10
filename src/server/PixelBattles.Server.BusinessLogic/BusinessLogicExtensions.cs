@@ -9,7 +9,7 @@ namespace PixelBattles.Server.BusinessLogic
     {
         public static IServiceCollection AddBusinessLogic(this IServiceCollection services, IConfigurationRoot configuration)
         {
-            services.Configure<GameTokenOptions>(configuration);
+            services.AddGameTokenLogic(configuration);
 
             return services
                 .AddDataStorage(configuration)
