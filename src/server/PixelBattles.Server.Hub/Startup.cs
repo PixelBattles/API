@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,10 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Serialization;
 using PixelBattles.Server.BusinessLogic;
-using PixelBattles.Server.Hubs.Utils;
+using System;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PixelBattles.Server.Hubs
@@ -23,7 +22,7 @@ namespace PixelBattles.Server.Hubs
 
         public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
+            var builder =   new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
@@ -35,80 +34,58 @@ namespace PixelBattles.Server.Hubs
 
             HostingEnvironment = env;
         }
-
-
+        
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/Account/Login/";
-                });
-
             services.AddAutoMapper();
+            
+            services.AddSignalR();
 
-            services.AddSockets();
-
-            services.AddSignalR(option =>
-            {
-                option.JsonSerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            });
+            services.AddOptions();
 
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
                 {
                     policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
-                    policy.RequireClaim(ClaimTypes.NameIdentifier);
+                    policy.RequireClaim("GameId");
+                    policy.RequireClaim("UserId");
                 });
             });
 
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(options =>
-            //    {
-            //        options.TokenValidationParameters =
-            //        new TokenValidationParameters
-            //        {
-            //            LifetimeValidator = (before, expires, token, parameters) => expires > DateTime.UtcNow,
-            //            ValidateAudience = false,
-            //            ValidateIssuer = false,
-            //            ValidateActor = false,
-            //            ValidateLifetime = true,
-            //            IssuerSigningKey = SecurityKey
-            //        };
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters =
+                    new TokenValidationParameters
+                    {
+                        LifetimeValidator = (before, expires, token, parameters) => expires > DateTime.UtcNow,
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateActor = false,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("This is default key for dev purposes"))
+                    };
 
-            //        options.Events = new JwtBearerEvents
-            //        {
-            //            OnMessageReceived = context =>
-            //            {
-            //                var accessToken = context.Request.Query["access_token"];
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
 
-            //                if (!string.IsNullOrEmpty(accessToken) &&
-            //                    (context.HttpContext.WebSockets.IsWebSocketRequest || context.Request.Headers["Accept"] == "text/event-stream"))
-            //                {
-            //                    context.Token = context.Request.Query["access_token"];
-            //                }
-            //                return Task.CompletedTask;
-            //            }
-            //        };
-            //    });
+                            if (!string.IsNullOrEmpty(accessToken.ToString()) &&
+                                (context.HttpContext.WebSockets.IsWebSocketRequest || context.Request.Headers["Accept"] == "text/event-stream"))
+                            {
+                                context.Token = context.Request.Query["access_token"];
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
 
             services.AddAttributeRegistration();
 
             services.AddBusinessLogic(Configuration);
-
-            services.AddSingleton(PixelBattleHubContextFactory.Create);
-
-            services.AddScoped<TestHub>();
-
-            services.AddMvc(options => { })
-                    .AddJsonOptions(options =>
-                    {
-                        options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    })
-                    .AddRazorOptions(options =>
-                    {
-                    });
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -125,30 +102,14 @@ namespace PixelBattles.Server.Hubs
                 loggerFactory.AddDebug();
             }
 
-            app.UseCors(builder => builder
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowAnyOrigin()
-                .AllowCredentials());
-
-            app.UseStaticFiles();
-
             app.UseAuthentication();
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<PixelBattleHub>("hub/game");
-                routes.MapHub<TestHub>("hub/test");
+                routes.MapHub<GameHub>("/hubs/game");
             });
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            app.InitializeHub(Configuration, loggerFactory.CreateLogger("Hub initialization"));
+            
+            //app.InitializeHub(Configuration, loggerFactory.CreateLogger("Hub initialization"));
         }
     }
 }

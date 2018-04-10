@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.AspNetCore.Sockets;
+﻿using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -11,27 +11,23 @@ namespace PixelBattles.Client.Emulator
         private string hubUrl;
         private ILogger logger;
         private HubConnection hubConnection;
-        private Guid? gameId;
 
         public HubClient(ILogger logger, string hubUrl)
         {
-            gameId = null;
             hubConnection = null;
             this.logger = logger;
             this.hubUrl = hubUrl;
         }
         
-        public async Task ConnectAsync(Guid gameId)
+        public async Task ConnectAsync()
         {
             try
             {
                 logger.LogInformation("Connecting to game...");
 
-                this.gameId = gameId;
-
                 hubConnection = new HubConnectionBuilder()
-                    .WithUrl(hubUrl)
-                    .WithAccessToken(() => "")
+                    .WithUrl(hubUrl + "/hubs/game")
+                    .WithAccessToken(() => "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJHYW1lSWQiOiJkNDlmZGMyOS1kZTZlLTQwOWItZDcwMS0wOGQ1ODk0NTFlYzgiLCJVc2VySWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDAiLCJleHAiOjE1MjM0NzY0MjYsImlzcyI6IlBpeGVsQmF0dGxlc1NlcnZlciIsImF1ZCI6IlBpeGVsQmF0dGxlc0NsaWVudCJ9.bO8JD3Y0xxMh4gWg3b3Si2mPcLWzBwzDBIs6iYWXI8o")
                     .WithConsoleLogger()
                     .WithTransport(TransportType.WebSockets)
                     .Build();
@@ -47,7 +43,7 @@ namespace PixelBattles.Client.Emulator
             }
             catch (Exception exception)
             {
-                logger.LogError($"Failed connect to {gameId} game.", exception);
+                logger.LogError($"Failed connect to game.", exception);
             }
         }
 
@@ -58,7 +54,6 @@ namespace PixelBattles.Client.Emulator
                 await hubConnection.StopAsync();
                 await hubConnection.DisposeAsync();
                 hubConnection = null;
-                gameId = null;
             }
             catch (Exception exception)
             {

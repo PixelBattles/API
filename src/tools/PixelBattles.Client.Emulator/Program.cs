@@ -13,7 +13,7 @@ namespace PixelBattles.Client.Emulator
                 .AddConsole();
             ILogger logger = loggerFactory.CreateLogger<Program>();
 
-            string baseUrl = "http://localhost:10000/hub/test";
+            string baseUrl = "http://localhost:10000";
             HubClient emulatorClient = new HubClient(logger, baseUrl);
             while (running)
             {
@@ -26,7 +26,7 @@ namespace PixelBattles.Client.Emulator
                         running = false;
                         break;
                     case "connect":
-                        emulatorClient.ConnectAsync(Guid.Empty).ConfigureAwait(false).GetAwaiter().GetResult();
+                        emulatorClient.ConnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
                         break;
                     case "disconnect":
                         emulatorClient.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();

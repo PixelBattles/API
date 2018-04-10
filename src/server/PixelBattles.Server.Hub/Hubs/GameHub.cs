@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace PixelBattles.Server.Hubs
 {
     [Authorize(JwtBearerDefaults.AuthenticationScheme)]
-    public class TestHub : Hub
+    public class GameHub : Hub
     {
-        public TestHub()
+        public GameHub()
         {
         }
 
