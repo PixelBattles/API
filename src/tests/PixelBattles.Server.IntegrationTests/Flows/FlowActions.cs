@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PixelBattles.Server.IntegrationTests.Clients.Api;
+using PixelBattles.Server.IntegrationTests.Clients.Hub;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,13 +8,9 @@ namespace PixelBattles.Server.IntegrationTests.Flows
 {
     public static class FlowActions
     {
-        public static FlowContext WithApiBackend(this FlowContext context, string url)
-        {
-            return context;
-        }
-
         public static FlowContext WithHubBackend(this FlowContext context, string url)
         {
+            context.HubClient = new HubClient(url);
             return context;
         }
 
