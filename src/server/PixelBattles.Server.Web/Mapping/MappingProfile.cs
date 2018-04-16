@@ -39,6 +39,7 @@ namespace PixelBattles.Server.Web.Mapping
         {
             CreateMap<Game, GameDTO>();
             CreateMap<CreateGameResult, CreateGameResultDTO>();
+            CreateMap<CreateGameTokenResult, CreateGameTokenResultDTO>();
         }
     }
 }

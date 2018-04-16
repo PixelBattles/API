@@ -16,9 +16,11 @@ namespace PixelBattles.Server.BusinessLogic.Managers
     public class GameManager : BaseManager, IGameManager
     {
         protected IGameStore GameStore { get; set; }
+        protected IGameTokenGenerator GameTokenGenerator { get; set; }
 
         public GameManager(
             IGameStore gameStore,
+            IGameTokenGenerator gameTokenGenerator,
             IHttpContextAccessor contextAccessor,
             ErrorDescriber errorDescriber,
             IMapper mapper,
@@ -30,6 +32,7 @@ namespace PixelBattles.Server.BusinessLogic.Managers
                   logger: logger)
         {
             GameStore = gameStore ?? throw new ArgumentNullException(nameof(gameStore));
+            GameTokenGenerator = gameTokenGenerator ?? throw new ArgumentNullException(nameof(gameTokenGenerator));
         }
 
         protected override void DisposeStores()
@@ -99,6 +102,22 @@ namespace PixelBattles.Server.BusinessLogic.Managers
             {
                 return new CreateGameResult(result.Errors);
             }
+        }
+
+        public async Task<CreateGameTokenResult> CreateGameTokenAsync(CreateGameTokenCommand command)
+        {
+            ThrowIfDisposed();
+            
+            var game = await GameStore.GetGameAsync(command.GameId, CancellationToken);
+
+            if (game == null)
+            {
+                return new CreateGameTokenResult(new Error("Game not found", "Game not found"));
+            }
+
+            string token = GameTokenGenerator.GenerateToken(command.GameId, command.UserId);
+
+            return new CreateGameTokenResult(token);
         }
     }
 }
