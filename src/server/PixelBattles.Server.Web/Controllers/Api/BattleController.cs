@@ -71,7 +71,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
         }
 
         [HttpPost("battle")]
-        public async Task<IActionResult> CreateBattleAsync(CreateBattleDTO commandDTO)
+        public async Task<IActionResult> CreateBattleAsync([FromBody] CreateBattleDTO commandDTO)
         {
             try
             {
