@@ -1,7 +1,5 @@
 ﻿using PixelBattles.Fluently;
 using PixelBattles.Server.IntegrationTests.Clients.Api;
-using PixelBattles.Shared.DataTransfer.Api.Battle;
-using System.Collections.Generic;
 using Xunit;
 
 namespace PixelBattles.Server.IntegrationTests.Tests
@@ -10,16 +8,16 @@ namespace PixelBattles.Server.IntegrationTests.Tests
     {
         public ApiBasicTests()
         {
-            FlowContext
+            Context
                 .Setup(new ApiClient())
-                .With(client => client.BackendUrl = "http://localhost:5000")
+                .With(client => client.BackendUrl = Configuration.GetApiBaseUrl())
                 .Save();
         }
 
         [Fact]
         public void ApiClient_GetBattles_Not_Throws_Error()
         {
-            FlowContext
+            Context
                 .Get<ApiClient>()
                 .Transform(t => t.GetBattles())
                 .Save()

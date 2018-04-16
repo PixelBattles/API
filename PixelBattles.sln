@@ -30,10 +30,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Server.BusinessLogic.Tests", "src\tests\PixelBattles.Server.BusinessLogic.Tests\PixelBattles.Server.BusinessLogic.Tests.csproj", "{427F6DD0-5E74-4F98-8BB4-B6FBB1C69793}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{F3C9C74A-957C-4C24-A501-F6260C8504A6}"
+	ProjectSection(SolutionItems) = preProject
+		src\tests\PixelBattles.Server.IntegrationTests\appsettings.Custom.json = src\tests\PixelBattles.Server.IntegrationTests\appsettings.Custom.json
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Client.Emulator", "src\tools\PixelBattles.Client.Emulator\PixelBattles.Client.Emulator.csproj", "{6DFEA50B-C786-4917-832A-C96DB3AD9262}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBattles.Server.IntegrationTests", "src\tests\PixelBattles.Server.IntegrationTests\PixelBattles.Server.IntegrationTests.csproj", "{F2971F8A-AF4F-4BC5-886A-125C800F307B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Server.IntegrationTests", "src\tests\PixelBattles.Server.IntegrationTests\PixelBattles.Server.IntegrationTests.csproj", "{F2971F8A-AF4F-4BC5-886A-125C800F307B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
