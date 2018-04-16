@@ -1,15 +1,19 @@
-﻿using System;
+﻿using PixelBattles.Shared.DataTransfer.Api.Battle;
 using System.Collections.Generic;
-using System.Text;
 
 namespace PixelBattles.Server.IntegrationTests.Clients.Api
 {
     public class ApiClient : IApiClient
     {
-        protected string backendUrl;
-        public ApiClient(string backendUrl)
+        public string BackendUrl { get; set; }
+        public ApiClient(string backendUrl = null)
         {
-            this.backendUrl = backendUrl;
+            this.BackendUrl = backendUrl;
+        }
+
+        public IEnumerable<BattleDTO> GetBattles()
+        {
+            return null;
         }
     }
 }
