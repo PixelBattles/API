@@ -43,9 +43,9 @@ namespace PixelBattles.Server.IntegrationTests.Tests
                     }))
                     .Save()
                     .Assert()
-                        .True(t => t.Succeeded);
-                        //.Empty(t => t.Errors)
-                        //.NotNull(t => t.BattleId)
+                        .True(t => t.Succeeded)
+                        .Empty(t => t.Errors)
+                        .NotNull(t => t.BattleId);
         }
 
         [Fact]
