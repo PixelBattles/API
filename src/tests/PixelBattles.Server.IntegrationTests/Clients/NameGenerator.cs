@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading;
 
 namespace PixelBattles.Server.IntegrationTests.Clients
 {
     public class NameGenerator
     {
-        private int index = 0;
+        private static int index = 0;
 
         public NameGenerator()
         {
@@ -13,7 +14,7 @@ namespace PixelBattles.Server.IntegrationTests.Clients
 
         public string GenerateBattleName()
         {
-            return "TEST_" + DateTime.UtcNow.ToString() + ++index;
+            return "TEST_" + DateTime.UtcNow.ToString() + Interlocked.Increment(ref index);
         }
     }
 }

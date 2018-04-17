@@ -38,5 +38,16 @@ namespace PixelBattles.Server.IntegrationTests.Clients.Api
         {
             return CreateBattleAsync(createBattleDTO).Result;
         }
+
+        public async Task<BattleDTO> GetBattleAsync(Guid battleId)
+        {
+            var response = await httpClient.GetAsync($"/api/battle/{battleId}");
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<BattleDTO>(content);
+        }
+        public BattleDTO GetBattle(Guid battleId)
+        {
+            return GetBattleAsync(battleId).Result;
+        }
     }
 }
