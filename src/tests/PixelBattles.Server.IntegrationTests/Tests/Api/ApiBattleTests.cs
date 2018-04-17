@@ -7,9 +7,9 @@ using Xunit;
 
 namespace PixelBattles.Server.IntegrationTests.Tests
 {
-    public class ApiBasicTests : FlowTest
+    public class ApiBattleTests : FlowTest
     {
-        public ApiBasicTests()
+        public ApiBattleTests()
         {
             Context
                 .Setup(new ApiClient())
@@ -22,12 +22,14 @@ namespace PixelBattles.Server.IntegrationTests.Tests
         }
 
         [Fact]
-        public void ApiClient_GetBattles_Not_Throws_Error()
+        public void ApiClient_GetBattles()
         {
             Context
                 .Get<ApiClient>()
-                    .Select(t => t.GetBattles())
+                    .Select(t => t.GetBattles(new BattleFilterDTO()))
                     .Save()
+                    .Assert()
+                        .NotNull()
                     .Continue();
         }
 

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PixelBattles.Server.BusinessLogic.Managers;
 using PixelBattles.Server.BusinessLogic.Models;
-using PixelBattles.Shared.DataTransfer.Api.Battle;
 using PixelBattles.Shared.DataTransfer.Api.Game;
 using System;
 using System.Threading.Tasks;
@@ -82,7 +81,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
         }
 
         [HttpPost("game")]
-        public async Task<IActionResult> CreateGameAsync(CreateGameDTO commandDTO)
+        public async Task<IActionResult> CreateGameAsync([FromBody] CreateGameDTO commandDTO)
         {
             try
             {
@@ -107,7 +106,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
         }
 
         [HttpPost("game/token")]
-        public async Task<IActionResult> CreateGameTokenAsync(CreateGameTokenDTO commandDTO)
+        public async Task<IActionResult> CreateGameTokenAsync([FromBody] CreateGameTokenDTO commandDTO)
         {
             try
             {

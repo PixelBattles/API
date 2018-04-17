@@ -11,5 +11,10 @@ namespace PixelBattles.Server.IntegrationTests
         {
             return configuration.GetSection("api")["baseUrl"];
         }
+
+        public static string GetHubBaseUrl(this IConfiguration configuration)
+        {
+            return configuration.GetSection("hub")["baseUrl"];
+        }
     }
 }
