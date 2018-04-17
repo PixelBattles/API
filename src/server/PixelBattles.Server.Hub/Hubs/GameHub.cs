@@ -22,5 +22,30 @@ namespace PixelBattles.Server.Hubs
         {
             await base.OnDisconnectedAsync(exception);
         }
+
+        public void GetGameInfo()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SubscribeChunk()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UnsubscribeChunk()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetChunkState()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ProcessAction()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
