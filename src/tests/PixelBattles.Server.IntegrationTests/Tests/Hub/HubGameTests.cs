@@ -65,5 +65,22 @@ namespace PixelBattles.Server.IntegrationTests.Tests
                     .With(t => t.Connect())
                     .Continue();
         }
+
+        [Fact]
+        public void HubClient_Can_Get_GameInfo()
+        {
+            Context
+                .Setup(new HubClient())
+                    .With(t => t.BackendUrl = Configuration.GetHubBaseUrl())
+                    .With(t => t.Token = Context.Get<string>("Token").Value)
+                    .Save()
+                    .With(t => t.Connect())
+                    .Select(t => t.GetGameInfo())
+                    .Save()
+                    .Assert()
+                        .NotNull()
+                        .Equals(t => t.GameId, Context.Get<Guid>("GameId").Value)
+                    .Continue();
+        }
     }
 }

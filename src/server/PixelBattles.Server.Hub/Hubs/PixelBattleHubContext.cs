@@ -1,35 +1,57 @@
-﻿//using Microsoft.AspNetCore.SignalR;
-//using PixelBattles.Server.BusinessLogic.Processors;
-//using System;
-//using System.Collections.Concurrent;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
+using PixelBattles.Server.BusinessLogic.Managers;
+using PixelBattles.Shared.DataTransfer.Hub;
+using System;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
-//namespace PixelBattles.Server.Hubs
-//{
-//    public class PixelBattleHubContext
-//    {
-//        protected ConcurrentDictionary<Guid, IGameProcessor> Games { get; set; }
-        
-//        protected IHubContext<PixelBattleHub> HubContext { get; set; }
+namespace PixelBattles.Server.Hubs
+{
+    public class PixelBattleHubContext
+    {
+        protected ConcurrentDictionary<Guid, GameInfoDTO> Games { get; set; }
 
-//        public PixelBattleHubContext(
-//            IHubContext<PixelBattleHub> hubContext)
-//        {
-//            this.HubContext = hubContext;
-//            this.Games = new ConcurrentDictionary<Guid, IGameProcessor>();
-//        }
+        protected IHubContext<GameHub> GameHubContext { get; set; }
 
-//        public IGameProcessor GetGame(Guid gameId)
-//        {
-//            if (Games.TryGetValue(gameId, out IGameProcessor game))
-//            {
-//                return game;
-//            }
-//            return null;
-//        }
+        protected IServiceScopeFactory ServiceScopeFactory { get; set; }
 
-//        public bool ContainsGame(Guid gameId)
-//        {
-//            return Games.ContainsKey(gameId);
-//        }
-//    }
-//}
+        public PixelBattleHubContext(
+            IServiceScopeFactory serviceScopeFactory,
+            IHubContext<GameHub> gameHubContext)
+        {
+            this.GameHubContext = gameHubContext;
+            this.ServiceScopeFactory = serviceScopeFactory;
+            this.Games = new ConcurrentDictionary<Guid, GameInfoDTO>();
+        }
+
+        public async Task<GameInfoDTO> GetGameAsync(Guid gameId)
+        {
+            if (Games.TryGetValue(gameId, out GameInfoDTO gameInfo))
+            {
+                return gameInfo;
+            }
+            else
+            {
+                using (var scope = ServiceScopeFactory.CreateScope())
+                {
+                    var gameManager = scope.ServiceProvider.GetRequiredService<IGameManager>();
+                    var game = await gameManager.GetGameAsync(gameId);
+                    gameInfo = new GameInfoDTO()
+                    {
+                        GameId = gameId,
+                        GameSizeX = game.Width,
+                        GameSizeY = game.Height,
+                        ChunkSizeX = game.Width,
+                        ChunkSizeY = game.Height
+                    };
+                }
+                if (gameInfo != null)
+                {
+                    gameInfo = Games.AddOrUpdate(gameId, gameInfo, (k, v) => v);
+                }
+            }
+            return gameInfo;
+        }
+    }
+}

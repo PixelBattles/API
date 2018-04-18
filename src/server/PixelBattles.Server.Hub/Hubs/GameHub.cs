@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using PixelBattles.Server.BusinessLogic.Managers;
+using PixelBattles.Shared.DataTransfer.Hub;
 using System;
 using System.Threading.Tasks;
 
@@ -9,8 +11,16 @@ namespace PixelBattles.Server.Hubs
     [Authorize(JwtBearerDefaults.AuthenticationScheme)]
     public class GameHub : Hub
     {
-        public GameHub()
+        private PixelBattleHubContext PixelBattleHubContext { get;set;}
+        
+        public GameHub(PixelBattleHubContext pixelBattleHubContext)
         {
+            this.PixelBattleHubContext = pixelBattleHubContext;
+        }
+
+        private Guid GetGameId()
+        {
+            return Guid.Parse(Context.User.FindFirst(GameTokenConstants.GameIdClaim).Value);
         }
 
         public async override Task OnConnectedAsync()
@@ -23,14 +33,14 @@ namespace PixelBattles.Server.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public void GetGameInfo()
+        public Task<GameInfoDTO> GetGameInfoAsync()
         {
-            throw new NotImplementedException();
+            return PixelBattleHubContext.GetGameAsync(GetGameId());
         }
 
-        public void SubscribeChunk()
+        public Task<bool> SubscribeChunkAsync(int x, int y)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(false);
         }
 
         public void UnsubscribeChunk()

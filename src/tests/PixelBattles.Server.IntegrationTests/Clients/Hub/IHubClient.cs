@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PixelBattles.Shared.DataTransfer.Hub;
+using System;
 
 namespace PixelBattles.Server.IntegrationTests.Clients.Hub
 {
@@ -11,6 +12,8 @@ namespace PixelBattles.Server.IntegrationTests.Clients.Hub
         string Token { get; set; }
 
         void Connect();
+
+        GameInfoDTO GetGameInfo();
 
         void Disconnect();
     }

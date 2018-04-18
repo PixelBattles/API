@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
+using PixelBattles.Shared.DataTransfer.Hub;
 using System;
 using System.Threading.Tasks;
 
@@ -39,6 +40,16 @@ namespace PixelBattles.Server.IntegrationTests.Clients.Hub
         public void Connect()
         {
             ConnectAsync().Wait();
+        }
+
+        public Task<GameInfoDTO> GetGameInfoAsync()
+        {
+            return hubConnection.InvokeAsync<GameInfoDTO>("GetGameInfoAsync");
+        }
+
+        public GameInfoDTO GetGameInfo()
+        {
+            return GetGameInfoAsync().Result;
         }
 
         public async Task DisconnectAsync()
