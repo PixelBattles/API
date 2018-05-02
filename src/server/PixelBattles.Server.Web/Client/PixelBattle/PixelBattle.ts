@@ -13,13 +13,13 @@ export class PixelBattle {
     private game: PixelGame;
     private gameContainer: HTMLDivElement;
     
-    constructor(battleContainer: HTMLDivElement, battleId: string) {
+    constructor(battleContainer: HTMLDivElement) {
         this.battleContainer = battleContainer;
         this.battleContainer.className = "card";
-        this.battleId = battleId;
-        this.apiClient = new ApiClient();
+        this.battleId = this.battleContainer.getAttribute("battle-id");
+        this.apiClient = new ApiClient("/api/");
         
-        this.apiClient.getBattleInfo(battleId).then(battle => {
+        this.apiClient.getBattleInfo(this.battleId).then(battle => {
             this.battleHeader = this.createBattleHeader("Test");
             this.battleContainer.appendChild(this.battleHeader);
             this.gameContainer = this.createGameContainer();

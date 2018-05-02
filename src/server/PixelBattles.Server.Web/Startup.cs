@@ -92,12 +92,11 @@ namespace PixelBattles.Server.Web
 
                 routes.MapRoute(
                     name: "dashboard",
-                    template: "game/{*.}",
-                    defaults: new { controller = "Dashboard", action = "Index" });
-
+                    template: "{controller=Dashboard}/{action=Battles}/{id?}");
+                
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
-                    defaults: new { controller = "Dashboard", action = "Index" });
+                    defaults: new { controller = "Dashboard", action = "Home" });
             });
         }
     }
