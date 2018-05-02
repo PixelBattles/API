@@ -1,11 +1,15 @@
 ﻿using System;
 
-namespace PixelBattles.Shared.DataTransfer.Api.Battle
+namespace PixelBattles.Server.BusinessLogic.Models
 {
-    public class BattleDTO
+    public class UpdateBattleCommand
     {
         public Guid BattleId { get; set; }
+
         public string Name { get; set; }
+
         public string Description { get; set; }
+
+        public Guid UserId { get; set; }
     }
 }

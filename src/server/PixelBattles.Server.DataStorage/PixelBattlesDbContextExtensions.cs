@@ -12,7 +12,6 @@ namespace PixelBattles.Server.DataStorage
 
         private static void SeedEnumLookups(PixelBattlesDbContext context)
         {
-            EnumLookup<BattleStatusEntity>.SeedEnumValues(context.Set<EnumLookup<BattleStatusEntity>>(), @enum => @enum);
             context.SaveChanges();
         }
     }

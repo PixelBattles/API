@@ -7,5 +7,7 @@ namespace PixelBattles.Server.BusinessLogic.Models
         public string Name { get; set; }
 
         public Guid? UserId { get; set; }
+
+        public int From { get; set; }
     }
 }

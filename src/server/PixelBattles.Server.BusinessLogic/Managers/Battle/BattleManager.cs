@@ -41,7 +41,6 @@ namespace PixelBattles.Server.BusinessLogic.Managers
         
         protected override void DisposeStores()
         {
-            BattleStore.Dispose();
         }
 
         public async Task<CreateBattleResult> CreateBattleAsync(CreateBattleCommand command)
@@ -53,21 +52,19 @@ namespace PixelBattles.Server.BusinessLogic.Managers
                 return new CreateBattleResult(new Error("Empty name", "Name can't be empty"));
             }
 
-            var existingBattle = await BattleStore.GetBattleAsync(command.Name, CancellationToken);
-            if (existingBattle != null)
-            {
-                return new CreateBattleResult(new Error("Name duplication", "Battle with the same name is already exist"));
-            }
+            //var existingBattle = await BattleStore.GetBattleAsync(command.Name, CancellationToken);
+            //if (existingBattle != null)
+            //{
+            //    return new CreateBattleResult(new Error("Name duplication", "Battle with the same name is already exist"));
+            //}
 
             var battle = new BattleEntity()
             {
                 Description = command.Description,
-                Name = command.Name,
-                Status = BattleStatusEntity.Running,
-                UserBattles = new List<UserBattleEntity> { new UserBattleEntity { UserId = command.UserId } }
+                Name = command.Name
             };
 
-            var result = await BattleStore.CreateAsync(battle, CancellationToken);
+            var result = await BattleStore.CreateBattleAsync(battle, CancellationToken);
             if (result.Succeeded)
             {
                 return new CreateBattleResult(battle.BattleId);
@@ -80,16 +77,29 @@ namespace PixelBattles.Server.BusinessLogic.Managers
 
         public async Task<IEnumerable<Battle>> GetBattlesAsync(BattleFilter battleFilter)
         {
-            ThrowIfDisposed();
-
             var battleEntityFilter = new BattleEntityFilter
             {
-                Name = battleFilter.Name,
-                UserId = battleFilter.UserId
+                Name = battleFilter.Name
             };
 
             var battles = await BattleStore.GetBattlesAsync(battleEntityFilter, CancellationToken);
             return Mapper.Map<IEnumerable<BattleEntity>, IEnumerable<Battle>>(battles);
+        }
+
+        public Task<Result> UpdateBattleAsync(UpdateBattleCommand command)
+        {
+            var battle = new BattleEntity()
+            {
+                BattleId = command.BattleId,
+                Description = command.Description,
+                Name = command.Name
+            };
+            return BattleStore.UpdateBattleAsync(battle, CancellationToken);
+        }
+
+        public Task<Result> DeleteBattleAsync(DeleteBattleCommand command)
+        {
+            return BattleStore.DeleteBattleAsync(command.BattleId, CancellationToken);
         }
     }
 }

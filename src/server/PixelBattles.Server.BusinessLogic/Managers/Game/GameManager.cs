@@ -86,8 +86,8 @@ namespace PixelBattles.Server.BusinessLogic.Managers
                 Height = command.Height,
                 Width = command.Width,
                 Cooldown = command.Cooldown,
-                StartDateUTC = command.StartDateUTC,
-                EndDateUTC = command.EndDateUTC,
+                StartDateUTC = command.StartDateUTC.Value,
+                EndDateUTC = command.EndDateUTC.Value,
                 State = null,
                 Name = command.Name
             };
