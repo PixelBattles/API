@@ -111,8 +111,6 @@ namespace PixelBattles.Server.Hubs
             {
                 routes.MapHub<GameHub>("/hubs/game");
             });
-            
-            //app.InitializeHub(Configuration, loggerFactory.CreateLogger("Hub initialization"));
         }
     }
 }
