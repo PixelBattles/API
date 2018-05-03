@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PixelBattles.Server.BusinessLogic.Managers
 {
-    public interface IBattleManager : IDisposable
+    public interface IBattleManager
     {
         Task<Battle> GetBattleAsync(Guid battleId);
         Task<IEnumerable<Battle>> GetBattlesAsync(BattleFilter battleFilter);

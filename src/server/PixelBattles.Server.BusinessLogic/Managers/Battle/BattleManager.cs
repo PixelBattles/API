@@ -34,29 +34,16 @@ namespace PixelBattles.Server.BusinessLogic.Managers
 
         public async Task<Battle> GetBattleAsync(Guid battleId)
         {
-            ThrowIfDisposed();
             var battle = await BattleStore.GetBattleAsync(battleId, CancellationToken);
             return Mapper.Map<BattleEntity, Battle>(battle);
         }
         
-        protected override void DisposeStores()
-        {
-        }
-
         public async Task<CreateBattleResult> CreateBattleAsync(CreateBattleCommand command)
         {
-            ThrowIfDisposed();
-
             if (String.IsNullOrWhiteSpace(command.Name))
             {
                 return new CreateBattleResult(new Error("Empty name", "Name can't be empty"));
             }
-
-            //var existingBattle = await BattleStore.GetBattleAsync(command.Name, CancellationToken);
-            //if (existingBattle != null)
-            //{
-            //    return new CreateBattleResult(new Error("Name duplication", "Battle with the same name is already exist"));
-            //}
 
             var battle = new BattleEntity()
             {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PixelBattles.Server.BusinessLogic.Managers
 {
-    public interface IGameManager : IDisposable
+    public interface IGameManager
     {
         Task<Game> GetGameAsync(Guid gameId);
 
