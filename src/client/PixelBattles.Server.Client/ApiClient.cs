@@ -9,13 +9,16 @@ namespace PixelBattles.Server.Client
 {
     public class ApiClient : IApiClient
     {
+        private readonly ApiClientOptions options;
         private readonly HttpClient httpClient;
 
-        public ApiClient(string baseUrl)
+        public ApiClient(ApiClientOptions options)
         {
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
+
             httpClient = new HttpClient
             {
-                BaseAddress = new Uri(baseUrl),
+                BaseAddress = new Uri(options.BaseUrl),
             };
         }
 
