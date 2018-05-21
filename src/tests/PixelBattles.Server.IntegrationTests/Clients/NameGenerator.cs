@@ -16,5 +16,10 @@ namespace PixelBattles.Server.IntegrationTests.Clients
         {
             return "TEST_" + DateTime.UtcNow.ToString() + Interlocked.Increment(ref index);
         }
+
+        public string GenerateGameName()
+        {
+            return "TEST_" + DateTime.UtcNow.ToString() + Interlocked.Increment(ref index);
+        }
     }
 }

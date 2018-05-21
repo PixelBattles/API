@@ -1,72 +1,69 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
+using PixelBattles.Server.Core;
 using PixelBattles.Server.DataStorage.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace PixelBattles.Server.DataStorage.Stores
 {
     [Register(typeof(IBattleStore))]
-    public class BattleStore : BaseStore<BattleEntity>, IBattleStore
+    public class BattleStore : IBattleStore
     {
-        public BattleStore(
-            PixelBattlesDbContext context) : base(
-                context: context)
-        {
+        private IMongoCollection<BattleEntity> battleCollection;
 
+        public BattleStore(IMongoCollection<BattleEntity> battleCollection)
+        {
+            this.battleCollection = battleCollection ?? throw new ArgumentNullException(nameof(battleCollection));
         }
 
         public async Task<BattleEntity> GetBattleAsync(Guid battleId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            ThrowIfDisposed();
-
-            var battle = await Entities
-                .FirstOrDefaultAsync(t => t.BattleId == battleId, cancellationToken);
-
-            return battle;
+            var result = await battleCollection.FindAsync(t => t.BattleId == battleId, null, cancellationToken);
+            return await result.SingleAsync(cancellationToken);
         }
 
-        public async Task<BattleEntity> GetBattleAsync(string name, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Result> CreateBattleAsync(BattleEntity battleEntity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            ThrowIfDisposed();
-
-            var battle = await Entities
-                .FirstOrDefaultAsync(t => t.Name == name, cancellationToken);
-
-            return battle;
+            await battleCollection.InsertOneAsync(battleEntity, null, cancellationToken);
+            return Result.Success;
         }
 
-        public async Task<IEnumerable<BattleEntity>> GetBattlesAsync(BattleEntityFilter battleFilter, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Result> UpdateBattleAsync(BattleEntity battleEntity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            ThrowIfDisposed();
-
-            var battlesQuery = ApplyFilter(Entities, battleFilter);
-
-            var battles = await battlesQuery
-                .ToListAsync(cancellationToken);
-
-            return battles;
-        }
-
-        private IQueryable<BattleEntity> ApplyFilter(IQueryable<BattleEntity> battles, BattleEntityFilter filter)
-        {
-            if (filter.UserId.HasValue)
+            var result = await battleCollection.ReplaceOneAsync(t => t.BattleId == battleEntity.BattleId, battleEntity, new UpdateOptions { IsUpsert = false }, cancellationToken);
+            if (result.MatchedCount == 0)
             {
-                var userId = filter.UserId;
-                battles = battles.Where(t => t.UserBattles.Any(ub => ub.UserId == userId));
+                return Result.Failed(new Error("Battle not found", "Battle not found"));
             }
-            if (!String.IsNullOrWhiteSpace(filter.Name))
+            return Result.Success;
+        }
+
+        public async Task<IEnumerable<BattleEntity>> GetBattlesAsync(BattleEntityFilter battleEntityFilter, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var filterBuilder = Builders<BattleEntity>.Filter;
+            FilterDefinition<BattleEntity> filter = null;
+            if (!String.IsNullOrEmpty(battleEntityFilter.Name))
             {
-                var name = filter.Name;
-                battles = battles.Where(t => t.Name.Contains(name));
+                filter = filterBuilder.Text(battleEntityFilter.Name);
             }
-            return battles;
+            
+            var result = await battleCollection.FindAsync(
+                filter ?? FilterDefinition<BattleEntity>.Empty, 
+                new FindOptions<BattleEntity, BattleEntity>
+                {
+                }, 
+                cancellationToken);
+
+            return await result.ToListAsync();
+        }
+
+        public async Task<Result> DeleteBattleAsync(Guid battleId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await battleCollection.DeleteOneAsync(t => t.BattleId == battleId, cancellationToken);
+            return Result.Success;
         }
     }
 }

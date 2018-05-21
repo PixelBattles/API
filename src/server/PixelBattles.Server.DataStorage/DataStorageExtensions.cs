@@ -10,6 +10,7 @@ namespace PixelBattles.Server.DataStorage
         public static IServiceCollection AddDataStorage(this IServiceCollection services, IConfigurationRoot configuration)
         {
             return services
+                .AddMongoDbStorage(configuration)
                 .AddDbContext<PixelBattlesDbContext>(options =>
                 {
                     options.UseSqlServer(configuration["ConnectionStrings:DefaultConnection"],

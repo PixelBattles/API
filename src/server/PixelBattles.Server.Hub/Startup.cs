@@ -87,6 +87,8 @@ namespace PixelBattles.Server.Hubs
             services.AddAttributeRegistration();
 
             services.AddBusinessLogic(Configuration);
+
+            services.AddSingleton<PixelBattleHubContext>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -109,8 +111,6 @@ namespace PixelBattles.Server.Hubs
             {
                 routes.MapHub<GameHub>("/hubs/game");
             });
-            
-            //app.InitializeHub(Configuration, loggerFactory.CreateLogger("Hub initialization"));
         }
     }
 }

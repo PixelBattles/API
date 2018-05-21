@@ -34,37 +34,27 @@ namespace PixelBattles.Server.BusinessLogic.Managers
             GameStore = gameStore ?? throw new ArgumentNullException(nameof(gameStore));
             GameTokenGenerator = gameTokenGenerator ?? throw new ArgumentNullException(nameof(gameTokenGenerator));
         }
-
-        protected override void DisposeStores()
-        {
-            GameStore.Dispose();
-        }
         
         public async Task<Game> GetGameAsync(Guid gameId)
         {
-            ThrowIfDisposed();
             var game = await GameStore.GetGameAsync(gameId, CancellationToken);
             return Mapper.Map<GameEntity, Game>(game);
         }
 
         public async Task<IEnumerable<Game>> GetBattleGamesAsync(Guid battleId)
         {
-            ThrowIfDisposed();
             var games = await GameStore.GetBattleGamesAsync(battleId, CancellationToken);
             return Mapper.Map<IEnumerable<GameEntity>, IEnumerable<Game>>(games);
         }
 
         public async Task<Game> GetBattleGameAsync(Guid battleId)
         {
-            ThrowIfDisposed();
             var game = await GameStore.GetBattleGameAsync(battleId, CancellationToken);
             return Mapper.Map<GameEntity, Game>(game);
         }
 
         public async Task<CreateGameResult> CreateGameAsync(CreateGameCommand command)
         {
-            ThrowIfDisposed();
-
             if (command.StartDateUTC >= command.EndDateUTC)
             {
                 return new CreateGameResult(new Error("Wrong time limits", "Start date can't be later than end date"));
@@ -86,8 +76,8 @@ namespace PixelBattles.Server.BusinessLogic.Managers
                 Height = command.Height,
                 Width = command.Width,
                 Cooldown = command.Cooldown,
-                StartDateUTC = command.StartDateUTC,
-                EndDateUTC = command.EndDateUTC,
+                StartDateUTC = command.StartDateUTC.Value,
+                EndDateUTC = command.EndDateUTC.Value,
                 State = null,
                 Name = command.Name
             };
@@ -105,9 +95,7 @@ namespace PixelBattles.Server.BusinessLogic.Managers
         }
 
         public async Task<CreateGameTokenResult> CreateGameTokenAsync(CreateGameTokenCommand command)
-        {
-            ThrowIfDisposed();
-            
+        {            
             var game = await GameStore.GetGameAsync(command.GameId, CancellationToken);
 
             if (game == null)

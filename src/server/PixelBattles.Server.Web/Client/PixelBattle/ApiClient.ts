@@ -1,24 +1,20 @@
 ﻿import { IApiClient, Battle, Game } from "./IApiClient";
 import { IHubClient } from "./IHubClient";
 import { HubClient } from "./HubClient";
+import { HttpClient } from "@aspnet/signalr-client";
 
 export class ApiClient implements IApiClient {
-    constructor() {
+    private baseUrl: string;
+    private httpClient: HttpClient;
 
+    constructor(baseUrl: string) {
+        this.baseUrl = baseUrl;
+        this.httpClient = new HttpClient();
     }
 
-    public getBattleInfo(battleId: string): Promise<Battle> {
-        return new Promise<Battle>((resolve, reject) => {
-            if (battleId == "4e3c87ea-46ea-42d3-a253-a9a9524ce55d") {
-                resolve({
-                    battleId: "4e3c87ea-46ea-42d3-a253-a9a9524ce55d",
-                    name: "Mock battle",
-                    description: "Mock battle description"
-                });
-            } else {
-                reject("Battle not found");
-            }
-        });
+    public async getBattleInfo(battleId: string): Promise<Battle> {
+        let result = await this.httpClient.get(this.baseUrl + "battle/" + battleId)
+        return JSON.parse(result);;
     }
 
     public createHubClient(gameId: string, url: string, token: string): Promise<IHubClient> {
