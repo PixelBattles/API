@@ -6,11 +6,9 @@ using System.Threading;
 
 namespace PixelBattles.Server.BusinessLogic.Managers
 {
-    public abstract class BaseManager : IDisposable
+    public abstract class BaseManager
     {
         protected readonly HttpContext HttpContext;
-
-        private bool disposed;
 
         protected CancellationToken CancellationToken => HttpContext?.RequestAborted ?? CancellationToken.None;
 
@@ -30,39 +28,6 @@ namespace PixelBattles.Server.BusinessLogic.Managers
             this.ErrorDescriber = errorDescriber;
             this.Logger = logger;
             this.Mapper = mapper;
-        }
-
-        protected abstract void DisposeStores();
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposed)
-                return;
-
-            if (disposing)
-            {
-                DisposeStores();
-                // Free any other managed objects here.
-                //
-            }
-
-            // Free any unmanaged objects here.
-            //
-            disposed = true;
-        }
-
-        protected void ThrowIfDisposed()
-        {
-            if (disposed)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

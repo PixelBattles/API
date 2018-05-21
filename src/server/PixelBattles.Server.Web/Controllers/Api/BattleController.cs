@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PixelBattles.Server.BusinessLogic.Managers;
 using PixelBattles.Server.BusinessLogic.Models;
+using PixelBattles.Server.Core;
+using PixelBattles.Shared.DataTransfer;
 using PixelBattles.Shared.DataTransfer.Api.Battle;
 using System;
 using System.Collections.Generic;
@@ -51,8 +53,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
             {
                 var battleFilter = new BattleFilter()
                 {
-                    Name = battleFilterDTO.Name,
-                    UserId = battleFilterDTO.UserId
+                    Name = battleFilterDTO.Name
                 };
 
                 var battles = await BattleManager.GetBattlesAsync(battleFilter);
@@ -87,6 +88,46 @@ namespace PixelBattles.Server.Web.Controllers.Api
             catch (Exception exception)
             {
                 return OnException(exception, "Error while creating battle.");
+            }
+        }
+
+        [HttpDelete("battle/{battleId:guid}")]
+        public async Task<IActionResult> DeleteBattleAsync(Guid battleId)
+        {
+            try
+            {
+                DeleteBattleCommand command = new DeleteBattleCommand()
+                {
+                    BattleId = battleId
+                };
+                var result = await BattleManager.DeleteBattleAsync(command);
+                var resultDTO = Mapper.Map<Result, ResultDTO>(result);
+                return OnResult(resultDTO);
+            }
+            catch (Exception exception)
+            {
+                return OnException(exception, "Error while deleting battle.");
+            }
+        }
+
+        [HttpPut("battle")]
+        public async Task<IActionResult> UpdateBattleAsync([FromBody] UpdateBattleDTO commandDTO)
+        {
+            try
+            {
+                UpdateBattleCommand command = new UpdateBattleCommand()
+                {
+                    BattleId = commandDTO.BattleId,
+                    Name = commandDTO.Name,
+                    Description = commandDTO.Description
+                };
+                var result = await BattleManager.UpdateBattleAsync(command);
+                var resultDTO = Mapper.Map<Result, ResultDTO>(result);
+                return OnResult(resultDTO);
+            }
+            catch (Exception exception)
+            {
+                return OnException(exception, "Error while updating battle.");
             }
         }
     }

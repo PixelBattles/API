@@ -2,7 +2,7 @@
 
 namespace PixelBattles.Shared.DataTransfer.Api.Battle
 {
-    public class BattleDTO
+    public class UpdateBattleDTO
     {
         public Guid BattleId { get; set; }
         public string Name { get; set; }

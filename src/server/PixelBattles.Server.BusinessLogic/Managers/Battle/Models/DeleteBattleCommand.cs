@@ -2,17 +2,10 @@
 
 namespace PixelBattles.Server.BusinessLogic.Models
 {
-    public class UserBattle
+    public class DeleteBattleCommand
     {
         public Guid BattleId { get; set; }
 
         public Guid UserId { get; set; }
-    }
-
-    public partial class BusinessLogicMappingProfile
-    {
-        private void InitializeUserBattle()
-        {
-        }
     }
 }

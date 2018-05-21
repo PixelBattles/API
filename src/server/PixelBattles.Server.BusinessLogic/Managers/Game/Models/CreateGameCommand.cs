@@ -8,9 +8,9 @@ namespace PixelBattles.Server.BusinessLogic.Models
 
         public string Name { get; set; }
 
-        public DateTime StartDateUTC { get; set; }
+        public DateTime? StartDateUTC { get; set; }
 
-        public DateTime EndDateUTC { get; set; }
+        public DateTime? EndDateUTC { get; set; }
 
         public int Height { get; set; }
 

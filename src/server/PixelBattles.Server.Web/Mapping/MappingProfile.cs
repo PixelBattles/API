@@ -2,7 +2,6 @@
 using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Shared.DataTransfer.Api.Battle;
 using PixelBattles.Shared.DataTransfer.Api.Game;
-using PixelBattles.Shared.DataTransfer.Api.Hub;
 using System.Linq;
 using System.Reflection;
 
@@ -28,13 +27,7 @@ namespace PixelBattles.Server.Web.Mapping
             CreateMap<BattleFilter, BattleFilterDTO>();
             CreateMap<CreateBattleResult, CreateBattleResultDTO>();
         }
-
-        private void InitializeHub()
-        {
-            CreateMap<Hub, HubDTO>();
-            CreateMap<CreateHubResult, CreateHubResultDTO>();
-        }
-
+        
         private void InitializeGame()
         {
             CreateMap<Game, GameDTO>();
