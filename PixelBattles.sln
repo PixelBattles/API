@@ -38,6 +38,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Client.Emulato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBattles.Server.IntegrationTests", "src\tests\PixelBattles.Server.IntegrationTests\PixelBattles.Server.IntegrationTests.csproj", "{F2971F8A-AF4F-4BC5-886A-125C800F307B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{FA147EDB-136F-4536-8F2C-78D3EC01EC41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBattles.Server.Client", "src\client\PixelBattles.Server.Client\PixelBattles.Server.Client.csproj", "{84E2B4D6-3886-425E-B687-F01300C82922}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +88,10 @@ Global
 		{F2971F8A-AF4F-4BC5-886A-125C800F307B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2971F8A-AF4F-4BC5-886A-125C800F307B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2971F8A-AF4F-4BC5-886A-125C800F307B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84E2B4D6-3886-425E-B687-F01300C82922}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84E2B4D6-3886-425E-B687-F01300C82922}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84E2B4D6-3886-425E-B687-F01300C82922}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84E2B4D6-3886-425E-B687-F01300C82922}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +111,8 @@ Global
 		{F3C9C74A-957C-4C24-A501-F6260C8504A6} = {0CBC0211-8B5D-4627-BC64-A3F4D642A6A4}
 		{6DFEA50B-C786-4917-832A-C96DB3AD9262} = {F3C9C74A-957C-4C24-A501-F6260C8504A6}
 		{F2971F8A-AF4F-4BC5-886A-125C800F307B} = {14CAFEE6-5A4F-4F32-AC92-3AEA059DB69E}
+		{FA147EDB-136F-4536-8F2C-78D3EC01EC41} = {0CBC0211-8B5D-4627-BC64-A3F4D642A6A4}
+		{84E2B4D6-3886-425E-B687-F01300C82922} = {FA147EDB-136F-4536-8F2C-78D3EC01EC41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {92FE1D4D-731F-46E2-B2D6-DE83EB22C174}
