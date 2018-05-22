@@ -1,8 +1,8 @@
-﻿using PixelBattles.Shared.DataTransfer.Api.Game;
+﻿using Newtonsoft.Json;
+using PixelBattles.Shared.DataTransfer.Api.Battle;
 using System;
 using System.Net.Http;
 using System.Threading;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace PixelBattles.Server.Client
@@ -19,13 +19,13 @@ namespace PixelBattles.Server.Client
             };
         }
 
-        public async Task<GameDTO> GetGameAsync(Guid gameId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<BattleDTO> GetBattleAsync(Guid battleId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var response = await httpClient.GetAsync("/api/game/" + gameId);
+            var response = await httpClient.GetAsync("/api/battle/" + battleId);
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var game = JsonConvert.DeserializeObject<GameDTO>(responseContent);
+                var game = JsonConvert.DeserializeObject<BattleDTO>(responseContent);
                 return game;
             }
             throw new InvalidOperationException();

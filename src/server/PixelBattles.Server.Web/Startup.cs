@@ -39,9 +39,7 @@ namespace PixelBattles.Server.Web
             services.AddBusinessLogic(ConfigurationRoot);
 
             services.AddOptions();
-
-            services.AddAttributeRegistration();
-
+            
             services.AddAutoMapper();
 
             services.AddSwaggerGen(c =>

@@ -11,5 +11,11 @@ namespace PixelBattles.Server.DataStorage.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public BattleSettingsEntity Settings { get; set; }
+
+        public DateTime StartDateUTC { get; set; }
+
+        public DateTime EndDateUTC { get; set; }
     }
 }

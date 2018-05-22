@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PixelBattles.Server.DataStorage.Models
+﻿namespace PixelBattles.Server.DataStorage.Models
 {
     public class BattleEntityFilter
     {

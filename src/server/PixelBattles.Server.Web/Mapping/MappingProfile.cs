@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Shared.DataTransfer.Api.Battle;
-using PixelBattles.Shared.DataTransfer.Api.Game;
 using System.Linq;
 using System.Reflection;
 
@@ -24,15 +23,10 @@ namespace PixelBattles.Server.Web.Mapping
         private void InitializeOrganization()
         {
             CreateMap<Battle, BattleDTO>();
+            CreateMap<BattleSettings, BattleSettingsDTO>();
             CreateMap<BattleFilter, BattleFilterDTO>();
             CreateMap<CreateBattleResult, CreateBattleResultDTO>();
-        }
-        
-        private void InitializeGame()
-        {
-            CreateMap<Game, GameDTO>();
-            CreateMap<CreateGameResult, CreateGameResultDTO>();
-            CreateMap<CreateGameTokenResult, CreateGameTokenResultDTO>();
+            CreateMap<CreateBattleTokenResult, CreateBattleTokenResultDTO>();
         }
     }
 }

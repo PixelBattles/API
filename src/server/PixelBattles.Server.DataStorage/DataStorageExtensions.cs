@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PixelBattles.Server.DataStorage.Stores;
 
 namespace PixelBattles.Server.DataStorage
 {
@@ -11,24 +10,13 @@ namespace PixelBattles.Server.DataStorage
         {
             return services
                 .AddMongoDbStorage(configuration)
-                .AddDbContext<PixelBattlesDbContext>(options =>
-                {
-                    options.UseSqlServer(configuration["ConnectionStrings:DefaultConnection"],
-                    sqlOptions => sqlOptions.MigrationsAssembly(typeof(DataStorageExtensions).Assembly.GetName().Name));
-                });
+                .AddStores();
         }
 
-        public static IWebHost Migrate(this IWebHost webhost)
+        private static IServiceCollection AddStores(this IServiceCollection services)
         {
-            using (var scope = webhost.Services.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                using (var dbContext = scope.ServiceProvider.GetRequiredService<PixelBattlesDbContext>())
-                {
-                    dbContext.Database.Migrate();
-                    dbContext.EnsureSeedData();
-                }
-            }
-            return webhost;
+            return services
+                .AddScoped<IBattleStore,BattleStore>();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PixelBattles.Server.BusinessLogic.Models;
 using PixelBattles.Server.Core;
@@ -12,13 +11,14 @@ using System.Threading.Tasks;
 
 namespace PixelBattles.Server.BusinessLogic.Managers
 {
-    [Register(typeof(IBattleManager))]
     public class BattleManager : BaseManager, IBattleManager
     {
         protected IBattleStore BattleStore { get; set; }
+        protected IBattleTokenGenerator BattleTokenGenerator { get; set; }
 
         public BattleManager(
             IBattleStore battleStore,
+            IBattleTokenGenerator battleTokenGenerator,
             IHttpContextAccessor contextAccessor,
             ErrorDescriber errorDescriber,
             IMapper mapper,
@@ -30,6 +30,7 @@ namespace PixelBattles.Server.BusinessLogic.Managers
                   logger: logger)
         {
             BattleStore = battleStore ?? throw new ArgumentNullException(nameof(battleStore));
+            BattleTokenGenerator = battleTokenGenerator ?? throw new ArgumentNullException(nameof(battleTokenGenerator));
         }
 
         public async Task<Battle> GetBattleAsync(Guid battleId)
@@ -48,7 +49,21 @@ namespace PixelBattles.Server.BusinessLogic.Managers
             var battle = new BattleEntity()
             {
                 Description = command.Description,
-                Name = command.Name
+                Name = command.Name,
+                Settings = new BattleSettingsEntity
+                {
+                    CenterX = 0,
+                    CenterY = 0,
+                    Cooldown = 0,
+                    ChunkHeight = 100,
+                    ChunkWidth = 100,
+                    MaxHeightIndex = 99,
+                    MaxWidthIndex = 99,
+                    MinHeightIndex = -100,
+                    MinWidthIndex = -100
+                },
+                StartDateUTC = DateTime.UtcNow,
+                EndDateUTC = DateTime.UtcNow.AddDays(100)
             };
 
             var result = await BattleStore.CreateBattleAsync(battle, CancellationToken);
@@ -73,20 +88,35 @@ namespace PixelBattles.Server.BusinessLogic.Managers
             return Mapper.Map<IEnumerable<BattleEntity>, IEnumerable<Battle>>(battles);
         }
 
-        public Task<Result> UpdateBattleAsync(UpdateBattleCommand command)
+        public async Task<Result> UpdateBattleAsync(UpdateBattleCommand command)
         {
-            var battle = new BattleEntity()
+            var battle = await BattleStore.GetBattleAsync(command.BattleId);
+            if (battle == null)
             {
-                BattleId = command.BattleId,
-                Description = command.Description,
-                Name = command.Name
-            };
-            return BattleStore.UpdateBattleAsync(battle, CancellationToken);
+                return Result.Failed(new Error("Battle not found", "Battle not found"));
+            }
+            battle.Description = command.Description;
+            battle.Name = command.Name;
+            return await BattleStore.UpdateBattleAsync(battle, CancellationToken);
         }
 
         public Task<Result> DeleteBattleAsync(DeleteBattleCommand command)
         {
             return BattleStore.DeleteBattleAsync(command.BattleId, CancellationToken);
+        }
+
+        public async Task<CreateBattleTokenResult> CreateBattleTokenAsync(CreateBattleTokenCommand command)
+        {
+            var battle = await BattleStore.GetBattleAsync(command.BattleId, CancellationToken);
+
+            if (battle == null)
+            {
+                return new CreateBattleTokenResult(new Error("Battle not found", "Battle not found"));
+            }
+
+            string token = BattleTokenGenerator.GenerateToken(command.BattleId, command.UserId);
+
+            return new CreateBattleTokenResult(token);
         }
     }
 }

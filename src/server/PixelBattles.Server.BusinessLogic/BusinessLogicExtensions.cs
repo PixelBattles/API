@@ -9,16 +9,17 @@ namespace PixelBattles.Server.BusinessLogic
     {
         public static IServiceCollection AddBusinessLogic(this IServiceCollection services, IConfigurationRoot configuration)
         {
-            services.AddGameTokenLogic(configuration);
-
             return services
                 .AddDataStorage(configuration)
+                .AddBattleTokenLogic(configuration)
+                .AddManagers()
                 .AddSingleton<ErrorDescriber>();
         }
         
-        public static IServiceCollection AddGameProcessors(this IServiceCollection services, IConfigurationRoot configuration)
+        public static IServiceCollection AddManagers(this IServiceCollection services)
         {
-            return services;
+            return services
+                .AddScoped<IBattleManager, BattleManager>();
         }
     }
 }

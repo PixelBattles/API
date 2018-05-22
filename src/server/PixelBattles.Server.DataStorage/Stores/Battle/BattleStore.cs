@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using PixelBattles.Server.Core;
 using PixelBattles.Server.DataStorage.Models;
 using System;
@@ -9,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace PixelBattles.Server.DataStorage.Stores
 {
-    [Register(typeof(IBattleStore))]
     public class BattleStore : IBattleStore
     {
         private IMongoCollection<BattleEntity> battleCollection;

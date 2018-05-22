@@ -8,7 +8,7 @@ namespace PixelBattles.Server.Web
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args).Migrate();
+            var host = BuildWebHost(args);
             host.Run();
         }
 

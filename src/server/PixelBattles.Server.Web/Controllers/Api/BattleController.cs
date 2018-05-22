@@ -130,5 +130,24 @@ namespace PixelBattles.Server.Web.Controllers.Api
                 return OnException(exception, "Error while updating battle.");
             }
         }
+
+        [HttpPost("battle/token")]
+        public async Task<IActionResult> CreateGameTokenAsync([FromBody] CreateBattleTokenDTO commandDTO)
+        {
+            try
+            {
+                var command = new CreateBattleTokenCommand()
+                {
+                    BattleId = commandDTO.BattleId
+                };
+                var result = await BattleManager.CreateBattleTokenAsync(command);
+                var resultDTO = Mapper.Map<CreateBattleTokenResult, CreateBattleTokenResultDTO>(result);
+                return OnResult(resultDTO);
+            }
+            catch (Exception exception)
+            {
+                return OnException(exception, "Error while creating battle token.");
+            }
+        }
     }
 }
