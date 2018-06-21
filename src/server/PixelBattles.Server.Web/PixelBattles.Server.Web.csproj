@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Client\PixelBattle\Controls\BattleHeader.ts" />
     <None Remove="Client\PixelBattle\IApiClient.ts" />
     <None Remove="Client\PixelBattle\IHubClient.ts" />
   </ItemGroup>
@@ -14,6 +15,7 @@
   <ItemGroup>
     <Folder Include="Client\Landing\img\" />
     <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\typescriptTemp\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,8 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="Client\PixelBattle\IApiClient.ts" />
-    <TypeScriptCompile Include="Client\PixelBattle\IHubClient.ts" />
+    <TypeScriptCompile Include="Client\PixelBattle\Clients\IApiClient.ts" />
+    <TypeScriptCompile Include="Client\PixelBattle\Clients\IHubClient.ts" />
+    <TypeScriptCompile Include="Client\PixelBattle\Controls\BattleHeader.ts" />
   </ItemGroup>
 
 </Project>
