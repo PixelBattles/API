@@ -1,6 +1,7 @@
 ﻿import { ApiClient } from "./Clients/ApiClient";
 import { IApiClient } from "./Clients/IApiClient";
 import { BattleHeader } from "./Controls/BattleHeader";
+import { BattleCanvas } from "./Controls/BattleCanvas";
 
 export class PixelBattle {
     private apiClient: IApiClient;
@@ -9,7 +10,7 @@ export class PixelBattle {
     private widgetContainer: HTMLDivElement;
 
     private header: BattleHeader;
-    private battleContainer: HTMLDivElement;
+    private canvas: BattleCanvas;
     
     constructor(widgetContainer: HTMLDivElement) {
         this.widgetContainer = widgetContainer;
@@ -17,29 +18,13 @@ export class PixelBattle {
         this.battleId = this.widgetContainer.getAttribute("battle-id");
 
         this.header = this.initializeHeader("test header text");
+        this.canvas = this.initializeCanvas();
+
+        window.onresize = this.resize.bind(this);
+        window.onload = this.resize.bind(this);
 
         this.apiClient = new ApiClient("/api/");
-        
-        //this.apiClient.getBattleInfo(this.battleId).then(battle => {
-        //    this.battleHeader = this.createBattleHeader("Test");
-        //    this.battleContainer.appendChild(this.battleHeader);
-        //    this.gameContainer = this.createGameContainer();
-        //    this.battleContainer.appendChild(this.gameContainer);
-        //    this.game = this.createGame(this.gameContainer, this.apiClient, this.battleId);
-
-        //window.addEventListener("resize", this.onResize.bind(this));
-        //    this.onResize();
-        //}, error => {
-        //    this.onError();
-        //});
     }
-
-    //private createGameContainer(): HTMLDivElement {
-    //    let gameContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
-    //    gameContainer.className = "gameContainer";
-    //    gameContainer.setAttribute("style","overflow:hidden");
-    //    return gameContainer;
-    //}
 
     private initializeHeader(text: string): BattleHeader{
         let headerContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
@@ -47,17 +32,13 @@ export class PixelBattle {
         return new BattleHeader(headerContainer, text);
     }
 
-    //private createGame(gameContainer: HTMLDivElement, apiClient: IApiClient, battleId : string): PixelGame {
-    //    let game: PixelGame = new PixelGame(gameContainer, apiClient, battleId);
-    //    return game;
-    //}
+    private initializeCanvas(): BattleCanvas {
+        let canvasContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
+        this.widgetContainer.appendChild(canvasContainer);
+        return new BattleCanvas(canvasContainer);
+    }
 
-    //private onError() {
-    //    let errorText = document.createTextNode('Error happened!');
-    //    this.battleContainer.appendChild(errorText);
-    //}
-
-    //private onResize(): void {
-    //    this.game.resize(this.battleContainer.clientWidth, this.battleContainer.clientHeight - this.battleHeader.clientHeight);
-    //}
+    public resize(ev: Event) {
+        this.canvas.resize(this.widgetContainer.offsetWidth - 2/*borders*/, this.widgetContainer.offsetHeight - this.header.height - 2/*borders*/);
+    }
 }
