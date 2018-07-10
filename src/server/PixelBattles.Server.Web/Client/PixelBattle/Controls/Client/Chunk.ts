@@ -1,4 +1,4 @@
-﻿export class BattleChunk {
+﻿export class Chunk {
     public canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
 

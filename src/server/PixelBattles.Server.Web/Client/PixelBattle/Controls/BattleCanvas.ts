@@ -1,4 +1,4 @@
-﻿import { BattleChunk } from "./BattleChunk";
+﻿import { Chunk } from "./Client/Chunk";
 
 export class BattleCanvas {
     private canvasContainer: HTMLDivElement;
@@ -63,14 +63,14 @@ export class BattleCanvas {
         let viewPortHalfHeight = this.canvas.height / 2;
         let viewPortHalfWidth = this.canvas.width / 2;
 
-        let chunk1 = new BattleChunk("red", 0, 0);//0,0
-        let chunk2 = new BattleChunk("green", -1, 0);//-1,0
+        let chunk1 = new Chunk("red", 0, 0);//0,0
+        let chunk2 = new Chunk("green", -1, 0);//-1,0
 
         this.renderChunk(chunk1, viewPortHalfWidth, viewPortHalfHeight);
         this.renderChunk(chunk2, viewPortHalfWidth, viewPortHalfHeight);
     }
 
-    private renderChunk(chunk: BattleChunk, viewPortHalfWidth: number, viewPortHalfHeight: number): void {
+    private renderChunk(chunk: Chunk, viewPortHalfWidth: number, viewPortHalfHeight: number): void {
         this.ctx.drawImage(
             chunk.canvas,
             viewPortHalfWidth + chunk.xIndex * 100 - this.cameraX + this.cameraOffsetX,
