@@ -5,9 +5,15 @@ export class BattleCanvas {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
 
-    private centerX: number;
-    private centerY: number;
+    private cameraX: number;
+    private cameraY: number;
     private scale: number;
+
+    private mouseX: number;
+    private mouseY: number;
+    private cameraOffsetX: number = 0;
+    private cameraOffsetY: number = 0;
+    private isDrag: boolean;
 
     constructor(canvasContainer: HTMLDivElement) {
         this.canvasContainer = canvasContainer;
@@ -18,9 +24,38 @@ export class BattleCanvas {
         this.ctx = this.canvas.getContext("2d");
         this.canvasContainer.appendChild<HTMLCanvasElement>(this.canvas);
 
-        this.centerX = 0;
-        this.centerY = -50;
+        //moving
+        this.canvas.onmousedown = this.mouseDown.bind(this);
+        this.canvas.onmouseup = this.mouseUp.bind(this);
+        this.canvas.onmousemove = this.mouseMove.bind(this);
+
+        this.cameraX = 0;
+        this.cameraY = -50;
         this.scale = 1;
+    }
+
+    private mouseMove(ev: MouseEvent): void {
+        if (this.isDrag) {
+            this.cameraOffsetX = ev.clientX - this.mouseX;
+            this.cameraOffsetY = ev.clientY - this.mouseY;
+            this.render();
+        }
+    }
+
+    private mouseDown(ev: MouseEvent): void {
+        this.mouseX = ev.clientX;
+        this.mouseY = ev.clientY;
+        this.isDrag = true;
+        this.render();
+    }
+
+    private mouseUp(ev: MouseEvent): void {
+        this.isDrag = false;
+        this.cameraX = this.cameraX - this.cameraOffsetX;
+        this.cameraY = this.cameraY + this.cameraOffsetY;
+        this.cameraOffsetX = 0;
+        this.cameraOffsetY = 0;
+        this.render();
     }
         
     private render(): void {
@@ -38,8 +73,8 @@ export class BattleCanvas {
     private renderChunk(chunk: BattleChunk, viewPortHalfWidth: number, viewPortHalfHeight: number): void {
         this.ctx.drawImage(
             chunk.canvas,
-            viewPortHalfWidth + chunk.xIndex * 100 - this.centerX,
-            viewPortHalfHeight + chunk.yIndex * 100 + this.centerY);
+            viewPortHalfWidth + chunk.xIndex * 100 - this.cameraX + this.cameraOffsetX,
+            viewPortHalfHeight + chunk.yIndex * 100 + this.cameraY + this.cameraOffsetY);
     }
 
     private renderBackground(): void {
