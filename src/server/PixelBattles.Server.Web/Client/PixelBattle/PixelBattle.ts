@@ -1,7 +1,7 @@
 ﻿import { ApiClient } from "./Clients/ApiClient";
 import { IApiClient } from "./Clients/IApiClient";
 import { BattleHeader } from "./Controls/BattleHeader";
-import { BattleCanvas } from "./Controls/BattleCanvas";
+import { BattleBody } from "./Controls/BattleBody";
 
 export class PixelBattle {
     private apiClient: IApiClient;
@@ -10,7 +10,7 @@ export class PixelBattle {
     private widgetContainer: HTMLDivElement;
 
     private header: BattleHeader;
-    private canvas: BattleCanvas;
+    private body: BattleBody;
     
     constructor(widgetContainer: HTMLDivElement) {
         this.widgetContainer = widgetContainer;
@@ -18,10 +18,10 @@ export class PixelBattle {
         this.battleId = this.widgetContainer.getAttribute("battle-id");
 
         this.header = this.initializeHeader("test header text");
-        this.canvas = this.initializeCanvas();
+        this.body = this.initializeBody();
 
-        window.onresize = this.resize.bind(this);
-        window.onload = this.resize.bind(this);
+        window.onresize = this.resize;
+        window.onload = this.resize;
 
         this.apiClient = new ApiClient("/api/");
     }
@@ -32,13 +32,13 @@ export class PixelBattle {
         return new BattleHeader(headerContainer, text);
     }
 
-    private initializeCanvas(): BattleCanvas {
+    private initializeBody(): BattleBody {
         let canvasContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
         this.widgetContainer.appendChild(canvasContainer);
-        return new BattleCanvas(canvasContainer);
+        return new BattleBody(canvasContainer);
     }
 
-    public resize(ev: Event) {
-        this.canvas.resize(this.widgetContainer.offsetWidth - 2/*borders*/, this.widgetContainer.offsetHeight - this.header.height - 2/*borders*/);
+    public resize = (ev: Event): void => {
+        this.body.resize(this.widgetContainer.offsetWidth - 2/*borders*/, this.widgetContainer.offsetHeight - this.header.height - 2/*borders*/);
     }
 }
