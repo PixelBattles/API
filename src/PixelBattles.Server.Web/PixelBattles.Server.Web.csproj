@@ -25,8 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\shared\PixelBattles.Shared.DataTransfer\PixelBattles.Shared.DataTransfer.csproj" />
     <ProjectReference Include="..\PixelBattles.Server.BusinessLogic\PixelBattles.Server.BusinessLogic.csproj" />
+    <ProjectReference Include="..\PixelBattles.Shared.DataTransfer\PixelBattles.Shared.DataTransfer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

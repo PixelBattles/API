@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Hub\" />
+    <Compile Remove="Hub\**" />
+    <EmbeddedResource Remove="Hub\**" />
+    <None Remove="Hub\**" />
   </ItemGroup>
 
 </Project>
