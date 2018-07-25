@@ -1,23 +1,7 @@
 ﻿import { HubConnection, TransportType, ConsoleLogger, LogLevel } from "@aspnet/signalr-client"
-import { IHubClient, } from "./IHubClient";
+import { IHubClient, IBattleInfo, IBattleAction, IChunkState, } from "./IHubClient";
 
 export class HubClient implements IHubClient {
-    //connectToGame(gameId: string): Promise<boolean> {
-    //    throw new Error("Method not implemented.");
-    //}
-    //disconnectFromGame(gameId: string): Promise<boolean> {
-    //    throw new Error("Method not implemented.");
-    //}
-    //getGameState(gameId: string): Promise<IGameState> {
-    //    throw new Error("Method not implemented.");
-    //}
-    //processAction(action: IBattleAction): Promise<IActionResult> {
-    //    throw new Error("Method not implemented.");
-    //}
-    //getGameDelta(gameId: string, from: number, to: number): Promise<IDeltaResult> {
-    //    throw new Error("Method not implemented.");
-    //}
-
     private hubConnection: HubConnection;
     private url: string;
     private token: string;
@@ -38,13 +22,30 @@ export class HubClient implements IHubClient {
         this.hubConnection.onclose(function (e) {
             this.handleConnection();
         });
-        //this.hubConnection.on('ActionMessage', this.onActionMessage);
         this.hubConnection.start().catch(function (e) {
             this.hubConnection();
         });
     }
 
-    //private onActionMessage(): void {
-
-    //}
+    connect(): Promise<void> {
+        return this.hubConnection.start();
+    }
+    disconnect(): void {
+        this.hubConnection.stop();
+    }
+    getBattleInfo(): Promise<IBattleInfo> {
+        throw new Error("Method not implemented.");
+    }
+    processAction(action: IBattleAction): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    getChunkState(xIndex: number, yIndex: number): Promise<IChunkState> {
+        throw new Error("Method not implemented.");
+    }
+    subscribeToChunk(xChunkIndex: number, yChunkIndex: number, callback: (...args: any[]) => void): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    unsubscribeFromChunk(xChunkIndex: number, yChunkIndex: number): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
 }
