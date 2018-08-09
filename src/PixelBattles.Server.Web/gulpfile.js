@@ -109,7 +109,7 @@ gulp.task("dashboard:generate-pixel-battles-package", function (cb) {
         .pipe(gulp.dest(paths.dashboard.js.dest))
         .pipe(buffer())
         .pipe(rename({ extname: '.min.js' }))
-        .pipe(babel({ presets: ['minify'] }))
+        //.pipe(babel({ presets: ['minify'] }))
         .pipe(gulp.dest(paths.dashboard.js.dest))
         .pipe(gzip())
         .pipe(gulp.dest(paths.dashboard.js.dest));

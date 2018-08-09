@@ -1,4 +1,4 @@
-﻿import { HubConnection, TransportType, ConsoleLogger, LogLevel } from "@aspnet/signalr-client"
+﻿import { HubConnection, LogLevel, HubConnectionBuilder, HttpTransportType } from "@aspnet/signalr"
 import { IHubClient, IBattleInfo, IBattleAction, IChunkState, } from "./IHubClient";
 
 export class HubClient implements IHubClient {
@@ -13,8 +13,14 @@ export class HubClient implements IHubClient {
         this.handleConnection();
     }
 
-    private createConnection() {
-        return new HubConnection(this.url + '?token=' + this.token, { transport: TransportType.WebSockets, logging: new ConsoleLogger(LogLevel.Information) });
+    private createConnection(): HubConnection {
+        return new HubConnectionBuilder()
+            .withUrl("http://localhost:10000/hubs/battles", {
+                transport: HttpTransportType.WebSockets,
+                logger: LogLevel.Information,
+                accessTokenFactory: () => this.token
+            })
+            .build();
     }
 
     private handleConnection() {

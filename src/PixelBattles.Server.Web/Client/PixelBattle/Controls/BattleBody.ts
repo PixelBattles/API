@@ -2,17 +2,26 @@
 import { IGameCanvas, GameCanvas } from "./Client/GameCanvas";
 import { ICamera, Camera } from "./Client/Camera";
 import { IRenderEngine, RenderEngine } from "./Client/RenderEngine";
+import { IBattle } from "../Clients/IApiClient";
+import { IHubClient } from "../Clients/IHubClient";
+import { HubClient } from "../Clients/HubClient";
 
 export class BattleBody {
+    private battle: IBattle;
+    private hubClient: IHubClient;
+
     private canvasContainer: HTMLDivElement;
     private canvas: HTMLCanvasElement;
     private gameCanvas: IGameCanvas;
     private camera: ICamera;
     private renderEngine: IRenderEngine;
 
-    constructor(canvasContainer: HTMLDivElement) {
+    constructor(canvasContainer: HTMLDivElement, battle: IBattle, hubClient: IHubClient) {
         this.canvasContainer = canvasContainer;
         this.canvasContainer.setAttribute("style", "margin:0;font-size:0;");
+
+        this.battle = battle;
+        this.hubClient = hubClient;
        
         this.canvas = document.createElement('canvas');
         this.canvas.setAttribute("style", "image-rendering:pixelated;");

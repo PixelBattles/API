@@ -72,7 +72,7 @@ namespace PixelBattles.Server.Web
             {
                 loggerFactory.AddDebug();
             }
-
+            
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
