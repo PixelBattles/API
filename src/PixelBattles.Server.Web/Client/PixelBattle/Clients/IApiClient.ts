@@ -1,21 +1,37 @@
-﻿//import { IHubClient } from "./IHubClient";
-
-export interface IApiClient {
-    //createHubClient(gameId: string, url: string, token: string): Promise<IHubClient>;
-    //getBattleInfo(battleId: string): Promise<Battle>; 
+﻿export interface IApiClient {
+    getBattle(battleId: string): Promise<IBattle>; 
+    getBattleToken(battleId: string): Promise<ITokenResult>; 
 }
 
-//export interface Battle {
-//    battleId: string;
-//    name: string;
-//    description: string;
-//}
+export interface IBattle {
+    battleId: string;
+    name: string;
+    description: string;
+    settings: {
+        chunkHeight: number;
+        chunkWidth: number;
+        maxHeightIndex: number;
+        maxWidthIndex: number;
+        minHeightIndex: number;
+        minWidthIndex: number;
+        centerX: number;
+        centerY: number;
+        cooldown: number;
+    };
+    startDateUTC: Date;
+    endDateUTC: Date;
+}
 
-//export interface Game {
-//    gameId: string;
-//    height: number;
-//    width: number;
-//    cooldown: number;
-//    startDateUTC: string;
-//    endDateUTC: string;
-//}
+export interface ITokenResult extends IResult {
+    token: string;
+}
+
+export interface IResult {
+    succeeded: boolean;
+    errors: Error;
+}
+
+export interface IError {
+    Code: string;
+    Description: string;
+}

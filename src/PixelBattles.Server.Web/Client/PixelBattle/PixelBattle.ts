@@ -1,5 +1,5 @@
 ﻿import { ApiClient } from "./Clients/ApiClient";
-import { IApiClient } from "./Clients/IApiClient";
+import { IApiClient, IBattle } from "./Clients/IApiClient";
 import { BattleHeader } from "./Controls/BattleHeader";
 import { BattleBody } from "./Controls/BattleBody";
 
@@ -7,6 +7,7 @@ export class PixelBattle {
     private apiClient: IApiClient;
 
     private battleId: string;
+    private battle: IBattle;
     private widgetContainer: HTMLDivElement;
 
     private header: BattleHeader;
@@ -17,15 +18,22 @@ export class PixelBattle {
         this.widgetContainer.className = "card";
         this.battleId = this.widgetContainer.getAttribute("battle-id");
 
-        this.header = this.initializeHeader("test header text");
+        this.initializeInternal();
+    }
+
+    private async initializeInternal(): Promise<void> {
+        this.apiClient = new ApiClient("/api/");
+        this.battle = await this.apiClient.getBattle(this.battleId);
+        let hubToken = await this.apiClient.getBattleToken(this.battleId);
+        
+        this.header = this.initializeHeader(this.battle.name);
         this.body = this.initializeBody();
 
         window.onresize = this.resize;
         window.onload = this.resize;
-
-        this.apiClient = new ApiClient("/api/");
+        this.resize(null);
     }
-
+    
     private initializeHeader(text: string): BattleHeader{
         let headerContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
         this.widgetContainer.appendChild(headerContainer);

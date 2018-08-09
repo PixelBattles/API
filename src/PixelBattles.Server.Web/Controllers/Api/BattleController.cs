@@ -132,7 +132,7 @@ namespace PixelBattles.Server.Web.Controllers.Api
         }
 
         [HttpPost("battle/token")]
-        public async Task<IActionResult> CreateGameTokenAsync([FromBody] CreateBattleTokenDTO commandDTO)
+        public async Task<IActionResult> CreateBattleTokenAsync([FromBody] CreateBattleTokenDTO commandDTO)
         {
             try
             {
