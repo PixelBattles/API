@@ -138,7 +138,8 @@ namespace PixelBattles.Server.Web.Controllers.Api
             {
                 var command = new CreateBattleTokenCommand()
                 {
-                    BattleId = commandDTO.BattleId
+                    BattleId = commandDTO.BattleId,
+                    UserId = Guid.Empty
                 };
                 var result = await BattleManager.CreateBattleTokenAsync(command);
                 var resultDTO = Mapper.Map<CreateBattleTokenResult, CreateBattleTokenResultDTO>(result);
