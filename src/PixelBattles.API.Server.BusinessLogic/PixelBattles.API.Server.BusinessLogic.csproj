@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PixelBattles.Server.DataStorage\PixelBattles.Server.DataStorage.csproj" />
+    <ProjectReference Include="..\PixelBattles.API.Server.DataStorage\PixelBattles.API.Server.DataStorage.csproj" />
   </ItemGroup>
 
 </Project>

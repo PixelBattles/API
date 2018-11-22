@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PixelBattles.Server.Client.Abstractions\PixelBattles.Server.Client.Abstractions.csproj" />
+    <ProjectReference Include="..\PixelBattles.API.Client.Abstractions\PixelBattles.API.Client.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

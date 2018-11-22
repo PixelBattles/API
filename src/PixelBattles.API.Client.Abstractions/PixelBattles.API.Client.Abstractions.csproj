@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PixelBattles.Shared.DataTransfer\PixelBattles.Shared.DataTransfer.csproj" />
+    <ProjectReference Include="..\PixelBattles.API.DataTransfer\PixelBattles.API.DataTransfer.csproj" />
   </ItemGroup>
 
 </Project>
