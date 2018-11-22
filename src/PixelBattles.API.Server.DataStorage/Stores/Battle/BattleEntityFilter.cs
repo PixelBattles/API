@@ -1,4 +1,4 @@
-﻿namespace PixelBattles.Server.DataStorage.Models
+﻿namespace PixelBattles.API.Server.DataStorage.Models
 {
     public class BattleEntityFilter
     {

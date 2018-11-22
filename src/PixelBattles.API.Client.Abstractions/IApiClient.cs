@@ -1,9 +1,9 @@
-﻿using PixelBattles.Shared.DataTransfer.Api.Battle;
+﻿using PixelBattles.API.DataTransfer.Battle;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PixelBattles.Server.Client
+namespace PixelBattles.API.Client
 {
     public interface IApiClient
     {

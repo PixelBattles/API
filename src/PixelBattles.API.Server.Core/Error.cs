@@ -1,4 +1,4 @@
-﻿namespace PixelBattles.Server.Core
+﻿namespace PixelBattles.API.Server
 {
     public class Error
     {

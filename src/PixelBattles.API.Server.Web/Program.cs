@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using PixelBattles.Server.DataStorage;
 
-namespace PixelBattles.Server.Web
+namespace PixelBattles.API.Server.Web
 {
     public class Program
     {

@@ -6,10 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
-using PixelBattles.Server.BusinessLogic;
+using PixelBattles.API.Server.BusinessLogic;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace PixelBattles.Server.Web
+namespace PixelBattles.API.Server.Web
 {
     public class Startup
     {

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using PixelBattles.Server.BusinessLogic.Models;
-using PixelBattles.Shared.DataTransfer.Api.Battle;
+using PixelBattles.API.DataTransfer.Battle;
+using PixelBattles.API.Server.BusinessLogic.Models;
 using System.Linq;
 using System.Reflection;
 
-namespace PixelBattles.Server.Web.Mapping
+namespace PixelBattles.API.Server.Web.Mapping
 {
     public partial class MappingProfile : Profile
     {

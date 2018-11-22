@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PixelBattles.Server.BusinessLogic.Managers
+namespace PixelBattles.API.Server.BusinessLogic.Managers
 {
     public interface IBattleTokenGenerator
     {

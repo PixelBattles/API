@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PixelBattles.Server.Core
+﻿namespace PixelBattles.API.Server
 {
     public static class EnvironmentNames
     {

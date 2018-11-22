@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace PixelBattles.Server.BusinessLogic.Models
+namespace PixelBattles.API.Server.BusinessLogic.Models
 {
     public partial class BusinessLogicMappingProfile : Profile
     {

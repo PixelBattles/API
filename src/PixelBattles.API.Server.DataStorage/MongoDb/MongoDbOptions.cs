@@ -1,4 +1,4 @@
-﻿namespace PixelBattles.Server.DataStorage
+﻿namespace PixelBattles.API.Server.DataStorage
 {
     public class MongoDbOptions
     {

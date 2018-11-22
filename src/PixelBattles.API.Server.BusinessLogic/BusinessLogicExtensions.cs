@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PixelBattles.Server.BusinessLogic.Managers;
-using PixelBattles.Server.DataStorage;
+using PixelBattles.API.Server.BusinessLogic.Managers;
+using PixelBattles.API.Server.DataStorage;
 
-namespace PixelBattles.Server.BusinessLogic
+namespace PixelBattles.API.Server.BusinessLogic
 {
     public static class BusinessLogicExtensions
     {

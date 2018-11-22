@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
 
-namespace PixelBattles.Server.DataStorage.Models
+namespace PixelBattles.API.Server.DataStorage.Models
 {
     public class BattleEntity
     {

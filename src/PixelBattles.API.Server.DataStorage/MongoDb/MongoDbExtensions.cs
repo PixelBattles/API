@@ -2,9 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using PixelBattles.Server.DataStorage.Models;
+using PixelBattles.API.Server.DataStorage.Models;
 
-namespace PixelBattles.Server.DataStorage
+namespace PixelBattles.API.Server.DataStorage
 {
     public static class MongoDbExtensions
     {

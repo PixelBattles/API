@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace PixelBattles.Server.Web.Controllers
+namespace PixelBattles.API.Server.Web.Controllers
 {
     public class HomeController : Controller
     {

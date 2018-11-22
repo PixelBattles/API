@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PixelBattles.Server.DataStorage.Stores;
+using PixelBattles.API.Server.DataStorage.Stores;
 
-namespace PixelBattles.Server.DataStorage
+namespace PixelBattles.API.Server.DataStorage
 {
     public static class DataStorageExtensions
     {

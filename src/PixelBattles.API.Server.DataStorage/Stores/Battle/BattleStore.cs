@@ -1,12 +1,11 @@
 ﻿using MongoDB.Driver;
-using PixelBattles.Server.Core;
-using PixelBattles.Server.DataStorage.Models;
+using PixelBattles.API.Server.DataStorage.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PixelBattles.Server.DataStorage.Stores
+namespace PixelBattles.API.Server.DataStorage.Stores
 {
     public class BattleStore : IBattleStore
     {

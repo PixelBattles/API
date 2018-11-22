@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace PixelBattles.Server.Client
+namespace PixelBattles.API.Client
 {
     public static class ApiClientExtensions
     {

@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PixelBattles.Server.Core;
-using PixelBattles.Shared.DataTransfer;
+using PixelBattles.API.DataTransfer;
 using System;
 
-namespace PixelBattles.Server.Web.Controllers.Api
+namespace PixelBattles.API.Server.Web.Controllers.Api
 {
     public abstract class BaseApiController : Controller
     {

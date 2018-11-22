@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PixelBattles.Shared.DataTransfer
+namespace PixelBattles.API.DataTransfer
 {
     public class ResultDTO
     {

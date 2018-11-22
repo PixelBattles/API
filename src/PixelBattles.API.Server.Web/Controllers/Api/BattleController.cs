@@ -1,16 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PixelBattles.Server.BusinessLogic.Managers;
-using PixelBattles.Server.BusinessLogic.Models;
-using PixelBattles.Server.Core;
-using PixelBattles.Shared.DataTransfer;
-using PixelBattles.Shared.DataTransfer.Api.Battle;
+using PixelBattles.API.DataTransfer;
+using PixelBattles.API.DataTransfer.Battle;
+using PixelBattles.API.Server.BusinessLogic.Managers;
+using PixelBattles.API.Server.BusinessLogic.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PixelBattles.Server.Web.Controllers.Api
+namespace PixelBattles.API.Server.Web.Controllers.Api
 {
     [Route("api")]
     public class BattleController : BaseApiController

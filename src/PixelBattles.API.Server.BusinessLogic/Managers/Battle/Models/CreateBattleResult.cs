@@ -1,8 +1,7 @@
-﻿using PixelBattles.Server.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace PixelBattles.Server.BusinessLogic.Models
+namespace PixelBattles.API.Server.BusinessLogic.Models
 {
     public class CreateBattleResult : Result
     {

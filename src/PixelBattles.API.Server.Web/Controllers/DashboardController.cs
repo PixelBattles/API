@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PixelBattles.Server.BusinessLogic.Managers;
-using PixelBattles.Server.BusinessLogic.Models;
+using PixelBattles.API.Server.BusinessLogic.Managers;
+using PixelBattles.API.Server.BusinessLogic.Models;
 using System;
 using System.Threading.Tasks;
 
-namespace PixelBattles.Server.Web.Controllers
+namespace PixelBattles.API.Server.Web.Controllers
 {
     public class DashboardController : Controller
     {

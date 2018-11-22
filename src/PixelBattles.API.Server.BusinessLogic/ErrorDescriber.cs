@@ -1,6 +1,4 @@
-﻿using PixelBattles.Server.Core;
-
-namespace PixelBattles.Server.BusinessLogic
+﻿namespace PixelBattles.API.Server.BusinessLogic
 {
     public class ErrorDescriber
     {

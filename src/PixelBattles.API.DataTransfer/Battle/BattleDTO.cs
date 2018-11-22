@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PixelBattles.Shared.DataTransfer.Api.Battle
+namespace PixelBattles.API.DataTransfer.Battle
 {
     public class BattleDTO
     {

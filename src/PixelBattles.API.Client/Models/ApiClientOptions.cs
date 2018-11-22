@@ -1,4 +1,4 @@
-﻿namespace PixelBattles.Server.Client
+﻿namespace PixelBattles.API.Client
 {
     public class ApiClientOptions
     {

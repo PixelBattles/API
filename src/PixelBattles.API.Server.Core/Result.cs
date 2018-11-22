@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace PixelBattles.Server.Core
+namespace PixelBattles.API.Server
 {
     public class Result
     {

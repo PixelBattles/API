@@ -1,7 +1,6 @@
-﻿using PixelBattles.Server.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace PixelBattles.Server.BusinessLogic.Models
+namespace PixelBattles.API.Server.BusinessLogic.Models
 {
     public class CreateBattleTokenResult : Result
     {

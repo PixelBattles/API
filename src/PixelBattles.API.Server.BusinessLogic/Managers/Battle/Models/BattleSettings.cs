@@ -1,6 +1,6 @@
-﻿using PixelBattles.Server.DataStorage.Models;
+﻿using PixelBattles.API.Server.DataStorage.Models;
 
-namespace PixelBattles.Server.BusinessLogic.Models
+namespace PixelBattles.API.Server.BusinessLogic.Models
 {
     public class BattleSettings
     {

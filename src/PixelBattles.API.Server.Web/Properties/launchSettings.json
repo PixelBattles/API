@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "PixelBattles.Server.Web": {
+    "PixelBattles.API.Server.Web": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

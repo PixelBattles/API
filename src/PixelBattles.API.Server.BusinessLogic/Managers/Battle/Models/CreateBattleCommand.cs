@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PixelBattles.Server.BusinessLogic.Models
+namespace PixelBattles.API.Server.BusinessLogic.Models
 {
     public class CreateBattleCommand
     {
