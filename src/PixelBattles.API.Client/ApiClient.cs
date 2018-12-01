@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using PixelBattles.API.DataTransfer.Battle;
 using System;
 using System.Net.Http;
@@ -9,22 +10,22 @@ namespace PixelBattles.API.Client
 {
     public class ApiClient : IApiClient
     {
-        private readonly ApiClientOptions options;
-        private readonly HttpClient httpClient;
+        private readonly ApiClientOptions _options;
+        private readonly HttpClient _httpClient;
 
-        public ApiClient(ApiClientOptions options)
+        public ApiClient(IOptions<ApiClientOptions> options)
         {
-            this.options = options ?? throw new ArgumentNullException(nameof(options));
+            _options = options.Value ?? throw new ArgumentNullException(nameof(options));
 
-            httpClient = new HttpClient
+            _httpClient = new HttpClient
             {
-                BaseAddress = new Uri(options.BaseUrl),
+                BaseAddress = new Uri(_options.BaseUrl),
             };
         }
 
         public async Task<BattleDTO> GetBattleAsync(Guid battleId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var response = await httpClient.GetAsync("/api/battle/" + battleId);
+            var response = await _httpClient.GetAsync("/api/battle/" + battleId);
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
