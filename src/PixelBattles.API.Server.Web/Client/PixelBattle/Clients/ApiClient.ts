@@ -1,6 +1,7 @@
 ﻿import { IApiClient, IBattle, ITokenResult } from "./IApiClient";
 import { IHubClient } from "./IHubClient";
 import { DefaultHttpClient, HttpClient } from "@aspnet/signalr";
+import { ApiHttpClient } from "./ApiHttpClient";
 
 export class ApiClient implements IApiClient {
     private baseUrl: string;
@@ -8,7 +9,7 @@ export class ApiClient implements IApiClient {
 
     constructor(baseUrl: string) {
         this.baseUrl = baseUrl;
-        this.httpClient = new DefaultHttpClient(null);
+        this.httpClient = new ApiHttpClient(null);
     }
 
     public async getBattle(battleId: string): Promise<IBattle> {
@@ -21,8 +22,8 @@ export class ApiClient implements IApiClient {
             this.baseUrl + "battle/token",
             {
                 content: JSON.stringify({ battleId: battleId }),
-                headers: { 'Content-Type': 'application/json; charset=utf-8' }
+                headers: { 'Content-Type': 'application/json; charset=utf-8'}
             });
         return JSON.parse(result.content.toString());
     }
-}
+} 
