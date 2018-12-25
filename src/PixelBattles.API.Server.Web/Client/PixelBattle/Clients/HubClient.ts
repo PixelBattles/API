@@ -3,6 +3,7 @@ import { IHubClient, IBattleInfo, IBattleAction, IChunkState, } from "./IHubClie
 
 export class HubClient implements IHubClient {
     private hubConnection: HubConnection;
+    public onConnected: Promise<void>;
     private url: string;
     private token: string;
 
@@ -29,16 +30,10 @@ export class HubClient implements IHubClient {
         this.hubConnection.onclose(function (e) {
             this.handleConnection();
         });
-        this.hubConnection.start().catch(function (e) {
-            this.hubConnection();
+        this.onConnected = this.hubConnection.start().catch(function (e) {
+            console.log("Error on hub connection.");
+            this.handleConnection();
         });
-    }
-
-    connect(): Promise<void> {
-        return this.hubConnection.start();
-    }
-    disconnect(): void {
-        this.hubConnection.stop();
     }
     getBattleInfo(): Promise<IBattleInfo> {
         throw new Error("Method not implemented.");
@@ -47,7 +42,7 @@ export class HubClient implements IHubClient {
         throw new Error("Method not implemented.");
     }
     getChunkState(xIndex: number, yIndex: number): Promise<IChunkState> {
-        throw new Error("Method not implemented.");
+        return this.hubConnection.invoke("GetChunkState", { ChunkXIndex: xIndex, ChunkYIndex: yIndex });
     }
     subscribeToChunk(xChunkIndex: number, yChunkIndex: number, callback: (...args: any[]) => void): Promise<boolean> {
         throw new Error("Method not implemented.");

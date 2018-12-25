@@ -1,6 +1,5 @@
 ﻿export interface IHubClient {
-    connect(): Promise<void>;
-    disconnect(): void;
+    onConnected: Promise<void>;
     getBattleInfo(): Promise<IBattleInfo>;
     processAction(action: IBattleAction): Promise<boolean>;
     getChunkState(xIndex: number, yIndex: number): Promise<IChunkState>;
@@ -20,4 +19,6 @@ export interface IBattleInfo {
 }
 
 export interface IChunkState {
+    changeIndex: number;
+    image: any;
 }

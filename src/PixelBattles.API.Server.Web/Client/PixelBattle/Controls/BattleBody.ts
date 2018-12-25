@@ -35,6 +35,7 @@ export class BattleBody {
 
         this.camera.onRender = this.renderEngine.render;
         this.gameCanvas.onRender = this.renderEngine.render;
+        this.chunkGrid.onUpdated = this.renderEngine.requestRender;
     }
 
     public resize = (width: number, height: number) : void => {

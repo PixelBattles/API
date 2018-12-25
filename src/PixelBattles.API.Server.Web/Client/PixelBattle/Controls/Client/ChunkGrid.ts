@@ -1,4 +1,4 @@
-﻿import { Chunk } from "./Chunk";
+﻿import { Chunk, IChunk } from "./Chunk";
 import { IBattle } from "../../Clients/IApiClient";
 import { IHubClient } from "../../Clients/IHubClient";
 
@@ -6,14 +6,16 @@ export class ChunkGrid implements IChunkGrid {
     private storage: Chunk[][];
     private battle: IBattle;
     private hubClient: IHubClient;
-    public defaultWidth: number;
-    public defaultHeight: number;
+
+    public chunkWidth: number;
+    public chunkHeight: number;
+    public onUpdated: () => void;
 
     public constructor(battle: IBattle, hubClient: IHubClient) {
         this.battle = battle;
         this.hubClient = hubClient;
-        this.defaultWidth = this.battle.settings.chunkWidth;
-        this.defaultHeight = this.battle.settings.chunkHeight;
+        this.chunkWidth = this.battle.settings.chunkWidth;
+        this.chunkHeight = this.battle.settings.chunkHeight;
         this.storage = new Array<Array<Chunk>>();
     }
 
@@ -32,15 +34,18 @@ export class ChunkGrid implements IChunkGrid {
                     resultChunks.push(chunk);
                 }
                 else {
-                    resultChunks.push(this.storage[x][y] = new Chunk(this.hubClient, x, y, this.battle.settings.chunkWidth, this.battle.settings.chunkHeight));
+                    resultChunks.push(this.storage[x][y] = new Chunk(this.hubClient, x, y, this.battle.settings.chunkWidth, this.battle.settings.chunkHeight, this.onChunkUpdated));
                 }
             }
         }
         return resultChunks;
     }
+
+    private onChunkUpdated = (chunk: IChunk) => this.onUpdated();
 }
 export interface IChunkGrid {
     getChunks(xIndexFrom: number, xIndexTo: number, yIndexFrom: number, yIndexTo: number): Chunk[];
-    defaultWidth: number;
-    defaultHeight: number;
+    onUpdated: () => void;
+    chunkWidth: number;
+    chunkHeight: number;
 }
