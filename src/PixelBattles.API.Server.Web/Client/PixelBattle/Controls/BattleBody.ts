@@ -30,7 +30,7 @@ export class BattleBody {
         this.canvasContainer.appendChild<HTMLCanvasElement>(this.canvas);
         this.gameCanvas = new GameCanvas(this.canvas);
         this.camera = new Camera(this.gameCanvas);
-        this.chunkGrid = new ChunkGrid(battle.settings.chunkWidth, battle.settings.chunkHeight);
+        this.chunkGrid = new ChunkGrid(battle, hubClient);
         this.renderEngine = new RenderEngine(this.gameCanvas, this.camera, this.chunkGrid);
 
         this.camera.onRender = this.renderEngine.render;
