@@ -28,7 +28,7 @@ export class PixelBattle {
         this.apiClient = new ApiClient("/api/");
         this.battle = await this.apiClient.getBattle(this.battleId);
         let hubToken = await this.apiClient.getBattleToken(this.battleId);
-        this.hubClient = new HubClient("http://localhost:10000/hubs/game", hubToken.token);
+        this.hubClient = new HubClient("http://localhost:10000/hubs/battles", hubToken.token);
         
         this.header = this.initializeHeader(this.battle.name);
         this.body = this.initializeBody();

@@ -15,10 +15,11 @@ export class HubClient implements IHubClient {
 
     private createConnection(): HubConnection {
         return new HubConnectionBuilder()
-            .withUrl("http://localhost:10000/hubs/battles", {
+            .withUrl(this.url, {
                 transport: HttpTransportType.WebSockets,
                 logger: LogLevel.Information,
-                accessTokenFactory: () => this.token
+                accessTokenFactory: () => this.token,
+                skipNegotiation: true
             })
             .build();
     }
