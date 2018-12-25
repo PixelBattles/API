@@ -8,8 +8,8 @@ export class Camera implements ICamera {
     private initialMouseY: number;
     private internalCameraX: number;
     private internalCameraY: number;
-    public cameraOffsetX: number = 0;
-    public cameraOffsetY: number = 0;
+    private cameraOffsetX: number = 0;
+    private cameraOffsetY: number = 0;
     private isDrag: boolean;
 
     public get cameraX(): number {
@@ -27,7 +27,7 @@ export class Camera implements ICamera {
         this.canvas.onMove = this.onMove;
 
         this.internalCameraX = 0;
-        this.internalCameraY = -50;
+        this.internalCameraY = 0;
         this.scale = 1;
     }
 
