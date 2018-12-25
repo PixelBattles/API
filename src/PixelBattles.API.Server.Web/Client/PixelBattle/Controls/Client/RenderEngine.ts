@@ -26,15 +26,17 @@ export class RenderEngine implements IRenderEngine {
     private renderChunk(chunk: Chunk, viewPortHalfHeight: number, viewPortHalfWidth: number): void {
         this.gameCanvas.ctx.drawImage(
             chunk.canvas,
-            viewPortHalfWidth + this.camera.cameraX + chunk.xIndex * this.chunkGrid.defaultWidth,
-            viewPortHalfHeight + this.camera.cameraY + chunk.yIndex * this.chunkGrid.defaultHeight);
+            viewPortHalfWidth + this.camera.cameraX + chunk.xIndex * (this.chunkGrid.defaultWidth * this.camera.scale),
+            viewPortHalfHeight + this.camera.cameraY + chunk.yIndex * (this.chunkGrid.defaultHeight * this.camera.scale),
+            (this.chunkGrid.defaultWidth * this.camera.scale),
+            (this.chunkGrid.defaultHeight * this.camera.scale));
     }
 
     private getVisibleChunks(viewPortHalfHeight: number, viewPortHalfWidth: number): Chunk[] {
-        let minX = Math.floor((- this.camera.cameraX - viewPortHalfWidth) / this.chunkGrid.defaultWidth);
-        let maxX = Math.ceil((- this.camera.cameraX + viewPortHalfWidth) / this.chunkGrid.defaultWidth) - 1;
-        let minY = Math.floor((- this.camera.cameraY - viewPortHalfHeight) / this.chunkGrid.defaultHeight);
-        let maxY = Math.ceil((- this.camera.cameraY + viewPortHalfHeight) / this.chunkGrid.defaultHeight) - 1;
+        let minX = Math.floor((- this.camera.cameraX - viewPortHalfWidth) / (this.chunkGrid.defaultWidth * this.camera.scale));
+        let maxX = Math.ceil((- this.camera.cameraX + viewPortHalfWidth) / (this.chunkGrid.defaultWidth * this.camera.scale)) - 1;
+        let minY = Math.floor((- this.camera.cameraY - viewPortHalfHeight) / (this.chunkGrid.defaultHeight * this.camera.scale));
+        let maxY = Math.ceil((- this.camera.cameraY + viewPortHalfHeight) / (this.chunkGrid.defaultHeight * this.camera.scale)) - 1;
         return this.chunkGrid.getChunks(minX, maxX, minY, maxY);
     }
 

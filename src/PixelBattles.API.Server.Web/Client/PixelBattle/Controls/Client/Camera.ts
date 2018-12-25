@@ -18,7 +18,7 @@ export class Camera implements ICamera {
     public get cameraY(): number {
         return this.internalCameraY + this.cameraOffsetY;
     }
-    private scale: number;
+    public scale: number;
     
     public constructor(canvas: IGameCanvas) {
         this.canvas = canvas;
@@ -65,4 +65,5 @@ export interface ICamera {
 
     cameraX: number;
     cameraY: number;
+    scale: number;
 }
