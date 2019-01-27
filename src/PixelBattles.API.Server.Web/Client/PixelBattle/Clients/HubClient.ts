@@ -42,7 +42,7 @@ export class HubClient implements IHubClient {
         throw new Error("Method not implemented.");
     }
     getChunkState(xIndex: number, yIndex: number): Promise<IChunkState> {
-        return this.hubConnection.invoke("GetChunkState", { ChunkXIndex: xIndex, ChunkYIndex: yIndex });
+        return this.hubConnection.invoke("GetChunkState", { X: xIndex, Y: yIndex });
     }
     subscribeToChunk(xChunkIndex: number, yChunkIndex: number, callback: (...args: any[]) => void): Promise<boolean> {
         throw new Error("Method not implemented.");
