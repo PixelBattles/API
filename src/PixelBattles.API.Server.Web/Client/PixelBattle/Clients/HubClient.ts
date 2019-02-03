@@ -1,15 +1,17 @@
 ﻿import { HubConnection, LogLevel, HubConnectionBuilder, HttpTransportType } from "@aspnet/signalr"
-import { IHubClient, IBattleInfo, IBattleAction, IChunkState, } from "./IHubClient";
+import { IHubClient, IChunkState, IChunkKey, IChunkStreamMessage, } from "./IHubClient";
 
-export class HubClient implements IHubClient {
+export class HubClient implements IHubClient {    
     private hubConnection: HubConnection;
     public onConnected: Promise<void>;
+    private subscriptions: Map<string, (message: IChunkStreamMessage) => void>;
     private url: string;
     private token: string;
 
     constructor(url: string, token: string) {
         this.url = url;
         this.token = token;
+        this.subscriptions = new Map<string, (message: IChunkStreamMessage) => void>();
 
         this.handleConnection();
     }
@@ -30,24 +32,42 @@ export class HubClient implements IHubClient {
         this.hubConnection.onclose(function (e) {
             this.handleConnection();
         });
-        this.onConnected = this.hubConnection.start().catch(function (e) {
+        this.onConnected = this.hubConnection.start().then(() => {
+            console.log("Hub connected.");
+            window.customAction = (x: number, y: number, cx: number, cy: number, color: number) => {
+                var changeIndex = this.hubConnection.invoke("Process", { x: x, y: y }, { x: cx, y: cy, color: color });
+                console.log(changeIndex);
+            }
+
+            this.hubConnection.stream<IChunkStreamMessage>("SubscribeToChunkStream").subscribe({
+                next: (value: IChunkStreamMessage) => {
+                    console.log("Next on hub connection.");
+                    var callback = this.subscriptions.get(`${value.key.x}:${value.key.y}`);
+                    if (callback) {
+                        callback(value);
+                    }
+                },
+                complete: () => {
+                    console.log("Complete on hub connection.");
+                },
+                error: (err) => {
+                    console.log("Error on hub connection.");
+                },
+            });
+        }, function (e) {
             console.log("Error on hub connection.");
             this.handleConnection();
         });
     }
-    getBattleInfo(): Promise<IBattleInfo> {
-        throw new Error("Method not implemented.");
+
+    subscribeToChunk(key: IChunkKey, callback: (message: IChunkStreamMessage) => void): void {
+        console.log(`Subs on ${key.x}:${key.y}`);
+        this.subscriptions.set(`${key.x}:${key.y}`, callback);
+        this.hubConnection.send("SubscribeToChunk", key);
     }
-    processAction(action: IBattleAction): Promise<boolean> {
-        throw new Error("Method not implemented.");
-    }
-    getChunkState(xIndex: number, yIndex: number): Promise<IChunkState> {
-        return this.hubConnection.invoke("GetChunkState", { X: xIndex, Y: yIndex });
-    }
-    subscribeToChunk(xChunkIndex: number, yChunkIndex: number, callback: (...args: any[]) => void): Promise<boolean> {
-        throw new Error("Method not implemented.");
-    }
-    unsubscribeFromChunk(xChunkIndex: number, yChunkIndex: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    unsubscribeFromChunk(key: IChunkKey): void {
+        console.log(`Unsubs on ${key.x}:${key.y}`);
+        this.subscriptions.delete(`${key.x}:${key.y}`);
+        this.hubConnection.send("UnsubscribeToChunk", key);
     }
 }

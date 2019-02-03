@@ -21,23 +21,18 @@ export class Chunk implements IChunk {
         this.ctx = this.canvas.getContext("2d");
         this.canvas.width = width;
         this.canvas.height = height;
-
+        
         this.hubClient.onConnected.then(() => {
-            hubClient.getChunkState(xIndex, yIndex).then(state => {
-                let image = new Image();
-                image.onload = () => {
-                    this.ctx.drawImage(image, 0, 0);
-                };
-                image.src = "data:image/png;base64," + state.image;
-                this.changeIndex = state.changeIndex;
-                this.onUpdated(this);
-            }, error => {
-                console.log(error);
-                this.ctx.beginPath();
-                this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
-                this.ctx.fillStyle = "grey";
-                this.ctx.fill();
-                this.onUpdated(this);
+            hubClient.subscribeToChunk({ x: xIndex, y: yIndex }, message => {
+                if (message.state) {
+                    let image = new Image();
+                    image.onload = () => {
+                        this.ctx.drawImage(image, 0, 0);
+                    };
+                    image.src = "data:image/png;base64," + message.state.image;
+                    this.changeIndex = message.state.changeIndex;
+                    this.onUpdated(this);
+                }
             });
         });
     }

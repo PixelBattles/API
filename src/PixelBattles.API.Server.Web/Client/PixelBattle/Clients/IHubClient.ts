@@ -1,24 +1,27 @@
 ﻿export interface IHubClient {
     onConnected: Promise<void>;
-    getBattleInfo(): Promise<IBattleInfo>;
-    processAction(action: IBattleAction): Promise<boolean>;
-    getChunkState(xIndex: number, yIndex: number): Promise<IChunkState>;
-    subscribeToChunk(xChunkIndex: number, yChunkIndex: number, callback: (...args: any[]) => void): Promise<boolean>;
-    unsubscribeFromChunk(xChunkIndex: number, yChunkIndex: number): Promise<boolean>;
-}
-
-export interface IBattleAction {
-    xChunkIndex: number;
-    yChunkIndex: number;
-    xIndex: number;
-    yIndex: number;
-    color: string;
-}
-
-export interface IBattleInfo {
+    subscribeToChunk(key: IChunkKey, callback: (message: IChunkStreamMessage) => void): void;
+    unsubscribeFromChunk(key: IChunkKey): void;
 }
 
 export interface IChunkState {
     changeIndex: number;
-    image: any;
+    image: string;
+}
+
+export interface IChunkKey {
+    x: number;
+    y: number;
+}
+
+export interface IChunkAction {
+    x: number;
+    y: number;
+    color: string;
+}
+
+export interface IChunkStreamMessage {
+    state: IChunkState;
+    key: IChunkKey;
+    action: IChunkAction;
 }
