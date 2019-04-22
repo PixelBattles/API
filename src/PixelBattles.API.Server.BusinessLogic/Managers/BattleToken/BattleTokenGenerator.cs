@@ -21,7 +21,7 @@ namespace PixelBattles.API.Server.BusinessLogic.Managers
             SecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(BattleTokenOptions.SecretKey));
         }
 
-        public string GenerateToken(Guid battleId, Guid userId)
+        public string GenerateToken(long battleId, Guid userId)
         {
             var claims = new[] {
                 new Claim(BattleTokenConstants.BattleIdClaim, battleId.ToString()),

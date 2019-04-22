@@ -4,6 +4,6 @@ namespace PixelBattles.API.Server.BusinessLogic.Managers
 {
     public interface IBattleTokenGenerator
     {
-        string GenerateToken(Guid battleId, Guid userId);
+        string GenerateToken(long battleId, Guid userId);
     }
 }

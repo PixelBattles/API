@@ -23,7 +23,7 @@ namespace PixelBattles.API.Client
             };
         }
 
-        public async Task<BattleDTO> GetBattleAsync(Guid battleId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<BattleDTO> GetBattleAsync(long battleId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var response = await _httpClient.GetAsync("/api/battle/" + battleId);
             if (response.IsSuccessStatusCode)

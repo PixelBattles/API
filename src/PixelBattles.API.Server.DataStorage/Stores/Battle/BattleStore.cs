@@ -16,7 +16,7 @@ namespace PixelBattles.API.Server.DataStorage.Stores
             this.battleCollection = battleCollection ?? throw new ArgumentNullException(nameof(battleCollection));
         }
 
-        public async Task<BattleEntity> GetBattleAsync(Guid battleId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<BattleEntity> GetBattleAsync(long battleId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = await battleCollection.FindAsync(t => t.BattleId == battleId, null, cancellationToken);
             return await result.SingleAsync(cancellationToken);
@@ -57,7 +57,7 @@ namespace PixelBattles.API.Server.DataStorage.Stores
             return await result.ToListAsync();
         }
 
-        public async Task<Result> DeleteBattleAsync(Guid battleId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Result> DeleteBattleAsync(long battleId, CancellationToken cancellationToken = default(CancellationToken))
         {
             await battleCollection.DeleteOneAsync(t => t.BattleId == battleId, cancellationToken);
             return Result.Success;

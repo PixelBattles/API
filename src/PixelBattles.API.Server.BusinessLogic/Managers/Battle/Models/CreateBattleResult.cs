@@ -5,9 +5,9 @@ namespace PixelBattles.API.Server.BusinessLogic.Models
 {
     public class CreateBattleResult : Result
     {
-        public Guid? BattleId { get; set; }
+        public long? BattleId { get; set; }
 
-        public CreateBattleResult(Guid battleId) : base(succeeded: true)
+        public CreateBattleResult(long battleId) : base(succeeded: true)
         {
             this.BattleId = battleId;
         }

@@ -26,8 +26,8 @@ namespace PixelBattles.API.Server.Web.Controllers.Api
             BattleManager = battleManager ?? throw new ArgumentNullException(nameof(battleManager));
         }
         
-        [HttpGet("battle/{battleId:guid}")]
-        public async Task<IActionResult> GetBattleAsync(Guid battleId)
+        [HttpGet("battle/{battleId:long}")]
+        public async Task<IActionResult> GetBattleAsync(long battleId)
         {
             try
             {
@@ -90,8 +90,8 @@ namespace PixelBattles.API.Server.Web.Controllers.Api
             }
         }
 
-        [HttpDelete("battle/{battleId:guid}")]
-        public async Task<IActionResult> DeleteBattleAsync(Guid battleId)
+        [HttpDelete("battle/{battleId:long}")]
+        public async Task<IActionResult> DeleteBattleAsync(long battleId)
         {
             try
             {

@@ -4,7 +4,7 @@ namespace PixelBattles.API.Server.BusinessLogic.Models
 {
     public class UpdateBattleCommand
     {
-        public Guid BattleId { get; set; }
+        public long BattleId { get; set; }
 
         public string Name { get; set; }
 
