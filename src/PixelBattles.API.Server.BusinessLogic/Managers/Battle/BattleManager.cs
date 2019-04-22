@@ -32,7 +32,7 @@ namespace PixelBattles.API.Server.BusinessLogic.Managers
             BattleTokenGenerator = battleTokenGenerator ?? throw new ArgumentNullException(nameof(battleTokenGenerator));
         }
 
-        public async Task<Battle> GetBattleAsync(Guid battleId)
+        public async Task<Battle> GetBattleAsync(long battleId)
         {
             var battle = await BattleStore.GetBattleAsync(battleId, CancellationToken);
             return Mapper.Map<BattleEntity, Battle>(battle);

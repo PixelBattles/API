@@ -4,6 +4,6 @@ namespace PixelBattles.API.DataTransfer.Battle
 {
     public class CreateBattleResultDTO : ResultDTO
     {
-        public Guid? BattleId { get; set; }
+        public long? BattleId { get; set; }
     }
 }

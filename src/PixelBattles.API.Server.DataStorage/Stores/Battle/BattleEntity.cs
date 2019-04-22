@@ -1,12 +1,13 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using PixelBattles.API.Server.DataStorage.MongoDb;
 using System;
 
 namespace PixelBattles.API.Server.DataStorage.Models
 {
     public class BattleEntity
     {
-        [BsonId]
-        public Guid BattleId { get; set; }
+        [BsonId(IdGenerator = typeof(Int64IdGenerator<BattleEntity>))]
+        public long BattleId { get; set; }
         
         public string Name { get; set; }
 

@@ -7,6 +7,6 @@ namespace PixelBattles.API.Client
 {
     public interface IApiClient
     {
-        Task<BattleDTO> GetBattleAsync(Guid battleId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<BattleDTO> GetBattleAsync(long battleId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }
