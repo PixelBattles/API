@@ -21,7 +21,7 @@ namespace PixelBattles.API.Server.Web.Controllers
             return View(battles);
         }
         
-        public IActionResult Battle(Guid id)
+        public IActionResult Battle(long id)
         {
             return View(id);
         }
