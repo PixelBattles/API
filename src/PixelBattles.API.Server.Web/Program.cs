@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 
 namespace PixelBattles.API.Server.Web
@@ -12,9 +13,14 @@ namespace PixelBattles.API.Server.Web
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
+            WebHost.CreateDefaultBuilder<Startup>(args)
                 .UseUrls("http://0.0.0.0:5000")
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                })
                 .Build();
     }
 }

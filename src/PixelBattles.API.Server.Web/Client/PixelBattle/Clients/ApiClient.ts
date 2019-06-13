@@ -26,4 +26,4 @@ export class ApiClient implements IApiClient {
             });
         return JSON.parse(result.content.toString());
     }
-} 
+}

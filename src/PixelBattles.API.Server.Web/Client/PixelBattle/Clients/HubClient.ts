@@ -1,7 +1,7 @@
 ﻿import { HubConnection, LogLevel, HubConnectionBuilder, HttpTransportType } from "@aspnet/signalr"
-import { IHubClient, IChunkState, IChunkKey, IChunkStreamMessage, } from "./IHubClient";
+import { IHubClient, IChunkState, IChunkKey, IChunkStreamMessage, IChunkAction, } from "./IHubClient";
 
-export class HubClient implements IHubClient {    
+export class HubClient implements IHubClient {
     private hubConnection: HubConnection;
     public onConnected: Promise<void>;
     private subscriptions: Map<string, (message: IChunkStreamMessage) => void>;
@@ -34,10 +34,6 @@ export class HubClient implements IHubClient {
         });
         this.onConnected = this.hubConnection.start().then(() => {
             console.log("Hub connected.");
-            window.customAction = (x: number, y: number, cx: number, cy: number, color: number) => {
-                var changeIndex = this.hubConnection.invoke("Process", { x: x, y: y }, { x: cx, y: cy, color: color });
-                console.log(changeIndex);
-            }
 
             this.hubConnection.stream<IChunkStreamMessage>("SubscribeToChunkStream").subscribe({
                 next: (value: IChunkStreamMessage) => {
@@ -60,14 +56,25 @@ export class HubClient implements IHubClient {
         });
     }
 
-    subscribeToChunk(key: IChunkKey, callback: (message: IChunkStreamMessage) => void): void {
+    subscribeToChunk(key: IChunkKey, callback: (message: IChunkStreamMessage) => void): Promise<void> {
         console.log(`Subs on ${key.x}:${key.y}`);
         this.subscriptions.set(`${key.x}:${key.y}`, callback);
-        this.hubConnection.send("SubscribeToChunk", key);
+        return this.hubConnection.send("SubscribeToChunk", key);
     }
-    unsubscribeFromChunk(key: IChunkKey): void {
+
+    unsubscribeFromChunk(key: IChunkKey): Promise<void> {
         console.log(`Unsubs on ${key.x}:${key.y}`);
         this.subscriptions.delete(`${key.x}:${key.y}`);
-        this.hubConnection.send("UnsubscribeToChunk", key);
+        return this.hubConnection.send("UnsubscribeToChunk", key);
+    }
+
+    enqueueAction(key: IChunkKey, action: IChunkAction): Promise<void> {
+        console.log(`Enqueue action ${action.x}:${action.y} with color ${action.color} on ${key.x}:${key.y}`);
+        return this.hubConnection.send("EnqueueAction", key, action);
+    }
+
+    processAction(key: IChunkKey, action: IChunkAction): Promise<number> {
+        console.log(`Process action ${action.x}:${action.y} with color ${action.color} on ${key.x}:${key.y}`);
+        return this.hubConnection.invoke("ProcessAction", key, action);
     }
 }

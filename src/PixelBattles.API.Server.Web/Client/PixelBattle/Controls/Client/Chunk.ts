@@ -23,7 +23,7 @@ export class Chunk implements IChunk {
         this.canvas.height = height;
         
         this.hubClient.onConnected.then(() => {
-            hubClient.subscribeToChunk({ x: xIndex, y: yIndex }, message => {
+            hubClient.subscribeToChunk({ x: xIndex, y: yIndex }, message => {   
                 if (message.state) {
                     let image = new Image();
                     image.onload = () => {
@@ -31,6 +31,20 @@ export class Chunk implements IChunk {
                     };
                     image.src = "data:image/png;base64," + message.state.image;
                     this.changeIndex = message.state.changeIndex;
+                    this.onUpdated(this);
+                } else if (message.update) {
+                    let arr = new ArrayBuffer(4);
+                    let view = new DataView(arr);
+                    view.setUint32(0, message.update.color, false);
+                    let imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+                    let pixels = imageData.data;
+                    let pixelIndex = (message.update.x + message.update.y * this.canvas.width) * 4;
+                    pixels[pixelIndex] = view.getUint8(0);
+                    pixels[pixelIndex+1] = view.getUint8(1);
+                    pixels[pixelIndex+2] = view.getUint8(2);
+                    pixels[pixelIndex+3] = view.getUint8(3);
+                    this.ctx.putImageData(imageData, 0, 0);
+                    this.changeIndex = message.update.changeIndex;
                     this.onUpdated(this);
                 }
             });

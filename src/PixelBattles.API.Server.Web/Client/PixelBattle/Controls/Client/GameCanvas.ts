@@ -2,9 +2,9 @@
     public canvas: HTMLCanvasElement;
     public ctx: CanvasRenderingContext2D;
 
-    public onMoveEnd: (ev: CameraMoveEvent) => any;
-    public onMoveStart: (ev: CameraMoveEvent) => any;
-    public onMove: (ev: CameraMoveEvent) => any;
+    public onMoveEnd: (ev: PositionEvent) => any;
+    public onMoveStart: (ev: PositionEvent) => any;
+    public onMove: (ev: PositionEvent) => any;
     public onRender: () => void;
 
     public constructor(canvas: HTMLCanvasElement) {
@@ -19,19 +19,20 @@
     public resize(width: number, height: number): void {
         this.canvas.width = width;
         this.canvas.height = height;
+        this.ctx.imageSmoothingEnabled = false;
         this.onRender();
     }
 
     private onmousedown = (ev: MouseEvent): void => {
-        this.onMoveStart(new CameraMoveEvent(ev.clientX, ev.clientY));
+        this.onMoveStart(new PositionEvent(ev.offsetX, ev.offsetY));
     }
 
     private onmouseup = (ev: MouseEvent): void => {
-        this.onMoveEnd(new CameraMoveEvent(ev.clientX, ev.clientY));
+        this.onMoveEnd(new PositionEvent(ev.offsetX, ev.offsetY));
     }
 
     private onmousemove = (ev: MouseEvent): void => {
-        this.onMove(new CameraMoveEvent(ev.clientX, ev.clientY));
+        this.onMove(new PositionEvent(ev.offsetX, ev.offsetY));
     }
 }
 
@@ -39,16 +40,16 @@ export interface IGameCanvas {
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
 
-    onMoveEnd: (ev: CameraMoveEvent) => any;
-    onMoveStart: (ev: CameraMoveEvent) => any;
-    onMove: (ev: CameraMoveEvent) => any;
+    onMoveEnd: (ev: PositionEvent) => any;
+    onMoveStart: (ev: PositionEvent) => any;
+    onMove: (ev: PositionEvent) => any;
 
     onRender: () => void;
 
     resize(width: number, height: number): void;
 }
 
-export class CameraMoveEvent {
+export class PositionEvent {
     public constructor(x: number, y: number) {
         this.x = x;
         this.y = y;

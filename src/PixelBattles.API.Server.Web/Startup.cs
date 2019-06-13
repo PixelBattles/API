@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using PixelBattles.API.Server.BusinessLogic;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 
 namespace PixelBattles.API.Server.Web
 {
@@ -40,7 +41,7 @@ namespace PixelBattles.API.Server.Web
 
             services.AddOptions();
             
-            services.AddAutoMapper();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSwaggerGen(c =>
             {
@@ -61,16 +62,9 @@ namespace PixelBattles.API.Server.Web
         {
             if (env.IsDevelopment())
             {
-                loggerFactory.AddDebug();
-                loggerFactory.AddConsole(ConfigurationRoot.GetSection("Logging"));
-
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
-            }
-            else
-            {
-                loggerFactory.AddDebug();
             }
             
             app.UseSwagger();

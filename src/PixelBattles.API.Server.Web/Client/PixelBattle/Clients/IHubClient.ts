@@ -1,7 +1,9 @@
 ﻿export interface IHubClient {
     onConnected: Promise<void>;
-    subscribeToChunk(key: IChunkKey, callback: (message: IChunkStreamMessage) => void): void;
-    unsubscribeFromChunk(key: IChunkKey): void;
+    subscribeToChunk(key: IChunkKey, callback: (message: IChunkStreamMessage) => void): Promise<void>;
+    unsubscribeFromChunk(key: IChunkKey): Promise<void>;
+    enqueueAction(key: IChunkKey, action: IChunkAction): Promise<void>;
+    processAction(key: IChunkKey, action: IChunkAction): Promise<number>;
 }
 
 export interface IChunkState {
@@ -17,11 +19,18 @@ export interface IChunkKey {
 export interface IChunkAction {
     x: number;
     y: number;
-    color: string;
+    color: number;
+}
+
+export interface IChunkUpdate {
+    x: number;
+    y: number;
+    color: number;
+    changeIndex: number;
 }
 
 export interface IChunkStreamMessage {
     state: IChunkState;
     key: IChunkKey;
-    action: IChunkAction;
+    update: IChunkUpdate;
 }

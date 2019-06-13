@@ -47,7 +47,7 @@ export class PixelBattle {
     private initializeBody(): BattleBody {
         let canvasContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
         this.widgetContainer.appendChild(canvasContainer);
-        return new BattleBody(canvasContainer, this.battle, this.hubClient);
+        return new BattleBody(canvasContainer, this.battle, this.hubClient, this.widgetContainer.offsetWidth - 2/*borders*/, this.widgetContainer.offsetHeight - this.header.height - 2/*borders*/);
     }
 
     public resize = (ev: Event): void => {
