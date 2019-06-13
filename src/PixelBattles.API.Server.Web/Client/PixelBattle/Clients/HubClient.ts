@@ -62,7 +62,7 @@ export class HubClient implements IHubClient {
 
     unsubscribeFromChunk(key: IChunkKey): Promise<void> {
         this.subscriptions.delete(`${key.x}:${key.y}`);
-        return this.hubConnection.send("UnsubscribeToChunk", key);
+        return this.hubConnection.send("UnsubscribeFromChunk", key);
     }
 
     enqueueAction(key: IChunkKey, action: IChunkAction): Promise<void> {

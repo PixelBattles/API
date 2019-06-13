@@ -32,9 +32,10 @@ export class ChunkGrid implements IChunkGrid {
     public clearChunks(xIndexFrom: number, xIndexTo: number, yIndexFrom: number, yIndexTo: number): void {
         let deleteCounter = 0;
         for (let [x, columnChunks] of this.storage) {
-            if (x < xIndexFrom && x > xIndexTo) {
+            if (x < xIndexFrom || x > xIndexTo) {
                 for (let [y, chunk] of columnChunks) {
                     chunk.dispose();
+                    console.log(`Disposing chunk ${chunk.xIndex}:${chunk.yIndex}.`);
                     deleteCounter++;
                 }
                 this.storage.delete(x);
@@ -42,6 +43,7 @@ export class ChunkGrid implements IChunkGrid {
                 for (let [y, chunk] of columnChunks) {
                     if (y < yIndexFrom || y > yIndexTo) {
                         chunk.dispose();
+                        console.log(`Disposing chunk ${chunk.xIndex}:${chunk.yIndex}.`);
                         columnChunks.delete(y);
                         deleteCounter++;
                     }
