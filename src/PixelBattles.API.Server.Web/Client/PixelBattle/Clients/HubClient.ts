@@ -37,7 +37,6 @@ export class HubClient implements IHubClient {
 
             this.hubConnection.stream<IChunkStreamMessage>("SubscribeToChunkStream").subscribe({
                 next: (value: IChunkStreamMessage) => {
-                    console.log("Next on hub connection.");
                     var callback = this.subscriptions.get(`${value.key.x}:${value.key.y}`);
                     if (callback) {
                         callback(value);
@@ -57,13 +56,11 @@ export class HubClient implements IHubClient {
     }
 
     subscribeToChunk(key: IChunkKey, callback: (message: IChunkStreamMessage) => void): Promise<void> {
-        console.log(`Subs on ${key.x}:${key.y}`);
         this.subscriptions.set(`${key.x}:${key.y}`, callback);
         return this.hubConnection.send("SubscribeToChunk", key);
     }
 
     unsubscribeFromChunk(key: IChunkKey): Promise<void> {
-        console.log(`Unsubs on ${key.x}:${key.y}`);
         this.subscriptions.delete(`${key.x}:${key.y}`);
         return this.hubConnection.send("UnsubscribeToChunk", key);
     }

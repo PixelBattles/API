@@ -50,6 +50,10 @@ export class Chunk implements IChunk {
             });
         });
     }
+
+    public dispose(): Promise<void> {
+        return this.hubClient.unsubscribeFromChunk({ x: this.xIndex, y: this.yIndex });
+    }
 }
 
 export interface IChunk {
@@ -58,4 +62,5 @@ export interface IChunk {
     changeIndex: number;
     canvas: HTMLCanvasElement;
     onUpdated: (chunk: IChunk) => void;
+    dispose: () => Promise<void>;
 }

@@ -3,7 +3,7 @@ import { IBattle } from "../../Clients/IApiClient";
 import { IHubClient } from "../../Clients/IHubClient";
 
 export class ChunkGrid implements IChunkGrid {
-    private storage: Chunk[][];
+    private storage: Map<number, Map<number, Chunk>>;
     private battle: IBattle;
     private hubClient: IHubClient;
 
@@ -16,7 +16,7 @@ export class ChunkGrid implements IChunkGrid {
         this.hubClient = hubClient;
         this.chunkWidth = this.battle.settings.chunkWidth;
         this.chunkHeight = this.battle.settings.chunkHeight;
-        this.storage = new Array<Array<Chunk>>();
+        this.storage = new Map<number, Map<number, Chunk>>();
     }
 
     public getChunks(xIndexFrom: number, xIndexTo: number, yIndexFrom: number, yIndexTo: number): Chunk[] {
@@ -27,6 +27,30 @@ export class ChunkGrid implements IChunkGrid {
             }
         }
         return resultChunks;
+    }
+
+    public clearChunks(xIndexFrom: number, xIndexTo: number, yIndexFrom: number, yIndexTo: number): void {
+        let deleteCounter = 0;
+        for (let [x, columnChunks] of this.storage) {
+            if (x < xIndexFrom && x > xIndexTo) {
+                for (let [y, chunk] of columnChunks) {
+                    chunk.dispose();
+                    deleteCounter++;
+                }
+                this.storage.delete(x);
+            } else {
+                for (let [y, chunk] of columnChunks) {
+                    if (y < yIndexFrom || y > yIndexTo) {
+                        chunk.dispose();
+                        columnChunks.delete(y);
+                        deleteCounter++;
+                    }
+                }
+            }
+        }
+        if (deleteCounter) {
+            console.log(`${deleteCounter} chunks was disposed.`);
+        }
     }
     
     public getChunk(x: number, y: number): Chunk {
@@ -41,18 +65,19 @@ export class ChunkGrid implements IChunkGrid {
     }
 
     private getOrAddChunkInternal(x: number, y: number): Chunk {
-        let chunk: Chunk;
-        if (this.storage[x]) {
-            chunk = this.storage[x][y];
+        let column = this.storage.get(x);
+        if (!column) {
+            column = new Map<number, Chunk>();
+            this.storage.set(x, column);
         }
-        else {
-            this.storage[x] = new Array<Chunk>();
-        }
+        let chunk = column.get(y);
         if (chunk) {
             return chunk;
         }
         else {
-            return this.storage[x][y] = new Chunk(this.hubClient, x, y, this.battle.settings.chunkWidth, this.battle.settings.chunkHeight, this.onChunkUpdated);
+            let newChunk = new Chunk(this.hubClient, x, y, this.battle.settings.chunkWidth, this.battle.settings.chunkHeight, this.onChunkUpdated);
+            column.set(y, newChunk);
+            return newChunk;
         }
     }
 
@@ -61,6 +86,7 @@ export class ChunkGrid implements IChunkGrid {
 export interface IChunkGrid {
     getChunk(x: number, y: number): Chunk;
     getChunks(xIndexFrom: number, xIndexTo: number, yIndexFrom: number, yIndexTo: number): Chunk[];
+    clearChunks(xIndexFrom: number, xIndexTo: number, yIndexFrom: number, yIndexTo: number): void;
     onUpdated: () => void;
     chunkWidth: number;
     chunkHeight: number;

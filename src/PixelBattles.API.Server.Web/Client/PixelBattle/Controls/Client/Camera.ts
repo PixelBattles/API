@@ -12,7 +12,7 @@ export class Camera implements ICamera {
     private internalCameraY: number;
     private cameraOffsetX: number = 0;
     private cameraOffsetY: number = 0;
-    private internalScale: number = 4;
+    private internalScale: number = 8;
     private isDrag: boolean;
 
     public get cameraX(): number {

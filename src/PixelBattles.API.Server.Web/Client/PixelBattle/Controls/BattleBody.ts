@@ -37,10 +37,6 @@ export class BattleBody {
         this.camera.onClick = this.onClick;
         this.gameCanvas.onRender = this.renderEngine.render;
         this.chunkGrid.onUpdated = this.renderEngine.requestRender;
-
-        window.customScale = (scale: number) => {
-            this.camera.scale = scale;
-        };
     }
 
     public resize = (width: number, height: number) : void => {
@@ -55,6 +51,5 @@ export class BattleBody {
         let y = Math.floor(ev.y / this.camera.scale) % this.battle.settings.chunkHeight;
         y = y < 0 ? y + this.battle.settings.chunkHeight : y;
         this.hubClient.enqueueAction({ x: chunkXIndex, y: chunkYIndex }, { x: x, y: y, color: 0 });
-        console.log(`onClick: ev:${x}:${y} chunk:${chunkXIndex}:${chunkYIndex}`);
     }
 }

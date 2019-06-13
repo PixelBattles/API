@@ -48,6 +48,7 @@ export class RenderEngine implements IRenderEngine {
         let maxX = Math.ceil((this.camera.cameraX + this.gameCanvas.canvas.width) / chunkWidth);
         let minY = Math.floor(this.camera.cameraY / chunkHeight);
         let maxY = Math.ceil((this.camera.cameraY + this.gameCanvas.canvas.height) / chunkHeight);
+        this.chunkGrid.clearChunks(minX, maxX, minY, maxY);
         return this.chunkGrid.getChunks(minX, maxX, minY, maxY);
     }
 
