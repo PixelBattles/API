@@ -35,7 +35,7 @@ export class HubClient implements IHubClient {
         this.onConnected = this.hubConnection.start().then(() => {
             console.log("Hub connected.");
 
-            this.hubConnection.stream<IChunkStreamMessage>("SubscribeToChunkStream").subscribe({
+            this.hubConnection.stream<IChunkStreamMessage>("GetUpdateStream").subscribe({
                 next: (value: IChunkStreamMessage) => {
                     var callback = this.subscriptions.get(`${value.key.x}:${value.key.y}`);
                     if (callback) {
@@ -67,11 +67,11 @@ export class HubClient implements IHubClient {
 
     enqueueAction(key: IChunkKey, action: IChunkAction): Promise<void> {
         console.log(`Enqueue action ${action.x}:${action.y} with color ${action.color} on ${key.x}:${key.y}`);
-        return this.hubConnection.send("EnqueueAction", key, action);
+        return this.hubConnection.send("EnqueueChunkAction", key, action);
     }
 
     processAction(key: IChunkKey, action: IChunkAction): Promise<number> {
         console.log(`Process action ${action.x}:${action.y} with color ${action.color} on ${key.x}:${key.y}`);
-        return this.hubConnection.invoke("ProcessAction", key, action);
+        return this.hubConnection.invoke("ProcessChunkAction", key, action);
     }
 }
