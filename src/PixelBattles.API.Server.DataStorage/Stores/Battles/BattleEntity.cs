@@ -2,13 +2,13 @@
 using PixelBattles.API.Server.DataStorage.MongoDb;
 using System;
 
-namespace PixelBattles.API.Server.DataStorage.Models
+namespace PixelBattles.API.Server.DataStorage.Stores.Battles
 {
     public class BattleEntity
     {
         [BsonId(IdGenerator = typeof(Int64IdGenerator<BattleEntity>))]
         public long BattleId { get; set; }
-        
+
         public string Name { get; set; }
 
         public string Description { get; set; }

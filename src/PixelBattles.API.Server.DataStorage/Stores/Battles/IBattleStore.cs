@@ -1,9 +1,8 @@
-﻿using PixelBattles.API.Server.DataStorage.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PixelBattles.API.Server.DataStorage.Stores
+namespace PixelBattles.API.Server.DataStorage.Stores.Battles
 {
     public interface IBattleStore
     {

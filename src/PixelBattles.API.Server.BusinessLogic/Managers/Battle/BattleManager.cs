@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using PixelBattles.API.Server.BusinessLogic.Models;
-using PixelBattles.API.Server.DataStorage.Models;
-using PixelBattles.API.Server.DataStorage.Stores;
+using PixelBattles.API.Server.DataStorage.Stores.Battles;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

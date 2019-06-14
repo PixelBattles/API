@@ -1,4 +1,4 @@
-﻿namespace PixelBattles.API.Server.DataStorage.Models
+﻿namespace PixelBattles.API.Server.DataStorage.Stores.Battles
 {
     public class BattleSettingsEntity
     {

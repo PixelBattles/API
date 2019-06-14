@@ -1,36 +1,35 @@
 ﻿using MongoDB.Driver;
-using PixelBattles.API.Server.DataStorage.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PixelBattles.API.Server.DataStorage.Stores
+namespace PixelBattles.API.Server.DataStorage.Stores.Battles
 {
     public class BattleStore : IBattleStore
     {
-        private IMongoCollection<BattleEntity> battleCollection;
+        private readonly IMongoCollection<BattleEntity> _battleCollection;
 
         public BattleStore(IMongoCollection<BattleEntity> battleCollection)
         {
-            this.battleCollection = battleCollection ?? throw new ArgumentNullException(nameof(battleCollection));
+            _battleCollection = battleCollection ?? throw new ArgumentNullException(nameof(battleCollection));
         }
 
         public async Task<BattleEntity> GetBattleAsync(long battleId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var result = await battleCollection.FindAsync(t => t.BattleId == battleId, null, cancellationToken);
+            var result = await _battleCollection.FindAsync(t => t.BattleId == battleId, null, cancellationToken);
             return await result.SingleAsync(cancellationToken);
         }
 
         public async Task<Result> CreateBattleAsync(BattleEntity battleEntity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await battleCollection.InsertOneAsync(battleEntity, null, cancellationToken);
+            await _battleCollection.InsertOneAsync(battleEntity, null, cancellationToken);
             return Result.Success;
         }
 
         public async Task<Result> UpdateBattleAsync(BattleEntity battleEntity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var result = await battleCollection.ReplaceOneAsync(t => t.BattleId == battleEntity.BattleId, battleEntity, new UpdateOptions { IsUpsert = false }, cancellationToken);
+            var result = await _battleCollection.ReplaceOneAsync(t => t.BattleId == battleEntity.BattleId, battleEntity, new UpdateOptions { IsUpsert = false }, cancellationToken);
             if (result.MatchedCount == 0)
             {
                 return Result.Failed(new Error("Battle not found", "Battle not found"));
@@ -47,7 +46,7 @@ namespace PixelBattles.API.Server.DataStorage.Stores
                 filter = filterBuilder.Text(battleEntityFilter.Name);
             }
             
-            var result = await battleCollection.FindAsync(
+            var result = await _battleCollection.FindAsync(
                 filter ?? FilterDefinition<BattleEntity>.Empty, 
                 new FindOptions<BattleEntity, BattleEntity>
                 {
@@ -59,7 +58,7 @@ namespace PixelBattles.API.Server.DataStorage.Stores
 
         public async Task<Result> DeleteBattleAsync(long battleId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await battleCollection.DeleteOneAsync(t => t.BattleId == battleId, cancellationToken);
+            await _battleCollection.DeleteOneAsync(t => t.BattleId == battleId, cancellationToken);
             return Result.Success;
         }
     }

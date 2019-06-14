@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using PixelBattles.API.Server.DataStorage.Models;
+using PixelBattles.API.Server.DataStorage.Stores.Battles;
 
 namespace PixelBattles.API.Server.DataStorage.MongoDb
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PixelBattles.API.Server.DataStorage.Stores;
+using PixelBattles.API.Server.DataStorage.Stores.Battles;
+using PixelBattles.API.Server.DataStorage.Stores.Images;
 
 namespace PixelBattles.API.Server.DataStorage
 {
@@ -16,7 +17,8 @@ namespace PixelBattles.API.Server.DataStorage
         private static IServiceCollection AddStores(this IServiceCollection services)
         {
             return services
-                .AddScoped<IBattleStore,BattleStore>();
+                .AddScoped<IBattleStore, BattleStore>()
+                .AddScoped<IImageStore, ImageStore>();
         }
     }
 }
