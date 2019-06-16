@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace PixelBattles.API.Server.BusinessLogic.Managers
+namespace PixelBattles.API.Server.BusinessLogic.BattleToken
 {
     public class BattleTokenGenerator : IBattleTokenGenerator
     {

@@ -1,6 +1,4 @@
-﻿using PixelBattles.API.Server.DataStorage.Stores.Battles;
-
-namespace PixelBattles.API.Server.BusinessLogic.Models
+﻿namespace PixelBattles.API.Server.BusinessLogic.Battles.Models
 {
     public class BattleSettings
     {
@@ -21,13 +19,5 @@ namespace PixelBattles.API.Server.BusinessLogic.Models
         public int CenterY { get; set; }
 
         public int Cooldown { get; set; }
-    }
-
-    public partial class BusinessLogicMappingProfile
-    {
-        private void InitializeBattleSettings()
-        {
-            CreateMap<BattleSettingsEntity, BattleSettings>();
-        }
     }
 }

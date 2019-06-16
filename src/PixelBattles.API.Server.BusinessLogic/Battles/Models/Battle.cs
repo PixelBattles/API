@@ -1,7 +1,6 @@
-﻿using PixelBattles.API.Server.DataStorage.Stores.Battles;
-using System;
+﻿using System;
 
-namespace PixelBattles.API.Server.BusinessLogic.Models
+namespace PixelBattles.API.Server.BusinessLogic.Battles.Models
 {
     public class Battle
     {
@@ -16,13 +15,5 @@ namespace PixelBattles.API.Server.BusinessLogic.Models
         public DateTime StartDateUTC { get; set; }
 
         public DateTime EndDateUTC { get; set; }
-    }
-
-    public partial class BusinessLogicMappingProfile
-    {
-        private void InitializeBattle()
-        {
-            CreateMap<BattleEntity, Battle>();
-        }
     }
 }

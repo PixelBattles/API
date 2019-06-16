@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 
-namespace PixelBattles.API.Server.BusinessLogic.Managers
+namespace PixelBattles.API.Server.BusinessLogic
 {
     public abstract class BaseManager
     {

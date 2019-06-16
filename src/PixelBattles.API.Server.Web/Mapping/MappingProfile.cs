@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using PixelBattles.API.DataTransfer.Battle;
-using PixelBattles.API.Server.BusinessLogic.Models;
+using PixelBattles.API.Server.BusinessLogic.Battles.Models;
 using System.Linq;
 using System.Reflection;
 

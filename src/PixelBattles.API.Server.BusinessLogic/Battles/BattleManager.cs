@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using PixelBattles.API.Server.BusinessLogic.Models;
+using PixelBattles.API.Server.BusinessLogic.Battles.Models;
+using PixelBattles.API.Server.BusinessLogic.BattleToken;
 using PixelBattles.API.Server.DataStorage.Stores.Battles;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PixelBattles.API.Server.BusinessLogic.Managers
+namespace PixelBattles.API.Server.BusinessLogic.Battles
 {
     public class BattleManager : BaseManager, IBattleManager
     {

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using PixelBattles.API.Server.BusinessLogic.Battles.Models;
+using PixelBattles.API.Server.DataStorage.Stores.Battles;
 using System.Linq;
 using System.Reflection;
 
-namespace PixelBattles.API.Server.BusinessLogic.Models
+namespace PixelBattles.API.Server.BusinessLogic
 {
     public partial class BusinessLogicMappingProfile : Profile
     {
@@ -16,6 +18,16 @@ namespace PixelBattles.API.Server.BusinessLogic.Models
                 .Where(t => !t.IsStatic)
                 .ToList()
                 .ForEach(t => t.Invoke(this, null));
+        }
+
+        private void InitializeBattleSettings()
+        {
+            CreateMap<BattleSettingsEntity, BattleSettings>();
+        }
+
+        private void InitializeBattle()
+        {
+            CreateMap<BattleEntity, Battle>();
         }
     }
 }

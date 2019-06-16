@@ -15,4 +15,8 @@
     <ProjectReference Include="..\PixelBattles.API.Server.DataStorage\PixelBattles.API.Server.DataStorage.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+
 </Project>

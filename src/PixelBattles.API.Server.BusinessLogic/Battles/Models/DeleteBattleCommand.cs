@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PixelBattles.API.Server.BusinessLogic.Models
+namespace PixelBattles.API.Server.BusinessLogic.Battles.Models
 {
     public class DeleteBattleCommand
     {

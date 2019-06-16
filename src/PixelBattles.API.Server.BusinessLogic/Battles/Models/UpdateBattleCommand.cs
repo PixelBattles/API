@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace PixelBattles.API.Server.BusinessLogic.Models
+namespace PixelBattles.API.Server.BusinessLogic.Battles.Models
 {
-    public class CreateBattleCommand
+    public class UpdateBattleCommand
     {
+        public long BattleId { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }

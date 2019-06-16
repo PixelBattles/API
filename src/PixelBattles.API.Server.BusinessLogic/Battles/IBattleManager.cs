@@ -1,9 +1,8 @@
-﻿using PixelBattles.API.Server.BusinessLogic.Models;
-using System;
+﻿using PixelBattles.API.Server.BusinessLogic.Battles.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PixelBattles.API.Server.BusinessLogic.Managers
+namespace PixelBattles.API.Server.BusinessLogic.Battles
 {
     public interface IBattleManager
     {

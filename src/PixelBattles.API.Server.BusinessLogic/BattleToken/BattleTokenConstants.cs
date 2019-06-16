@@ -1,4 +1,4 @@
-﻿namespace PixelBattles.API.Server.BusinessLogic.Managers
+﻿namespace PixelBattles.API.Server.BusinessLogic.BattleToken
 {
     public class BattleTokenConstants
     {
