@@ -1,6 +1,6 @@
-﻿namespace PixelBattles.API.DataTransfer.Battle
+﻿namespace PixelBattles.API.DataTransfer.Images
 {
-    public class CreateBattleDTO
+    public class CreateImageDTO
     {
         public string Name { get; set; }
         public string Description { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace PixelBattles.API.DataTransfer.Battle
+﻿namespace PixelBattles.API.DataTransfer.Battles
 {
     public class BattleFilterDTO
     {

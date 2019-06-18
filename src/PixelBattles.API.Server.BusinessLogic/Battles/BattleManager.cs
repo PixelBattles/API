@@ -44,7 +44,7 @@ namespace PixelBattles.API.Server.BusinessLogic.Battles
             {
                 return new CreateBattleResult(new Error("Empty name", "Name can't be empty"));
             }
-
+            
             var battle = new BattleEntity()
             {
                 Description = command.Description,
@@ -116,6 +116,17 @@ namespace PixelBattles.API.Server.BusinessLogic.Battles
             string token = BattleTokenGenerator.GenerateToken(command.BattleId, command.UserId);
 
             return new CreateBattleTokenResult(token);
+        }
+
+        public async Task<Result> UpdateBattleImageAsync(UpdateBattleImageCommand command)
+        {
+            var battle = await BattleStore.GetBattleAsync(command.BattleId);
+            if (battle == null)
+            {
+                return Result.Failed(new Error("Battle not found", "Battle not found"));
+            }
+            battle.ImageId = command.ImageId;
+            return await BattleStore.UpdateBattleAsync(battle, CancellationToken);
         }
     }
 }

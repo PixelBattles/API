@@ -12,5 +12,6 @@ namespace PixelBattles.API.Server.BusinessLogic.Battles
         Task<Result> UpdateBattleAsync(UpdateBattleCommand command);
         Task<Result> DeleteBattleAsync(DeleteBattleCommand command);
         Task<CreateBattleTokenResult> CreateBattleTokenAsync(CreateBattleTokenCommand command);
+        Task<Result> UpdateBattleImageAsync(UpdateBattleImageCommand command);
     }
 }

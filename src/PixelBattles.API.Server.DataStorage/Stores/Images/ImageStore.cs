@@ -17,7 +17,7 @@ namespace PixelBattles.API.Server.DataStorage.Stores.Images
         public async Task<ImageEntity> GetImageAsync(Guid imageId, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = await _imageCollection.FindAsync(t => t.ImageId == imageId, null, cancellationToken);
-            return await result.SingleAsync(cancellationToken);
+            return await result.SingleOrDefaultAsync(cancellationToken);
         }
 
         public async Task<Result> CreateImageAsync(ImageEntity imageEntity, CancellationToken cancellationToken = default(CancellationToken))

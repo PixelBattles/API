@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PixelBattles.API.DataTransfer;
-using PixelBattles.API.DataTransfer.Battle;
+using PixelBattles.API.DataTransfer.Battles;
 using PixelBattles.API.Server.BusinessLogic.Battles;
 using PixelBattles.API.Server.BusinessLogic.Battles.Models;
 using System;
@@ -109,14 +109,14 @@ namespace PixelBattles.API.Server.Web.Controllers.Api
             }
         }
 
-        [HttpPut("battle")]
-        public async Task<IActionResult> UpdateBattleAsync([FromBody] UpdateBattleDTO commandDTO)
+        [HttpPut("battle/{battleId:long}")]
+        public async Task<IActionResult> UpdateBattleAsync(long battleId, [FromBody] UpdateBattleDTO commandDTO)
         {
             try
             {
-                UpdateBattleCommand command = new UpdateBattleCommand()
+                var command = new UpdateBattleCommand()
                 {
-                    BattleId = commandDTO.BattleId,
+                    BattleId = battleId,
                     Name = commandDTO.Name,
                     Description = commandDTO.Description
                 };
@@ -130,14 +130,14 @@ namespace PixelBattles.API.Server.Web.Controllers.Api
             }
         }
 
-        [HttpPost("battle/token")]
-        public async Task<IActionResult> CreateBattleTokenAsync([FromBody] CreateBattleTokenDTO commandDTO)
+        [HttpPost("battle/{battleId:long}/token")]
+        public async Task<IActionResult> CreateBattleTokenAsync(long battleId)
         {
             try
             {
                 var command = new CreateBattleTokenCommand()
                 {
-                    BattleId = commandDTO.BattleId,
+                    BattleId = battleId,
                     UserId = Guid.Empty
                 };
                 var result = await BattleManager.CreateBattleTokenAsync(command);
@@ -147,6 +147,26 @@ namespace PixelBattles.API.Server.Web.Controllers.Api
             catch (Exception exception)
             {
                 return OnException(exception, "Error while creating battle token.");
+            }
+        }
+
+        [HttpPut("battle/{battleId:long}/image")]
+        public async Task<IActionResult> UpdateBattleImageAsync(long battleId, [FromBody] UpdateBattleImageDTO commandDTO)
+        {
+            try
+            {
+                var command = new UpdateBattleImageCommand()
+                {
+                    BattleId = battleId,
+                    ImageId = commandDTO.ImageId
+                };
+                var result = await BattleManager.UpdateBattleImageAsync(command);
+                var resultDTO = Mapper.Map<Result, ResultDTO>(result);
+                return OnResult(resultDTO);
+            }
+            catch (Exception exception)
+            {
+                return OnException(exception, "Error while updating battle image.");
             }
         }
     }

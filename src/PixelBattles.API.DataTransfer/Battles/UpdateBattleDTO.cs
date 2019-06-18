@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace PixelBattles.API.DataTransfer.Battle
+namespace PixelBattles.API.DataTransfer.Battles
 {
     public class UpdateBattleDTO
     {
-        public long BattleId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }

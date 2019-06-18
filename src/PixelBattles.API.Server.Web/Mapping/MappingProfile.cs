@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
-using PixelBattles.API.DataTransfer.Battle;
+using PixelBattles.API.DataTransfer;
+using PixelBattles.API.DataTransfer.Battles;
+using PixelBattles.API.DataTransfer.Images;
 using PixelBattles.API.Server.BusinessLogic.Battles.Models;
+using PixelBattles.API.Server.BusinessLogic.Images.Models;
 using System.Linq;
 using System.Reflection;
 
@@ -20,13 +23,24 @@ namespace PixelBattles.API.Server.Web.Mapping
                 .ForEach(t => t.Invoke(this, null));
         }
 
-        private void InitializeOrganization()
+        private void Initialize()
+        {
+            CreateMap<Result, ResultDTO>();
+        }
+
+        private void InitializeBattles()
         {
             CreateMap<Battle, BattleDTO>();
             CreateMap<BattleSettings, BattleSettingsDTO>();
             CreateMap<BattleFilter, BattleFilterDTO>();
             CreateMap<CreateBattleResult, CreateBattleResultDTO>();
             CreateMap<CreateBattleTokenResult, CreateBattleTokenResultDTO>();
+        }
+
+        private void InitializeImages()
+        {
+            CreateMap<Image, ImageDTO>();
+            CreateMap<CreateImageResult, CreateImageResultDTO>();
         }
     }
 }

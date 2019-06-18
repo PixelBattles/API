@@ -44,7 +44,9 @@ namespace PixelBattles.API.Server.BusinessLogic.Images
             {
                 Description = command.Description,
                 Name = command.Name,
-                Data = command.Data
+                Data = command.Data,
+                ContentType = command.ContentType,
+                FileName = command.FileName
             };
 
             var result = await ImageStore.CreateImageAsync(image, CancellationToken);
@@ -68,6 +70,8 @@ namespace PixelBattles.API.Server.BusinessLogic.Images
             image.Description = command.Description;
             image.Name = command.Name;
             image.Data = command.Data;
+            image.ContentType = command.ContentType;
+            image.FileName = command.FileName;
             return await ImageStore.UpdateImageAsync(image, CancellationToken);
         }
 

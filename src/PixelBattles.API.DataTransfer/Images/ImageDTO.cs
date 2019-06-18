@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace PixelBattles.API.Server.BusinessLogic.Images.Models
+namespace PixelBattles.API.DataTransfer.Images
 {
-    public class Image
+    public class ImageDTO
     {
         public Guid ImageId { get; set; }
-
         public string Name { get; set; }
-
         public string Description { get; set; }
-
         public string ContentType { get; set; }
-
         public string FileName { get; set; }
-
-        public byte[] Data { get; set; }
     }
 }

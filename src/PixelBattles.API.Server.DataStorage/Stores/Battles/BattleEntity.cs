@@ -13,8 +13,10 @@ namespace PixelBattles.API.Server.DataStorage.Stores.Battles
 
         public string Description { get; set; }
 
-        public BattleSettingsEntity Settings { get; set; }
+        public Guid? ImageId { get; set; }
 
+        public BattleSettingsEntity Settings { get; set; }
+        
         public DateTime StartDateUTC { get; set; }
 
         public DateTime EndDateUTC { get; set; }
