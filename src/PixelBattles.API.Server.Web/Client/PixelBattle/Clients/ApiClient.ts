@@ -19,9 +19,8 @@ export class ApiClient implements IApiClient {
 
     public async getBattleToken(battleId: string): Promise<ITokenResult> {
         let result = await this.httpClient.post(
-            this.baseUrl + "battle/token",
+            this.baseUrl + "battle/" + battleId + "/token",
             {
-                content: JSON.stringify({ battleId: battleId }),
                 headers: { 'Content-Type': 'application/json; charset=utf-8'}
             });
         return JSON.parse(result.content.toString());

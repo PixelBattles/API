@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PixelBattles.API.Server.BusinessLogic.Managers;
-using PixelBattles.API.Server.BusinessLogic.Models;
+using PixelBattles.API.Server.BusinessLogic.Battles;
+using PixelBattles.API.Server.BusinessLogic.Battles.Models;
 using System;
 using System.Threading.Tasks;
 

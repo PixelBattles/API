@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PixelBattles.API.Server.BusinessLogic.Managers;
+using PixelBattles.API.Server.BusinessLogic.Battles;
+using PixelBattles.API.Server.BusinessLogic.BattleToken;
+using PixelBattles.API.Server.BusinessLogic.Images;
 using PixelBattles.API.Server.DataStorage;
 
 namespace PixelBattles.API.Server.BusinessLogic
@@ -19,7 +21,8 @@ namespace PixelBattles.API.Server.BusinessLogic
         public static IServiceCollection AddManagers(this IServiceCollection services)
         {
             return services
-                .AddScoped<IBattleManager, BattleManager>();
+                .AddScoped<IBattleManager, BattleManager>()
+                .AddScoped<IImageManager, ImageManager>();
         }
     }
 }
