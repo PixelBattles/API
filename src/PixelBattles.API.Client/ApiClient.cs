@@ -5,6 +5,7 @@ using PixelBattles.API.DataTransfer.Battles;
 using PixelBattles.API.DataTransfer.Images;
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,9 +27,31 @@ namespace PixelBattles.API.Client
             };
         }
 
-        public Task<CreateImageResultDTO> CreateImageAsync(CreateImageDTO createImage, byte[] data, CancellationToken cancellationToken = default)
+        public async Task<CreateImageResultDTO> CreateImageAsync(CreateImageDTO createImage, byte[] data, string fileName, string contentType, CancellationToken cancellationToken = default)
         {
-            throw new InvalidOperationException();
+            using (var content = new MultipartFormDataContent())
+            using (var imageContent = new ByteArrayContent(data))
+            using (var nameContent = new StringContent(createImage.Name, Encoding.UTF8))
+            using (var descriptionContent = new StringContent(createImage.Description, Encoding.UTF8))
+            {
+                imageContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+                content.Add(imageContent, "file", fileName);
+                content.Add(nameContent, "name");
+                content.Add(descriptionContent, "description");
+                using (var response = await _httpClient.PostAsync("/api/image", content, cancellationToken))
+                {
+                    response.EnsureSuccessStatusCode();
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<CreateImageResultDTO>(responseContent);
+                    return result;
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
 
         public async Task<BattleDTO> GetBattleAsync(long battleId, CancellationToken cancellationToken = default(CancellationToken))
@@ -57,10 +80,27 @@ namespace PixelBattles.API.Client
                 }
             }
         }
-
-        public Task<ResultDTO> UpdateImageAsync(Guid imageId, UpdateImageDTO updateImage, byte[] data, CancellationToken cancellationToken = default)
+        
+        public async Task<ResultDTO> UpdateImageAsync(Guid imageId, UpdateImageDTO updateImage, byte[] data, string fileName, string contentType, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            using (var content = new MultipartFormDataContent())
+            using (var imageContent = new ByteArrayContent(data))
+            using (var nameContent = new StringContent(updateImage.Name, Encoding.UTF8))
+            using (var descriptionContent = new StringContent(updateImage.Description, Encoding.UTF8))
+            {
+                imageContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+                content.Add(imageContent, "file", fileName);
+                content.Add(nameContent, "name");
+                content.Add(descriptionContent, "description");
+                using (var response = await _httpClient.PutAsync($"/api/image/{imageId}", content, cancellationToken))
+                {
+                    response.EnsureSuccessStatusCode();
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<ResultDTO>(responseContent);
+                    return result;
+                }
+            }
         }
     }
 }
