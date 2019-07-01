@@ -20,7 +20,6 @@ export class BattleBody {
 
     constructor(canvasContainer: HTMLDivElement, battle: IBattle, hubClient: IHubClient, width: number, height: number) {
         this.canvasContainer = canvasContainer;
-        this.canvasContainer.setAttribute("style", "margin:0;font-size:0;");
 
         this.battle = battle;
         this.hubClient = hubClient;

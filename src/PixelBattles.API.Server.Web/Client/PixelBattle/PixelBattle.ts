@@ -18,7 +18,6 @@ export class PixelBattle {
     
     constructor(widgetContainer: HTMLDivElement) {
         this.widgetContainer = widgetContainer;
-        this.widgetContainer.className = "card";
         this.battleId = this.widgetContainer.getAttribute("battle-id");
 
         this.initializeInternal();
@@ -37,20 +36,15 @@ export class PixelBattle {
         window.onload = this.resize;
         this.resize(null);
     }
-    
-    private initializeHeader(text: string): BattleHeader{
-        let headerContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
-        this.widgetContainer.appendChild(headerContainer);
-        return new BattleHeader(headerContainer, text);
-    }
 
+    private initializeHeader(text: string): BattleHeader {
+        return new BattleHeader(this.widgetContainer, text);
+    }
     private initializeBody(): BattleBody {
-        let canvasContainer: HTMLDivElement = <HTMLDivElement>document.createElement('div');
-        this.widgetContainer.appendChild(canvasContainer);
-        return new BattleBody(canvasContainer, this.battle, this.hubClient, this.widgetContainer.offsetWidth - 2/*borders*/, this.widgetContainer.offsetHeight - this.header.height - 2/*borders*/);
+        return new BattleBody(this.widgetContainer, this.battle, this.hubClient, this.widgetContainer.offsetWidth, this.widgetContainer.offsetHeight);
     }
 
     public resize = (ev: Event): void => {
-        this.body.resize(this.widgetContainer.offsetWidth - 2/*borders*/, this.widgetContainer.offsetHeight - this.header.height - 2/*borders*/);
+        this.body.resize(this.widgetContainer.offsetWidth, this.widgetContainer.offsetHeight);
     }
 }

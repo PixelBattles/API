@@ -1,16 +1,11 @@
 ﻿export class BattleHeader{
-    private headerContainer: HTMLDivElement;
+    private container: HTMLDivElement;
 
-    constructor(headerContainer: HTMLDivElement, text: string) {
-        this.headerContainer = headerContainer;
-        this.headerContainer.className = "card-header";
-        let header: HTMLHeadingElement = <HTMLHeadingElement>document.createElement('h4');
-        header.className = "my-0 font-weight-normal";
-        header.textContent = text;
-        this.headerContainer.appendChild(header)
-    }
-
-    get height(): number {
-        return this.headerContainer.offsetHeight;
+    constructor(container: HTMLDivElement, text: string) {
+        this.container = container;
+        let header: HTMLHeadingElement = <HTMLHeadingElement>document.createElement('div');
+        header.id = "toolbar";
+        header.setAttribute("style", "height: 45px; width: 100%; position: absolute; z-index: 1; top: 0;background-color: black; opacity: 0.5;");
+        this.container.appendChild(header)
     }
 }

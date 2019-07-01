@@ -49,11 +49,13 @@ export class Camera implements ICamera {
     }
 
     private onMove = (ev: PositionEvent): void => {
-        if (this.isDrag) {
-            this.cameraOffsetX = this.initialMouseX - ev.x;
-            this.cameraOffsetY = this.initialMouseY - ev.y;
-            this.onRender();
+        if (!this.isDrag) {
+            return;
         }
+
+        this.cameraOffsetX = this.initialMouseX - ev.x;
+        this.cameraOffsetY = this.initialMouseY - ev.y;
+        this.onRender();
     }
 
     private onMoveStart = (ev: PositionEvent): void => {
@@ -65,6 +67,10 @@ export class Camera implements ICamera {
     }
 
     private onMoveEnd = (ev: PositionEvent): void => {
+        if (!this.isDrag) {
+            return;
+        }
+
         this.isDrag = false;
         this.cameraOffsetX = this.initialMouseX - ev.x;
         this.cameraOffsetY = this.initialMouseY - ev.y;
