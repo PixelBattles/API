@@ -5,6 +5,7 @@
     public onMoveEnd: (ev: PositionEvent) => any;
     public onMoveStart: (ev: PositionEvent) => any;
     public onMove: (ev: PositionEvent) => any;
+    public onZoom: (ev: ZoomEvent) => any;
     public onRender: () => void;
 
     public constructor(canvas: HTMLCanvasElement) {
@@ -14,6 +15,7 @@
         this.canvas.onmousedown = this.onmousedown;
         this.canvas.onmouseup = this.onmouseup;
         this.canvas.onmousemove = this.onmousemove;
+        this.canvas.onwheel = this.onwheel;
     }
 
     public resize(width: number, height: number): void {
@@ -34,6 +36,10 @@
     private onmousemove = (ev: MouseEvent): void => {
         this.onMove(new PositionEvent(ev.offsetX, ev.offsetY));
     }
+
+    private onwheel = (ev: WheelEvent): void => {
+        this.onZoom(new ZoomEvent(ev.deltaY));
+    }
 }
 
 export interface IGameCanvas {
@@ -43,10 +49,18 @@ export interface IGameCanvas {
     onMoveEnd: (ev: PositionEvent) => any;
     onMoveStart: (ev: PositionEvent) => any;
     onMove: (ev: PositionEvent) => any;
+    onZoom: (ev: ZoomEvent) => any;
 
     onRender: () => void;
 
     resize(width: number, height: number): void;
+}
+
+export class ZoomEvent {
+    public constructor(ratio: number) {
+        this.ratio = ratio;
+    }
+    readonly ratio: number;
 }
 
 export class PositionEvent {

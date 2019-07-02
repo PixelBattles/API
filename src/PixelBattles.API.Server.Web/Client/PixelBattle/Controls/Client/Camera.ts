@@ -1,4 +1,4 @@
-﻿import { IGameCanvas, PositionEvent } from "./GameCanvas";
+﻿import { IGameCanvas, PositionEvent, ZoomEvent } from "./GameCanvas";
 
 export class Camera implements ICamera {
     public onRender: () => void;
@@ -22,14 +22,10 @@ export class Camera implements ICamera {
         return this.internalCameraY + this.cameraOffsetY;
     }
 
-    public get cameraCenterX(): number {
-        return this.internalCameraX + this.cameraOffsetX + (this.canvas.canvas.width / 2);
-    }
-    public get cameraCenterY(): number {
-        return this.internalCameraY + this.cameraOffsetY + (this.canvas.canvas.height / 2);
-    }
-
     public set scale(value: number) {
+        let ratio = value / this.internalScale;
+        this.internalCameraX = this.internalCameraX * ratio + (this.canvas.canvas.width * ratio - this.canvas.canvas.width) / 2;
+        this.internalCameraY = this.internalCameraY * ratio + (this.canvas.canvas.height * ratio - this.canvas.canvas.height) / 2;
         this.internalScale = value;
         this.onRender();
     }
@@ -43,6 +39,7 @@ export class Camera implements ICamera {
         this.canvas.onMoveEnd = this.onMoveEnd;
         this.canvas.onMoveStart = this.onMoveStart;
         this.canvas.onMove = this.onMove;
+        this.canvas.onZoom = this.onZoom;
 
         this.internalCameraX = 0/*center*/ - Math.floor(width / 2);
         this.internalCameraY = 0/*center*/ - Math.floor(height / 2);
@@ -56,6 +53,15 @@ export class Camera implements ICamera {
         this.cameraOffsetX = this.initialMouseX - ev.x;
         this.cameraOffsetY = this.initialMouseY - ev.y;
         this.onRender();
+    }
+
+    private onZoom = (ev: ZoomEvent): void => {
+        if (ev.ratio < 0 && this.scale < 32) {
+            this.scale = this.scale << 1
+        }
+        if (ev.ratio > 0 && this.scale > 1) {
+            this.scale = this.scale >> 1;
+        }
     }
 
     private onMoveStart = (ev: PositionEvent): void => {
@@ -93,7 +99,5 @@ export interface ICamera {
 
     cameraX: number;
     cameraY: number;
-    cameraCenterX: number;
-    cameraCenterY: number;
     scale: number;
 }
